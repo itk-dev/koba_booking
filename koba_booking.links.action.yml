@@ -1,0 +1,13 @@
+# All action links for this module
+
+koba_booking.booking_add:
+  # Which route will be called by the link
+  route_name: koba_booking.booking_add
+  title: 'Add Booking'
+
+  # Where will the link appear, defined by route name.
+  appears_on:
+    - entity.koba_booking_booking.requests
+    - entity.koba_booking_booking.accepted
+    - entity.koba_booking_booking.denied
+    - entity.koba_booking_booking.history

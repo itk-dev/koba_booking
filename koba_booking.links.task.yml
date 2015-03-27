@@ -1,0 +1,55 @@
+# Define the 'local' links for the module
+
+# Administration related local tasks
+koba_booking.bookingrequests:
+  title: Booking requests
+  route_name: entity.koba_booking_booking.requests
+  base_route: koba_booking.bookingrequests
+  weight: 0
+
+koba_booking.bookingsaccepted:
+  title: Bookings accepted
+  route_name: entity.koba_booking_booking.accepted
+  base_route: koba_booking.bookingrequests
+  weight: 1
+
+koba_booking.bookingsdenied:
+  title: Bookings denied
+  route_name: entity.koba_booking_booking.denied
+  base_route: koba_booking.bookingrequests
+  weight: 2
+
+koba_booking.bookingshistory:
+  title: Bookings history
+  route_name: entity.koba_booking_booking.history
+  base_route: koba_booking.bookingrequests
+  weight: 3
+
+dokk_resource.pending:
+  title: Bookings pending
+  route_name: koba_booking.pending
+  base_route: koba_booking.bookingrequests
+  weight: 4
+
+koba_booking.bookingsettings:
+  title: Settings
+  route_name: koba_booking.booking_settings
+  base_route: koba_booking.bookingrequests
+  weight: 5
+
+# Entity related local tasks
+booking.view:
+  route_name: entity.koba_booking_booking.canonical
+  base_route: entity.koba_booking_booking.canonical
+  title: View
+
+booking.page_edit:
+  route_name: entity.koba_booking_booking.edit_form
+  base_route: entity.koba_booking_booking.canonical
+  title: Edit
+
+booking.delete_confirm:
+  route_name:  entity.koba_booking_booking.delete_form
+  base_route:  entity.koba_booking_booking.canonical
+  title: Delete
+  weight: 10

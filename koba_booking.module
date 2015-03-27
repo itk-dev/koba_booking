@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * @file
+ * Contains Drupal\koba_booking\koba_booking.module
+ */
+
+/**
+ * @defgroup koba_booking
+ * @{
+ * Implement a Content entity.
+ *
+ * }
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+
+/**
+ * Implements hook_theme().
+ */
+function koba_booking_theme() {
+  return array(
+    'angular_test' => array(
+      'variables' => array(),
+      'file' => 'koba_booking.pages.inc',
+    ),
+  );
+}
+
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function koba_booking_form_koba_booking_booking_add_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form['from_date']['widget']['0']['value']['#attributes']['class']['0'] = 'js-datepicker';
+  $form['to_date']['widget']['0']['value']['#attributes']['class']['0'] = 'js-datepicker';
+}

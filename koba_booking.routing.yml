@@ -1,0 +1,100 @@
+# --- Administration pages routing --- #
+entity.koba_booking_booking.requests:
+  path: '/admin/booking/requests'
+  defaults:
+    _entity_list: 'koba_booking_booking'
+    _title: 'Booking List'
+  requirements:
+    _permission: 'administer booking settings'
+
+entity.koba_booking_booking.accepted:
+  path: '/admin/booking/accepted'
+  defaults:
+    _entity_list: 'koba_booking_booking'
+    _title: 'Booking List'
+  requirements:
+    _permission: 'view booking entity'
+
+entity.koba_booking_booking.denied:
+  path: '/admin/booking/denied'
+  defaults:
+    _entity_list: 'koba_booking_booking'
+    _title: 'Booking List'
+  requirements:
+    _permission: 'administer booking settings'
+
+entity.koba_booking_booking.history:
+  path: '/admin/booking/history'
+  defaults:
+    _entity_list: 'koba_booking_booking'
+    _title: 'Booking List'
+  requirements:
+    _permission: 'administer booking settings'
+
+koba_booking.pending:
+  path: '/admin/booking/pending'
+  defaults:
+    _form: '\Drupal\koba_booking\Form\AdminListForm'
+    _title: 'Booking List'
+  requirements:
+    _permission: 'administer booking settings'
+
+koba_booking.booking_settings:
+  path: '/admin/booking/settings'
+  defaults:
+    _form: '\Drupal\koba_booking\Form\BookingSettingsForm'
+    _title: 'Booking Settings'
+  requirements:
+    _permission: 'administer booking settings'
+
+
+# --- Entity related routing --- #
+entity.koba_booking_booking.canonical:
+  path: '/booking/{koba_booking_booking}'
+  defaults:
+    _entity_view: 'koba_booking_booking'
+    _title: 'Booking Content'
+  requirements:
+    _entity_access: 'koba_booking_booking.view'
+  options:
+    _admin_route: TRUE
+
+koba_booking.booking_add:
+  path: '/booking/add'
+  defaults:
+    _entity_form: koba_booking_booking.add
+    _title: 'Add Booking'
+  requirements:
+    _entity_create_access: 'koba_booking_booking'
+  options:
+    _admin_route: TRUE
+
+entity.koba_booking_booking.edit_form:
+  path: '/booking/{koba_booking_booking}/edit'
+  defaults:
+    _entity_form: koba_booking_booking.edit
+    _title: 'Edit Booking'
+  requirements:
+    _entity_access: 'koba_booking_booking.edit'
+  options:
+    _admin_route: TRUE
+
+entity.koba_booking_booking.delete_form:
+  path: '/booking/{koba_booking_booking}/delete'
+  defaults:
+    _entity_form: koba_booking_booking.delete
+    _title: 'Delete Booking'
+  requirements:
+    _entity_access: 'koba_booking_booking.delete'
+  options:
+    _admin_route: TRUE
+
+
+# --- Angular --- #
+koba_booking.angular_page:
+  path: '/my-angular'
+  defaults:
+    _controller: '\Drupal\koba_booking\Controller\KobaBookingController::angular'
+    _title: 'Angular test'
+  requirements:
+    _permission: 'access content'

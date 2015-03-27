@@ -1,0 +1,11 @@
+name: Koba Booking
+type: module
+description: 'Provides Koba booking entity and administaration.'
+package: Dokk1 custom
+core: 8.x
+version: '8.x-1.x-dev'
+# These modules are required by the tests, must be available at bootstrap time
+dependencies:
+  - options
+  - entity_reference
+  - datetime
