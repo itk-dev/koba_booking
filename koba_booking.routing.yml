@@ -1,9 +1,9 @@
 # --- Administration pages routing --- #
-entity.koba_booking_booking.requests:
+koba_booking.requests:
   path: '/admin/booking/requests'
   defaults:
-    _entity_list: 'koba_booking_booking'
-    _title: 'Booking List'
+    _form: '\Drupal\koba_booking\Form\AdminRequestListForm'
+    _title: 'Booking Requests List'
   requirements:
     _permission: 'administer booking settings'
 
@@ -13,7 +13,7 @@ entity.koba_booking_booking.accepted:
     _entity_list: 'koba_booking_booking'
     _title: 'Booking List'
   requirements:
-    _permission: 'view booking entity'
+    _permission: 'administer booking settings'
 
 entity.koba_booking_booking.denied:
   path: '/admin/booking/denied'
@@ -34,8 +34,8 @@ entity.koba_booking_booking.history:
 koba_booking.pending:
   path: '/admin/booking/pending'
   defaults:
-    _form: '\Drupal\koba_booking\Form\AdminListForm'
-    _title: 'Booking List'
+    _form: '\Drupal\koba_booking\Form\AdminPendingListForm'
+    _title: 'Booking Pending List'
   requirements:
     _permission: 'administer booking settings'
 
@@ -96,5 +96,13 @@ koba_booking.angular_page:
   defaults:
     _controller: '\Drupal\koba_booking\Controller\KobaBookingController::angular'
     _title: 'Angular test'
+  requirements:
+    _permission: 'access content'
+
+# --- Form autocomplete --- #
+koba_booking.autocomplete:
+  path: '/koba_booking/autocomplete/{entity_type}/{field_name}'
+  defaults:
+    _controller: '\Drupal\koba_booking\Controller\KobaAutocompleteController::autocomplete'
   requirements:
     _permission: 'access content'

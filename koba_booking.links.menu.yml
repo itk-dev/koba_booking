@@ -3,4 +3,4 @@ koba_booking.bookingrequests:
   title: Dokk1 Booking
   description: 'List of booking requests'
   parent: system.admin
-  route_name: entity.koba_booking_booking.requests
+  route_name: koba_booking.pending

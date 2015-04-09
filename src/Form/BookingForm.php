@@ -41,7 +41,7 @@ class BookingForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    $form_state->setRedirect('entity.koba_booking_booking.requests');
+    $form_state->setRedirect('koba_booking.bookingrequests');
     $entity = $this->getEntity();
     $entity->save();
   }

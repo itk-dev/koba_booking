@@ -3,7 +3,7 @@
 # Administration related local tasks
 koba_booking.bookingrequests:
   title: Booking requests
-  route_name: entity.koba_booking_booking.requests
+  route_name: koba_booking.requests
   base_route: koba_booking.bookingrequests
   weight: 0
 

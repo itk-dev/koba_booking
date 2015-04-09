@@ -1,10 +1,12 @@
 'delete booking entity':
-  title: Delete entity content.
+  title: Delete booking content.
 'add booking entity':
-  title: Add entity content
+  title: Add booking content
 'view booking entity':
-  title: View entity content
+  title: View booking content
 'edit booking entity':
-  title: Edit entity content
+  title: Edit booking content
 'administer booking settings':
   title: Administer settings
+'configure booking api settings':
+  title: Configure booking API settings

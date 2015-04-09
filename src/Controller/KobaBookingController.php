@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains \Drupal\dokk_resource\Controller\DokkResourceController.
+ * Contains \Drupal\koba_booking\Controller\KobaBookingController
  */
 
 namespace Drupal\koba_booking\Controller;
@@ -9,7 +9,7 @@ namespace Drupal\koba_booking\Controller;
 use Drupal\Core\Controller\ControllerBase;
 
 /**
- * DemoController.
+ * KobaBookingController.
  */
 class KobaBookingController extends ControllerBase  {
 

@@ -19,7 +19,7 @@ use Drupal\Core\Url;
  * @package Drupal\dokk_resource\Form
  * @ingroup dokk_resource
  */
-class AdminListForm extends FormBase {
+class AdminRequestListForm extends FormBase {
   /**
    * {@inheritdoc}.
    */
@@ -32,7 +32,7 @@ class AdminListForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $query = \Drupal::entityQuery('koba_booking_booking')
-      ->condition('booking_status', 'pending', '=');
+      ->condition('booking_status', 'request', '=');
       $entities = $query->execute();
 
     // Dropdown selections for bulk updating. (See entity definition for possible values)
@@ -40,7 +40,6 @@ class AdminListForm extends FormBase {
       '#type' => 'select',
       '#title' => t('Update multiple bookings'),
       '#options' => array(
-        'request' => t('Revert to request'),
         'accepted'=> t('Accept'),
         'denied' => t('Deny'),
         'surpassed' => t('Delete'),
@@ -48,6 +47,32 @@ class AdminListForm extends FormBase {
       '#empty_value' => TRUE,
       '#description' => t('Change the status of multiple bookings.'),
       '#weight' => '0',
+    );
+
+    $form['filters'] = array(
+      '#title' => $this->t('Filters'),
+      '#type' => 'details',
+      '#weight' => '0',
+      '#open' => TRUE,
+    );
+
+    $form['filters']['author_email'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Email'),
+      '#maxlength' => 60,
+      '#autocomplete_route_name' => 'koba_booking.autocomplete',
+      '#autocomplete_route_parameters' => array(
+        'entity_type' => 'koba_booking_booking',
+        'field_name' => 'booking_email',
+      ),
+      '#weight' => -1,
+    );
+
+    $form['filters']['email_filter_submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Filter'),
+      '#weight' => 20,
+      '#submit' => array('::filter'),
     );
 
     // Perform selected action.
@@ -118,5 +143,18 @@ class AdminListForm extends FormBase {
         drupal_set_message('Changed status of ' . $entity->booking_short_description->value . ' to ' . $values['actions_select'] . '.');
       }
     }
+  }
+
+
+  /**
+   * Form submission handler for the 'preview' action.
+   *
+   * @param $form
+   *   An associative array containing the structure of the form.
+   * @param $form_state
+   *   The current state of the form.
+   */
+  public function filter(array $form, FormStateInterface $form_state) {
+    drupal_set_message('Working');
   }
 }
