@@ -4,7 +4,7 @@
 koba_booking.bookingrequests:
   title: Booking requests
   route_name: koba_booking.requests
-  base_route: koba_booking.bookingrequests
+  base_route: koba_booking.requests
   weight: 0
 
 koba_booking.bookingsaccepted:

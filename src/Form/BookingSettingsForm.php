@@ -30,6 +30,7 @@ class BookingSettingsForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('koba_booking.settings');
     $account = $this->currentUser();
+    $tokens_description = t('Available tokens are: [booking:name], [booking:description], [booking:resource], [booking:status], [booking:date], [booking:from_time], [booking:to_time], [booking:email], [booking:id]');
 
     // Filter settings.
     $form['settings'] = array(
@@ -99,10 +100,10 @@ class BookingSettingsForm extends FormBase {
     );
 
     $form['general_settings']['messages']['booking_created'] = array(
-      '#type' => 'textarea',
+      '#type' => 'text_format',
       '#title' => t('Created booking'),
-      '#description' => t('The message displayed to the user when the booking is created'),
-      '#default_value' => $config->get('koba_booking.created_booking_message'),
+      '#description' => t('The message displayed to the user when the booking is created.') . ' ' . $tokens_description,
+      '#default_value' => $config->get('koba_booking.created_booking_message')['value'],
     );
 
     $form['general_settings']['general_settings_submit'] = array(
@@ -128,9 +129,10 @@ class BookingSettingsForm extends FormBase {
     );
 
     $form['pending_email']['pending_email_body'] = array(
-      '#type' => 'textarea',
+      '#type' => 'text_format',
       '#title' => $this->t('Email body'),
-      '#default_value' => $config->get('koba_booking.email_pending_body'),
+      '#default_value' => $config->get('koba_booking.email_pending_body')['value'],
+      '#description' => $tokens_description,
     );
 
     $form['pending_email']['pending_email_submit'] = array(
@@ -156,9 +158,10 @@ class BookingSettingsForm extends FormBase {
     );
 
     $form['accepted_email']['accepted_email_body'] = array(
-      '#type' => 'textarea',
+      '#type' => 'text_format',
       '#title' => $this->t('Email body'),
-      '#default_value' => $config->get('koba_booking.email_accepted_body'),
+      '#default_value' => $config->get('koba_booking.email_accepted_body')['value'],
+      '#description' => $tokens_description,
     );
 
     $form['accepted_email']['accepted_email_submit'] = array(
@@ -184,9 +187,10 @@ class BookingSettingsForm extends FormBase {
     );
 
     $form['denied_email']['denied_email_body'] = array(
-      '#type' => 'textarea',
+      '#type' => 'text_format',
       '#title' => $this->t('Email body'),
-      '#default_value' => $config->get('koba_booking.email_denied_body'),
+      '#default_value' => $config->get('koba_booking.email_denied_body')['value'],
+      '#description' => $tokens_description,
     );
 
     $form['denied_email']['denied_email_submit'] = array(
@@ -212,9 +216,10 @@ class BookingSettingsForm extends FormBase {
     );
 
     $form['cancelled_email']['cancelled_email_body'] = array(
-      '#type' => 'textarea',
+      '#type' => 'text_format',
       '#title' => $this->t('Email body'),
-      '#default_value' => $config->get('koba_booking.email_cancelled_body'),
+      '#default_value' => $config->get('koba_booking.email_cancelled_body')['value'],
+      '#description' => $tokens_description,
     );
 
     $form['cancelled_email']['cancelled_email_submit'] = array(
