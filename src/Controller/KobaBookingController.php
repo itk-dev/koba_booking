@@ -7,6 +7,9 @@
 namespace Drupal\koba_booking\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\koba_booking\BookingInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * KobaBookingController.
@@ -14,6 +17,8 @@ use Drupal\Core\Controller\ControllerBase;
 class KobaBookingController extends ControllerBase  {
 
   public function angular() {
+
+    // Setup template for frontend.
     $build = array(
       '#type' => 'markup',
       '#theme' => 'angular_test',
@@ -27,11 +32,42 @@ class KobaBookingController extends ControllerBase  {
     return $build;
   }
 
-  public function accepted() {
-    return '';
+  public function actionAccept(BookingInterface $koba_booking_booking = NULL, Request $request) {
+    // Set redirect. (Original path.)
+    $referer = $request->server->get('HTTP_REFERER');
+    $response = new RedirectResponse($referer);
+
+    // Change booking state.
+    $koba_booking_booking->set('booking_status', 'accepted');
+    $koba_booking_booking->save();
+    $response->send();
+
+    return;
   }
 
-  public function denied() {
-    return '';
+  public function actionRefuse(BookingInterface $koba_booking_booking = NULL, Request $request) {
+    // Set redirect. (Original path.)
+    $referer = $request->server->get('HTTP_REFERER');
+    $response = new RedirectResponse($referer);
+
+    // Change booking state.
+    $koba_booking_booking->set('booking_status', 'refused');
+    $koba_booking_booking->save();
+    $response->send();
+
+    return;
+  }
+
+  public function actionCancel(BookingInterface $koba_booking_booking = NULL, Request $request) {
+    // Set redirect. (Original path.)
+    $referer = $request->server->get('HTTP_REFERER');
+    $response = new RedirectResponse($referer);
+
+    // Change booking state.
+    $koba_booking_booking->set('booking_status', 'cancelled');
+    $koba_booking_booking->save();
+    $response->send();
+
+    return;
   }
 }

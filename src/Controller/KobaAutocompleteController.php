@@ -84,7 +84,7 @@ class KobaAutocompleteController implements ContainerInjectionInterface {
 
     $matches = array();
     if ($input_value != '') {
-      $matches = $this->getMatchingValues($input_value);
+      $matches = $this->getMatchingValues($field_name, $input_value);
     }
 
     return new JsonResponse($matches);
@@ -98,21 +98,33 @@ class KobaAutocompleteController implements ContainerInjectionInterface {
    *   The full typed tags string.
    *
    * @return array
-   *   Returns an array of matching booking emails.
+   *   Returns an array of matching booking names.
    */
-  protected function getMatchingValues($input_value) {
+  protected function getMatchingValues($field_name, $input_value) {
     $matches = array();
 
-    // Select rows that match by booking_email.
-    $booking_ids = \Drupal::entityQuery('koba_booking_booking')
-      ->condition('booking_email', $input_value, 'CONTAINS')
-      ->range(0, 10)
-      ->execute();
+    switch ($field_name) {
+      case 'booking_name' :
+        // Select rows that match by booking_name.
+        $booking_ids = \Drupal::entityQuery('koba_booking_booking')
+          ->condition('booking_name', $input_value, 'CONTAINS')
+          ->range(0, 10)
+          ->execute();
+        break;
+      case 'name' :
+        // Select rows that match by title.
+        $booking_ids = \Drupal::entityQuery('koba_booking_booking')
+          ->condition('name', $input_value, 'CONTAINS')
+          ->range(0, 10)
+          ->execute();
+        break;
+    }
+
 
     if (!empty($booking_ids)) {
       foreach ($booking_ids as $id) {
         $booking = entity_load('koba_booking_booking', $id);
-        $matches[] = $booking->booking_email->value;
+        $matches[] = $booking->$field_name->value;
       }
     }
     return $matches;

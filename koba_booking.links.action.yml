@@ -8,7 +8,6 @@ koba_booking.booking_add:
   # Where will the link appear, defined by route name.
   appears_on:
     - koba_booking.requests
-    - koba_booking.pending
-    - entity.koba_booking_booking.accepted
-    - entity.koba_booking_booking.denied
-    - entity.koba_booking_booking.history
+    - koba_booking.accepted
+    - koba_booking.refused
+    - koba_booking.cancelled

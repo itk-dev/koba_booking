@@ -2,30 +2,30 @@
 
 # Administration related local tasks
 koba_booking.bookingrequests:
-  title: Booking requests
+  title: New bookings
   route_name: koba_booking.requests
   base_route: koba_booking.bookingrequests
   weight: 0
 
 koba_booking.bookingsaccepted:
-  title: Bookings accepted
-  route_name: entity.koba_booking_booking.accepted
+  title: Accepted bookings
+  route_name: koba_booking.accepted
   base_route: koba_booking.bookingrequests
   weight: 1
 
-koba_booking.bookingsdenied:
-  title: Bookings denied
-  route_name: entity.koba_booking_booking.denied
+koba_booking.bookingsrefused:
+  title: Refused bookings
+  route_name: koba_booking.refused
   base_route: koba_booking.bookingrequests
   weight: 2
 
-koba_booking.bookingshistory:
-  title: Bookings history
-  route_name: entity.koba_booking_booking.history
+koba_booking.bookingscancelled:
+  title: Cancelled bookings
+  route_name: koba_booking.cancelled
   base_route: koba_booking.bookingrequests
   weight: 3
 
-dokk_resource.pending:
+koba_booking.pending:
   title: Bookings pending
   route_name: koba_booking.pending
   base_route: koba_booking.bookingrequests
@@ -36,6 +36,12 @@ koba_booking.bookingsettings:
   route_name: koba_booking.booking_settings
   base_route: koba_booking.bookingrequests
   weight: 5
+
+koba_booking.bookingmails:
+  title: Messages
+  route_name: koba_booking.booking_messages
+  base_route: koba_booking.bookingrequests
+  weight: 6
 
 # Entity related local tasks
 booking.view:

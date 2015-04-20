@@ -2,13 +2,23 @@ koba_booking:
   api_key: 1234567890
   created_booking_message: 'Your booking has been registered and is now pending. All bookings need to be confirmed by a system administrator. Your will receive an email when your booking has been accepted.'
   planning_state: 'first half year open'
+  search_phase: FALSE
   last_booking_date: '1435615200'
+koba_email:
   email_accepted_title: 'Your booking request has been accepted'
   email_accepted_body: 'Your booking has now been accepted.'
   email_pending_title: 'Your booking has been registered'
   email_pending_body: 'Your booking has been registered and is now pending. All bookings need to be confirmed by a system administrator. Your will receive another email when your booking has been accepted.'
-  email_denied_title: 'Your booking request has been denied'
-  email_denied_body: 'Your booking request has been denied, this is most likely caused by overlapping bookings. Other reasons for denying a booking request can be found in the booking guidelines.'
+  email_rejected_title: 'Your booking request has been rejected'
+  email_rejected_body: 'Your booking request has been rejected, this is most likely caused by overlapping bookings. Other reasons for denying a booking request can be found in the booking guidelines.'
   email_cancelled_title: 'Your booking has been cancelled'
   email_cancelled_body: 'A cancel request has been received and a booking in your name has been removed.'
-
+koba_email_admin:
+  email_admin_accepted_title: 'Your booking request has been accepted'
+  email_admin_accepted_body: 'Your booking has now been accepted.'
+  email_admin_pending_title: 'Your booking has been registered'
+  email_admin_pending_body: 'Your booking has been registered and is now pending. All bookings need to be confirmed by a system administrator. Your will receive another email when your booking has been accepted.'
+  email_admin_rejected_title: 'Your booking request has been rejected'
+  email_admin_rejected_body: 'Your booking request has been rejected, this is most likely caused by overlapping bookings. Other reasons for denying a booking request can be found in the booking guidelines.'
+  email_admin_cancelled_title: 'Your booking has been cancelled'
+  email_admin_cancelled_body: 'A cancel request has been received and a booking in your name has been removed.'

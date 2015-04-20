@@ -15,12 +15,12 @@ use Drupal\Core\Url;
  * @package Drupal\koba_booking\Form
  * @ingroup koba_booking
  */
-class AdminRequestListForm extends FormBase {
+class AdminAcceptedListForm extends FormBase {
   /**
    * {@inheritdoc}.
    */
   public function getFormId() {
-    return 'koba_booking_request_list';
+    return 'koba_booking_accepted_list';
   }
 
   /**
@@ -28,7 +28,7 @@ class AdminRequestListForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     // Get fields related to the booking entity..
-    // @todo - Why the required field id input. Whichever field inputted the ouput seems to be the the same.
+    // @todo - Why the required field id input. Whichever field inputted the output seems to be the the same.
     $field_definitions = \Drupal::entityManager()->getFieldDefinitions('koba_booking_booking', 'booking_resource');
 
     // Set search period notice.
@@ -40,7 +40,7 @@ class AdminRequestListForm extends FormBase {
 
     // Fetch all entities.
     $query = \Drupal::entityQuery('koba_booking_booking')
-      ->condition('booking_status', 'request', '=');
+      ->condition('booking_status', 'accepted', '=');
       $entities = $query->execute();
 
     // Create the filter group, and filter input fields.
@@ -60,6 +60,7 @@ class AdminRequestListForm extends FormBase {
       '#weight' => 1,
     );
 
+    // Using autocomplete see KobaAutoCompleteController.
     $form['filters']['title'] = array(
       '#type' => 'textfield',
       '#title' => t('Title'),
@@ -128,7 +129,6 @@ class AdminRequestListForm extends FormBase {
         'specifier' => 'booking_resource'
       ),
       'name' => t('Name'),
-      'submitted' => t('Submitted'),
       'date' => t('Date'),
       'time' => t('Time'),
       'operations' => t('Operations')
@@ -142,8 +142,6 @@ class AdminRequestListForm extends FormBase {
       '#weight' => '2',
     );
 
-    $booking_time = array();
-
     // List items.
     foreach ($entities as $id) {
       $booking = entity_load('koba_booking_booking', $id);
@@ -151,10 +149,6 @@ class AdminRequestListForm extends FormBase {
       $accept_url = Url::fromRoute('koba_booking.action_accept', array('koba_booking_booking' => $id));
       $refuse_url = Url::fromRoute('koba_booking.action_refuse', array('koba_booking_booking' => $id));
       $cancel_url = Url::fromRoute('koba_booking.action_cancel', array('koba_booking_booking' => $id));
-
-      // Save booking times for overlapping check later.
-      $booking_time[$id]['from'] = $booking->booking_from_date->value;
-      $booking_time[$id]['to'] = $booking->booking_to_date->value;
 
       // Some table columns containing raw markup.
       $form['koba_pending_table'][$id]['title'] = array(
@@ -166,14 +160,11 @@ class AdminRequestListForm extends FormBase {
       $form['koba_pending_table'][$id]['name'] = array(
         '#markup' => $booking->booking_name->value,
       );
-      $form['koba_pending_table'][$id]['submitted'] = array(
-        '#markup' => date('d-m-Y - H:i', $booking->created->value),
-      );
       $form['koba_pending_table'][$id]['date'] = array(
         '#markup' => date('d/m/Y', $booking->booking_from_date->value),
       );
       $form['koba_pending_table'][$id]['time'] = array(
-        '#markup' => date('H:i', $booking->booking_from_date->value) . ' - ' . date('H:i', $booking->booking_to_date->value),
+        '#markup' => date('H:i', $booking->booking_from_date->value) . ' - ' .date('H:i', $booking->booking_to_date->value),
       );
       $form['koba_pending_table'][$id]['operations'] = array(
         '#type' => 'operations',
@@ -195,16 +186,6 @@ class AdminRequestListForm extends FormBase {
         'title' => t('Cancel'),
         'url' => $cancel_url,
       );
-    }
-
-    // Check for overlapping events.
-    $overlaps = checkOverlap($booking_time);
-
-    // Apply background color on overlapping events.
-    foreach ($entities as $id) {
-      if (array_key_exists($id, $overlaps)) {
-        $form['koba_pending_table'][$id]['#attributes']['style'] = 'background:#FACCCC';
-      }
     }
 
     return $form;
@@ -230,7 +211,7 @@ class AdminRequestListForm extends FormBase {
 
 
   /**
-   * Form submission handler for the 'preview' action.
+   * Form submission handler for the 'filter' action.
    *
    * @param $form
    *   An associative array containing the structure of the form.
@@ -240,46 +221,4 @@ class AdminRequestListForm extends FormBase {
   public function filter(array $form, FormStateInterface $form_state) {
     drupal_set_message('Working');
   }
-}
-
-
-/**
- * Checks for overlaps between from and to datestamps.
- *
- * @param
- *  An array of from and to times for bookings.
- *
- * @return array
- */
-function checkOverlap($booking_time) {
-
-  $overlaps = array();
-
-  // Foreach booking.
-  foreach ($booking_time as $check_id => $actual_booking) {
-    $start = $actual_booking['from'];
-    $end = $actual_booking['to'];
-
-    // Compare the actual booking to each other booking in the full array of bookings,
-    foreach ($booking_time as $booked_id => $booked) {
-
-      // Is the bookings start time between another bookings start or end time.
-      if($booked['from'] <= $start && $start < $booked['to']) {
-        // Don't register an overlap if the id is the same.
-        if ($booked_id <> $check_id) {
-          $overlaps[$check_id] = TRUE;
-        }
-      }
-
-      // Is the bookings end time between another bookings start or end time.
-      if($booked['from'] < $end && $end <= $booked['to']) {
-        // Don't register an overlap if the id is the same.
-        if ($booked_id <> $check_id) {
-          $overlaps[$check_id] = TRUE;
-        }
-      }
-    }
-
-  }
-  return $overlaps;
 }

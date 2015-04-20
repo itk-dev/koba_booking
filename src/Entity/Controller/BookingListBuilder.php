@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\Core\Url;
 
+
 /**
  * Provides a list controller for koba_booking entity.
  *
@@ -27,6 +28,11 @@ class BookingListBuilder extends EntityListBuilder {
    */
   public function render() {
     $build['table'] = parent::render();
+    $config = \Drupal::config('koba_booking.settings');
+    if ($config->get('koba_booking.search_phase') > 0) {
+      $search_period_message = t('Notice! Search period is active, remember to deactivate the setting when planning starts');
+      drupal_set_message($search_period_message, $type = 'warning');
+    }
     return $build;
   }
 
@@ -39,11 +45,11 @@ class BookingListBuilder extends EntityListBuilder {
    * and inserts the 'edit' and 'delete' links as defined for the entity type.
    */
   public function buildHeader() {
-    $header['booking_short_description'] = $this->t('Description');
-    $header['booking_name'] = $this->t('Name');
-    $header['booking_email'] = $this->t('Email');
+    $header['name'] = $this->t('Title');
     $header['booking_resource'] = $this->t('Resource');
-    $header['booking_status'] = $this->t('Booking Status');
+    $header['booking_name'] = $this->t('Name');
+    $header['booking_date'] = $this->t('Date');
+    $header['booking_time'] = $this->t('Time');
     return $header + parent::buildHeader();
   }
 
@@ -55,38 +61,20 @@ class BookingListBuilder extends EntityListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     // Show bookings depending on path.
-    $current_uri = \Drupal::request()->getRequestUri();
     $edit_url = Url::fromRoute('entity.koba_booking_booking.edit_form', array('koba_booking_booking' => $entity->id()));
 
-    switch ($current_uri) {
-      case '/admin/booking/requests':
-        if ($entity->booking_status->value != 'request') {
-          return;
-        }
-        break;
-      case '/admin/booking/accepted':
-        if ($entity->booking_status->value != 'accepted') {
-          return;
-        }
-        break;
-      case '/admin/booking/denied':
-        if ($entity->booking_status->value != 'denied') {
-          return;
-        }
-        break;
-      case '/admin/booking/history':
-        if ($entity->booking_status->value != 'surpassed') {
-          return;
-        }
-        break;
+    // Only print bookings in pending states.
+    if ($entity->booking_status->value != 'pending') {
+      return;
     }
 
-    /* @var $entity \Drupal\dokk_resource\Entity\Booking */
-    $row['booking_short_description'] = \Drupal::l($entity->booking_short_description->value, $edit_url);
-    $row['booking_name'] = $entity->booking_name->value;
-    $row['booking_email'] = $entity->booking_email->value;
+    /* @var $entity \Drupal\koba_booking\Entity\Booking */
+    $row['name'] = \Drupal::l($entity->name->value, $edit_url);
     $row['booking_resource'] = $entity->booking_resource->value;
-    $row['booking_status'] = $entity->booking_status->value;
+    $row['booking_name'] = $entity->booking_name->value;
+    $row['booking_date'] = date('d/m/Y', $entity->booking_from_date->value);
+    $row['booking_time'] = date('H:i', $entity->booking_from_date->value) . '-' . date('H:i', $entity->booking_to_date->value);
+
     return $row + parent::buildRow($entity);
   }
 }
