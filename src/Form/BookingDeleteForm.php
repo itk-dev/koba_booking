@@ -55,7 +55,6 @@ class BookingDeleteForm extends ContentEntityConfirmFormBase {
         '@type' => $this->entity->bundle(),
         '%title' => $this->entity->label(),
       ));
-    $form_state->setRedirect('koba_booking.bookingrequests');
+    $form_state->setRedirect('koba_booking.requests');
   }
-
 }

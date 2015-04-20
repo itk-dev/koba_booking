@@ -28,11 +28,59 @@ function koba_booking_theme() {
   );
 }
 
-
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function koba_booking_form_koba_booking_booking_add_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  $form['from_date']['widget']['0']['value']['#attributes']['class']['0'] = 'js-datepicker';
-  $form['to_date']['widget']['0']['value']['#attributes']['class']['0'] = 'js-datepicker';
+function koba_booking_form_koba_booking_booking_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
+  // Switch between add or edit action.
+  if ($form['#action'] == '/booking/add') {
+    $form['booking_status']['#access'] = FALSE;
+    $form['booking_from_date']['widget']['0']['value']['#default_value'] = date('d/m/Y', time());
+  }
+  else {
+    // Set date format from timestamp.
+    $from_stamp = $form['booking_from_date']['widget']['0']['value']['#default_value'];
+    $to_stamp = $form['booking_to_date']['widget']['0']['value']['#default_value'];
+
+    // Set the default date value in the the edit form.
+    $form['booking_from_date']['widget']['0']['value']['#default_value'] = date('d/m/Y', $from_stamp);
+  }
+
+  // Enable jquery calendar for date fields.
+  $form['booking_from_date']['widget']['0']['value']['#attributes']['class']['0'] = 'js-datepicker';
+  $form['booking_from_date']['widget']['0']['value']['#title'] = t('Date');
+  $form['booking_from_date']['widget']['0']['value']['#attributes']['readonly'] = 'readonly';
+
+  // Disable the two datefield (The actual date value saved in the DB is generated in the form submit handler).
+  $form['booking_to_date']['#access'] = FALSE;
+
+
+  // Add custom fields for to and from time based on from and to timestamps.
+  // We want the database to save two timestamps (From and two), but these timestamps should be generated from three input fields (Date, toTime and fromTime).
+  $form['booking_from_time'] = array(
+    '#type' => 'textfield',
+    '#title' => t('From'),
+    '#default_value' => ($form['#action'] == '/booking/add') ? '06:00' : date('H:i', $from_stamp),
+    '#size' => 60,
+    '#maxlength' => 128,
+    '#attributes' => array(
+      'class' => array('js-timepicker'),
+      'readonly' => 'readonly'
+    ),
+  );
+
+  $form['booking_to_time'] = array(
+    '#type' => 'textfield',
+    '#title' => t('To'),
+    '#default_value' => ($form['#action'] == '/booking/add') ? '06:00' : date('H:i', $to_stamp),
+    '#size' => 60,
+    '#maxlength' => 128,
+    '#attributes' => array(
+      'class' => array('js-timepicker'),
+      'readonly' => 'readonly'
+    ),
+  );
 }
+
+

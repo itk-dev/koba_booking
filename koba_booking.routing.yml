@@ -3,41 +3,41 @@ koba_booking.requests:
   path: '/admin/booking/requests'
   defaults:
     _form: '\Drupal\koba_booking\Form\AdminRequestListForm'
-    _title: 'Booking Requests List'
+    _title: 'New bookings list'
   requirements:
     _permission: 'administer booking settings'
 
-entity.koba_booking_booking.accepted:
+koba_booking.accepted:
   path: '/admin/booking/accepted'
   defaults:
-    _entity_list: 'koba_booking_booking'
-    _title: 'Booking List'
+    _form: '\Drupal\koba_booking\Form\AdminAcceptedListForm'
+    _title: 'Bookings accepted list'
   requirements:
     _permission: 'administer booking settings'
 
-entity.koba_booking_booking.denied:
-  path: '/admin/booking/denied'
+koba_booking.refused:
+  path: '/admin/booking/refused'
   defaults:
-    _entity_list: 'koba_booking_booking'
-    _title: 'Booking List'
+    _form: '\Drupal\koba_booking\Form\AdminRefusedListForm'
+    _title: 'Bookings refused list'
   requirements:
     _permission: 'administer booking settings'
 
-entity.koba_booking_booking.history:
-  path: '/admin/booking/history'
+koba_booking.cancelled:
+  path: '/admin/booking/cancelled'
   defaults:
-    _entity_list: 'koba_booking_booking'
-    _title: 'Booking List'
+    _form: '\Drupal\koba_booking\Form\AdminCancelledListForm'
+    _title: 'Bookings cancelled list'
   requirements:
     _permission: 'administer booking settings'
 
 koba_booking.pending:
   path: '/admin/booking/pending'
   defaults:
-    _form: '\Drupal\koba_booking\Form\AdminPendingListForm'
-    _title: 'Booking Pending List'
+    _entity_list: 'koba_booking_booking'
+    _title: 'Bookings pending list'
   requirements:
-    _permission: 'administer booking settings'
+    _permission: 'view pending bookings list'
 
 koba_booking.booking_settings:
   path: '/admin/booking/settings'
@@ -47,6 +47,13 @@ koba_booking.booking_settings:
   requirements:
     _permission: 'administer booking settings'
 
+koba_booking.booking_messages:
+  path: '/admin/booking/messsages'
+  defaults:
+    _form: '\Drupal\koba_booking\Form\BookingMessagesForm'
+    _title: 'Booking Messages'
+  requirements:
+    _permission: 'administer booking settings'
 
 # --- Entity related routing --- #
 entity.koba_booking_booking.canonical:
@@ -106,3 +113,34 @@ koba_booking.autocomplete:
     _controller: '\Drupal\koba_booking\Controller\KobaAutocompleteController::autocomplete'
   requirements:
     _permission: 'access content'
+
+# --- Actions --- #
+koba_booking.action_accept:
+  path: '/booking/accept/{koba_booking_booking}'
+  defaults:
+    _controller: '\Drupal\koba_booking\Controller\KobaBookingController::actionAccept'
+    _title: 'Cancel action'
+  requirements:
+    _permission: 'edit booking entity'
+  options:
+    _admin_route: TRUE
+
+koba_booking.action_refuse:
+  path: '/booking/refuse/{koba_booking_booking}'
+  defaults:
+    _controller: '\Drupal\koba_booking\Controller\KobaBookingController::actionRefuse'
+    _title: 'Cancel action'
+  requirements:
+    _permission: 'edit booking entity'
+  options:
+    _admin_route: TRUE
+
+koba_booking.action_cancel:
+  path: '/booking/cancel/{koba_booking_booking}'
+  defaults:
+    _controller: '\Drupal\koba_booking\Controller\KobaBookingController::actionCancel'
+    _title: 'Cancel action'
+  requirements:
+    _permission: 'edit booking entity'
+  options:
+    _admin_route: TRUE

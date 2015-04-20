@@ -10,3 +10,5 @@
   title: Administer settings
 'configure booking api settings':
   title: Configure booking API settings
+'view pending bookings list':
+  title: View pending bookings list
