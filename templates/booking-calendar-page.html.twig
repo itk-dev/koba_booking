@@ -1,0 +1,29 @@
+{#
+/**
+ * @file
+ * Theme implementation for booking calendar.
+ *
+ * Available variables:
+ *  - title
+ *  - top_img
+ *  - manchet
+ *  - submit_header : path
+ */
+#}
+
+{% include "@koba_booking/booking-top.html.twig" %}
+
+<div ng-app="kobaApp">
+  <label>Name:</label>
+  <input type="text" ng-model="yourName" placeholder="Enter a name here">
+  <hr>
+  <h1>Hello [[yourName]]!</h1>
+  <a href="{{ submit_header }}">Submit</a>
+</div>
+
+
+{% include "@koba_booking/booking-datepicker.html.twig" %}
+
+{% include "@koba_booking/booking-resourcepicker.html.twig" %}
+
+{% include "@koba_booking/booking-timepicker.html.twig" %}

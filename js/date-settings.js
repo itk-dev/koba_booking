@@ -7,7 +7,7 @@
     $(".js-datepicker").datetimepicker({
       format: 'd/m/Y',
       defaultDate:new Date(),
-      timepicker: false,
+      timepicker: false
     });
 
     $(".js-timepicker").datetimepicker({

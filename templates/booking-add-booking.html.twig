@@ -1,0 +1,32 @@
+{#
+/**
+ * @file
+ * Theme implementation for Booking add form.
+ *
+ * Available variables:
+ *  - form : Booking form
+ *  - user : Active user
+ *  - title
+ *  - top_img
+ *  - manchet
+ */
+#}
+
+{% include "@koba_booking/booking-top.html.twig" %}
+
+{{ form.name }}
+{{ form.booking_name }}
+{{ form.booking_email }}
+{{ form.booking_phone }}
+{{ form.booking_resource }}
+{{ form.booking_from_date }}
+{{ form.booking_from_time }}
+{{ form.booking_to_time }}
+{{ form.booking_usage }}
+{{ form.form_build_id }}
+{{ form.form_token }}
+{{ form.form_id }}
+{{ form.booking_message }}
+{{ form.actions }}
+
+{{ dump() }}

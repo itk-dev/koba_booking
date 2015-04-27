@@ -8,6 +8,8 @@ namespace Drupal\koba_booking\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\file\Entity\File;
+
 
 /**
  * Class ContentEntityExampleSettingsForm.
@@ -54,26 +56,12 @@ class BookingSettingsForm extends FormBase {
       }
     }
 
-    // Admin settings tab.
-    $form['admin_settings'] = array(
-      '#title' => $this->t('Admin settings'),
-      '#type' => 'details',
-      '#weight' => '1',
-      '#access' => $account->hasPermission('configure booking api settings'),
-      '#open' => TRUE,
-    );
-
-    $form['admin_settings']['api_key'] = array(
-      '#type' => 'textfield',
-      '#title' => $this->t('Set API Key'),
-      '#default_value' => $config->get('koba_booking.api_key'),
-    );
-
+    // Booking status.
     $form['booking_status'] = array(
       '#prefix' => '<div class="messages messages--status">Bookings possible until ' . date('d/m/Y', $config->get('koba_booking.last_booking_date')) . '</div>',
       '#title' => $this->t('Booking status'),
       '#type' => 'details',
-      '#weight' => '0',
+      '#weight' => '1',
       '#open' => TRUE,
     );
 
@@ -98,10 +86,11 @@ class BookingSettingsForm extends FormBase {
       '#description' => t('Users can book until end of December'),
     );
 
+    // Search period.
     $form['search_period_wrapper'] = array(
       '#title' => $this->t('Search period'),
       '#type' => 'details',
-      '#weight' => '0',
+      '#weight' => '2',
       '#open' => TRUE,
     );
 
@@ -112,10 +101,77 @@ class BookingSettingsForm extends FormBase {
       '#description' => t('When the search period is active, the users will be informed of their booking state after the planning phase, if the bookings are in the next half year period.'),
     );
 
+    // Add booking wrapper.
+    $form['create_booking_wrapper'] = array(
+      '#title' => $this->t('Create booking pages'),
+      '#type' => 'details',
+      '#weight' => '3',
+      '#open' => TRUE,
+    );
+
+    $form['create_booking_wrapper']['create_booking_title'] = array(
+      '#title' => $this->t('Pages title'),
+      '#type' => 'textfield',
+      '#default_value' => $config->get('koba_booking.create_booking_title'),
+      '#weight' => '1',
+      '#open' => TRUE,
+    );
+
+    $form['create_booking_wrapper']['create_booking_description'] = array(
+      '#title' => $this->t('Pages description'),
+      '#type' => 'textfield',
+      '#default_value' => $config->get('koba_booking.create_booking_description'),
+      '#weight' => '2',
+      '#open' => TRUE,
+    );
+
+    $fids = array();
+    if (!empty($input)) {
+      if (!empty($input['create_booking_top_image'])) {
+        $fids[0] = $form_state->getValue('create_booking_top_image');
+      }
+    }
+    else {
+      $fids[0] = $config->get('koba_booking.create_booking_top_image', '');
+    }
+
+    $form['create_booking_wrapper']['create_booking_top_image'] = array(
+      '#title' => $this->t('Top image'),
+      '#type' => 'managed_file',
+      '#default_value' => ($fids[0]) ? $fids : '',
+      '#upload_location' => 'public://',
+      '#weight' => '3',
+      '#open' => TRUE,
+      '#description' => t('The image used at the top of the create booking pages.'),
+    );
+
+
+    // Admin settings tab.
+    $form['admin_settings'] = array(
+      '#title' => $this->t('Admin settings'),
+      '#type' => 'details',
+      '#weight' => '4',
+      '#access' => $account->hasPermission('configure booking api settings'),
+      '#open' => TRUE,
+    );
+
+    $form['admin_settings']['api_key'] = array(
+      '#type' => 'textfield',
+      '#title' => $this->t('Set API Key'),
+      '#default_value' => $config->get('koba_booking.api_key'),
+    );
+
+    $form['admin_settings']['add_booking_header'] = array(
+      '#type' => 'textfield',
+      '#title' => $this->t('Set add booking header'),
+      '#default_value' => $config->get('koba_booking.add_booking_header'),
+      '#description' => t('The header to use after date/time has been selected in booking add form.</br>Can be used to enable wayf.'),
+    );
+
     $form['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Save changes'),
-      '#weight' => '3',
+      '#weight' => '5',
     );
 
     return $form;
@@ -126,12 +182,50 @@ class BookingSettingsForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     drupal_set_message('Settings saved');
+
+    // Fetch the file id previously saved.
+    $config = $this->config('koba_booking.settings');
+    $old_fid = $config->get('koba_booking.create_booking_top_image', '');
+
+    // Load the file set in the form.
+    $form_fid = $form_state->getValue('create_booking_top_image')['0'];
+    $file = ($form_fid) ? File::load($form_fid) : FALSE;
+
+    // If a file is set.
+    if ($file) {
+      $fid = $file->id();
+      // Check if the file has changed.
+      if ($fid != $old_fid) {
+
+        // Remove old file.
+        if ($old_fid) {
+          removeFile($old_fid);
+        }
+
+        // Add file to file_usage table.
+        \Drupal::service('file.usage')->add($file, 'koba_booking', 'user', '1');
+      }
+    } else {
+
+      // If old file exists but no file set in form, remove old file.
+      if ($old_fid) {
+        removeFile($old_fid);
+      }
+    }
+
+    // Set the last possible date for booking.
     $last_booking_date = setLastBookingDate($form_state);
+    $image_id = $form_state->getValue('create_booking_top_image')['0'];
+
     $this->configFactory()->getEditable('koba_booking.settings')
+      ->set('koba_booking.create_booking_title', $form_state->getValue('create_booking_title'))
+      ->set('koba_booking.create_booking_description', $form_state->getValue('create_booking_description'))
+      ->set('koba_booking.create_booking_top_image', $image_id)
       ->set('koba_booking.planning_state', $form_state->getValue('half_year'))
       ->set('koba_booking.search_phase', $form_state->getValue('search_period'))
       ->set('koba_booking.last_booking_date', $last_booking_date)
       ->set('koba_booking.api_key', $form_state->getValue('api_key'))
+      ->set('koba_booking.add_booking_header', $form_state->getValue('add_booking_header'))
       ->save();
   }
 }
@@ -186,4 +280,18 @@ function getHalfYears() {
   }
 
   return $half_years;
+}
+
+
+/**
+ * Deletes a a file from file usage table.
+ *
+ * @param $fid
+ *  The file id of the file to delete.
+ *
+ */
+function removeFile($fid) {
+  // Load and delete old file.
+  $file = File::load($fid);
+  \Drupal::service('file.usage')->delete($file, 'koba_booking', 'user', '1', '1');
 }

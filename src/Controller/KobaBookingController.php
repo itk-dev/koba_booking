@@ -16,17 +16,28 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 class KobaBookingController extends ControllerBase  {
 
-  public function angular() {
+  public function calendarPage() {
 
     // Setup template for frontend.
     $build = array(
       '#type' => 'markup',
-      '#theme' => 'angular_test',
+      '#theme' => 'booking_calendar_page',
       '#attached' => array(
         'library' =>  array(
           'koba_booking/angular'
         ),
       ),
+    );
+
+    return $build;
+  }
+
+  public function receipt() {
+
+    // Setup template for frontend.
+    $build = array(
+      '#type' => 'markup',
+      '#theme' => 'booking_receipt',
     );
 
     return $build;

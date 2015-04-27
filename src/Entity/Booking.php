@@ -351,6 +351,54 @@ class Booking extends ContentEntityBase implements BookingInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
+    // Phone field.
+    $fields['booking_phone'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Phone number'))
+      ->setDescription(t('Booking phone number.'))
+      ->setSettings(array(
+        'default_value' => '',
+        'max_length' => 255,
+        'text_processing' => 0,
+      ))
+      ->setDisplayOptions('view', array(
+        'label' => 'above',
+        'type' => 'string',
+        'weight' => -5,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'string',
+        'weight' => -5,
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
+    // Usage field.
+    $fields['booking_usage'] = BaseFieldDefinition::create('list_string')
+      ->setLabel(t('Resource'))
+      ->setDescription(t('The resource to book.'))
+      ->setSettings(array(
+        'allowed_values' => array(
+          'lecture' => t('Lecture'),
+          'theater' => t('Theater'),
+          'debate' => t('Debate'),
+          'project_meeting' => t('Project meeting'),
+          'screening' => t('Screening'),
+          'it_intro' => t('IT-Introduction'),
+          'other' => t('Other (Use message field)'),
+        ),
+      ))
+      ->setDisplayOptions('view', array(
+        'label' => 'above',
+        'type' => 'string',
+        'weight' => -4,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'options_buttons',
+        'weight' => -4,
+      ))
+      ->setRequired(TRUE)
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
 
     // Resource/room field.
     $fields['booking_resource'] = BaseFieldDefinition::create('list_string')
@@ -424,6 +472,27 @@ class Booking extends ContentEntityBase implements BookingInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
+
+    // Message
+    $fields['booking_message'] = BaseFieldDefinition::create('string_long')
+      ->setLabel(t('Message'))
+      ->setDisplayOptions('form', array(
+        'type' => 'string_textarea',
+        'weight' => 0,
+        'settings' => array(
+          'rows' => 5,
+        ),
+      ))
+      ->setDisplayOptions('view', array(
+        'type' => 'string',
+        'weight' => 0,
+        'label' => 'above',
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
+
+
     //<--------------------------------------->
 
     // Name field for the booking.
@@ -432,8 +501,8 @@ class Booking extends ContentEntityBase implements BookingInterface {
     // Users with correct privileges can change the view and edit configuration.
 
     $fields['name'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Short description'))
-      ->setDescription(t('A description of the booking.'))
+      ->setLabel(t('Title'))
+      ->setDescription(t('A title for the booking.'))
       ->setSettings(array(
         'default_value' => '',
         'max_length' => 255,

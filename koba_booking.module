@@ -14,6 +14,8 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\file\Entity\File;
+use Drupal\Core\Config;
 
 
 /**
@@ -21,9 +23,16 @@ use Drupal\Core\Form\FormStateInterface;
  */
 function koba_booking_theme() {
   return array(
-    'angular_test' => array(
+    'booking_calendar_page' => array(
       'variables' => array(),
       'file' => 'koba_booking.pages.inc',
+    ),
+    'booking_receipt' => array(
+      'variables' => array(),
+      'file' => 'koba_booking.pages.inc',
+    ),
+    'booking_add_booking' => array(
+      'render element' => 'form',
     ),
   );
 }
@@ -35,10 +44,31 @@ function koba_booking_form_koba_booking_booking_form_alter(&$form, FormStateInte
 
   // Switch between add or edit action.
   if ($form['#action'] == '/booking/add') {
+
+    // Fetch module config settings.
+    $config = \Drupal::config('koba_booking.settings');
+
+    // Fetch header top file.
+    $top_image_id = $config->get('koba_booking.create_booking_top_image', '');
+    $file = ($top_image_id) ? File::load($top_image_id) : FALSE;
+
+    // @todo caching af image.
+    // Set variables
+    $form['variables']['title'] = $config->get('koba_booking.create_booking_title', '');
+    $form['variables']['top_img'] = ($file) ? $file->url() : '';
+    $form['variables']['manchet'] = $config->get('koba_booking.create_booking_description', '');
+
+    // Add template as prefix.
+    $form['#theme'] = array('booking_add_booking');
+
+
     $form['booking_status']['#access'] = FALSE;
+
+    // Set default value to now.
     $form['booking_from_date']['widget']['0']['value']['#default_value'] = date('d/m/Y', time());
   }
   else {
+
     // Set date format from timestamp.
     $from_stamp = $form['booking_from_date']['widget']['0']['value']['#default_value'];
     $to_stamp = $form['booking_to_date']['widget']['0']['value']['#default_value'];

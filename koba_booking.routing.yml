@@ -55,6 +55,7 @@ koba_booking.booking_messages:
   requirements:
     _permission: 'administer booking settings'
 
+
 # --- Entity related routing --- #
 entity.koba_booking_booking.canonical:
   path: '/booking/{koba_booking_booking}'
@@ -63,16 +64,6 @@ entity.koba_booking_booking.canonical:
     _title: 'Booking Content'
   requirements:
     _entity_access: 'koba_booking_booking.view'
-  options:
-    _admin_route: TRUE
-
-koba_booking.booking_add:
-  path: '/booking/add'
-  defaults:
-    _entity_form: koba_booking_booking.add
-    _title: 'Add Booking'
-  requirements:
-    _entity_create_access: 'koba_booking_booking'
   options:
     _admin_route: TRUE
 
@@ -97,12 +88,28 @@ entity.koba_booking_booking.delete_form:
     _admin_route: TRUE
 
 
-# --- Angular --- #
-koba_booking.angular_page:
-  path: '/my-angular'
+# --- Create booking routes --- #
+koba_booking.calendar_page:
+  path: '/booking/calendar'
   defaults:
-    _controller: '\Drupal\koba_booking\Controller\KobaBookingController::angular'
-    _title: 'Angular test'
+    _controller: '\Drupal\koba_booking\Controller\KobaBookingController::calendarPage'
+    _title: 'Add booking'
+  requirements:
+    _permission: 'access content'
+
+koba_booking.booking_add:
+  path: '/booking/add'
+  defaults:
+    _entity_form: koba_booking_booking.add
+    _title: 'Add Booking'
+  requirements:
+    _entity_create_access: 'koba_booking_booking'
+
+koba_booking.receipt:
+  path: '/booking/receipt/{hash}'
+  defaults:
+    _controller: '\Drupal\koba_booking\Controller\KobaBookingController::receipt'
+    _title: 'Booking receipt'
   requirements:
     _permission: 'access content'
 
@@ -113,6 +120,7 @@ koba_booking.autocomplete:
     _controller: '\Drupal\koba_booking\Controller\KobaAutocompleteController::autocomplete'
   requirements:
     _permission: 'access content'
+
 
 # --- Actions --- #
 koba_booking.action_accept:
