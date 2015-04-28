@@ -9,7 +9,8 @@
  *  - manchet
  */
 #}
-
-<img src="{{ top_img }}"/>
+{% if top_img %}
+  <img src="{{ top_img }}"/>
+{% endif %}
 <h1 class="title" id="page-title">{{ title }}</h1>
 <div>{{ manchet }}</div>
