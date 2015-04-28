@@ -11,19 +11,9 @@
  */
 #}
 
+
 {% include "@koba_booking/booking-top.html.twig" %}
 
-<div ng-app="kobaApp">
-  <label>Name:</label>
-  <input type="text" ng-model="yourName" placeholder="Enter a name here">
-  <hr>
-  <h1>Hello [[yourName]]!</h1>
-  <a href="{{ submit_header }}">Submit</a>
+<div data-ng-app="kobaApp">
+  <div data-ng-include="'/modules/koba_booking/app/pages/calendar/calendar.html'"></div>
 </div>
-
-
-{% include "@koba_booking/booking-datepicker.html.twig" %}
-
-{% include "@koba_booking/booking-resourcepicker.html.twig" %}
-
-{% include "@koba_booking/booking-timepicker.html.twig" %}

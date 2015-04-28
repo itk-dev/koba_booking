@@ -14,16 +14,19 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 /**
  * KobaBookingController.
  */
-class KobaBookingController extends ControllerBase  {
-
+class KobaBookingController extends ControllerBase {
+  /**
+   * @TODO: Add documentation.
+   *
+   * @return array
+   */
   public function calendarPage() {
-
     // Setup template for frontend.
     $build = array(
       '#type' => 'markup',
       '#theme' => 'booking_calendar_page',
       '#attached' => array(
-        'library' =>  array(
+        'library' => array(
           'koba_booking/angular'
         ),
       ),
@@ -32,8 +35,12 @@ class KobaBookingController extends ControllerBase  {
     return $build;
   }
 
+  /**
+   * @TODO: Add documentation.
+   *
+   * @return array
+   */
   public function receipt() {
-
     // Setup template for frontend.
     $build = array(
       '#type' => 'markup',
@@ -43,6 +50,12 @@ class KobaBookingController extends ControllerBase  {
     return $build;
   }
 
+  /**
+   * @TODO: Add documentation.
+   *
+   * @param BookingInterface $koba_booking_booking
+   * @param Request $request
+   */
   public function actionAccept(BookingInterface $koba_booking_booking = NULL, Request $request) {
     // Set redirect. (Original path.)
     $referer = $request->server->get('HTTP_REFERER');
@@ -56,6 +69,12 @@ class KobaBookingController extends ControllerBase  {
     return;
   }
 
+  /**
+   * @TODO: Add documentation.
+   *
+   * @param BookingInterface $koba_booking_booking
+   * @param Request $request
+   */
   public function actionRefuse(BookingInterface $koba_booking_booking = NULL, Request $request) {
     // Set redirect. (Original path.)
     $referer = $request->server->get('HTTP_REFERER');
@@ -69,6 +88,12 @@ class KobaBookingController extends ControllerBase  {
     return;
   }
 
+  /**
+   * @TODO: Add documentation.
+   *
+   * @param BookingInterface $koba_booking_booking
+   * @param Request $request
+   */
   public function actionCancel(BookingInterface $koba_booking_booking = NULL, Request $request) {
     // Set redirect. (Original path.)
     $referer = $request->server->get('HTTP_REFERER');

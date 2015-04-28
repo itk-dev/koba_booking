@@ -1,0 +1,16 @@
+<div data-ng-controller="CalendarController">
+  <div data-ng-click="pickDate = !pickDate">{{ t('Pick date') }}</div>
+  <div data-ng-model="selected.date" date-picker="" number-of-months="9" show-week-number="true" data-ng-if="pickDate"></div>
+  <h1>{{ t('Chosen date') }}: {{ selected.date | date}}</h1>
+  <input type="text" data-ng-model="selected.date">
+
+  <div data-ng-click="pickTime = !pickTime">{{ t('Pick time') }}</div>
+  <div data-ng-if="pickTime">
+    <div>
+      <input type="text" data-ng-model="selected.time.start" time-picker="">
+    </div>
+    <div>
+      <input type="text" data-ng-model="selected.time.end" time-picker="">
+    </div>
+  </div>
+</div>
