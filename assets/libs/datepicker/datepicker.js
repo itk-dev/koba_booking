@@ -10,7 +10,7 @@ angular.module('datePicker', [])
 .directive('datePicker', function() {
   return {
     restrict: 'A',
-    require: 'ngModel',
+    require: '^ngModel',
     scope: {
       "numberOfMonths": "=",
       "showWeekNumber": "="
@@ -21,9 +21,8 @@ angular.module('datePicker', [])
         numberOfMonths: scope.numberOfMonths ? scope.numberOfMonths : 1,
         showButtonPanel: false,
         onSelect: function() {
-          // Apply change to model.
           scope.$apply(function() {
-            ngModel.$setViewValue(el.datepicker('getDate'));
+            ngModel.$setViewValue(moment(el.datepicker('getDate')));
           });
         },
         showWeek: scope.showWeekNumber ? scope.showWeekNumber : false,
@@ -36,7 +35,7 @@ angular.module('datePicker', [])
 
       // update the datepicker whenever the value on the scope changes
       ngModel.$render = function() {
-        el.datepicker('setDate', ngModel.$modelValue);
+        el.datepicker('setDate', moment(ngModel.$modelValue).toDate());
         el.change();
       };
     }

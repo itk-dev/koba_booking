@@ -1,0 +1,36 @@
+<style>
+.calendar {
+  border: 1px solid black;
+}
+
+.calendar-time {
+  display: inline-block;
+  width: 100px;
+}
+
+.calendar-description {
+  display: inline-block;
+}
+
+.is-disabled {
+  background-color: darkgray;
+}
+
+.is-selected {
+  background-color: green;
+}
+
+.is-free {
+  background-color: white;
+}
+
+.is-booked {
+  background-color: red;
+}
+</style>
+<div class="calendar" data-ng-repeat="timeInterval in timeIntervals">
+  <div class="calendar-row" data-ng-class="{'is-disabled': timeInterval.disabled}">
+    <div class="calendar-time"><span data-ng-if="!timeInterval.halfhour">{{ timeInterval.time | date:'HH:mm' }}</span></div>
+    <div class="calendar-description" data-ng-if="!timeInterval.disabled" data-ng-class="{'is-selected': !timeInterval.disabled && timeInterval.selected, 'is-free': !timeInterval.disabled && timeInterval.free && !timeInterval.selected, 'is-booked': !timeInterval.disabled && !timeInterval.free}">Content</div>
+  </div>
+</div>
