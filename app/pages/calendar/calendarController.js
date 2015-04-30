@@ -1,5 +1,5 @@
-angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
-  function ($scope, $window) {
+angular.module('kobaApp').controller("CalendarController", ['$scope', '$window', 'kobaFactory',
+  function ($scope, $window, kobaFactory) {
     // Open up for translations.
     $scope.t = function(str) {
       return $window.Drupal.t(str);
@@ -11,7 +11,8 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       "time": {
         "start": (new Date(0)).setHours(7),
         "end": (new Date(0)).setHours(8)
-      }
+      },
+      "resource": null
     };
 
     $scope.interestPeriod = {
@@ -22,6 +23,21 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       [moment().startOf('day').add(5, 'hours'), moment().startOf('day').add(7, 'hours')],
       [moment().startOf('day').add(19, 'hours'), moment().startOf('day').add(21, 'hours')]
     ];
+
+    $scope.resources = [];
+    kobaFactory.getResources().then(
+      function success(data) {
+        $scope.resources = data;
+      },
+      function error(error) {
+        // @TODO: Report error properly.
+        console.error(error);
+      }
+    );
+
+    $scope.setResource = function setResource(resource) {
+      $scope.selected.resource = resource;
+    };
 
     /**
      * Get selected date.
@@ -64,8 +80,16 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
     $scope.$watch('selected.time.start', function(val) {
       if (!val) return;
 
-      if ($scope.selected.time.end < $scope.selected.time.start) {
+      if ($scope.selected.time.end <= $scope.selected.time.start) {
         $scope.selected.time.end = new Date($scope.selected.time.start.getTime() + 30 * 60 * 1000);
+      }
+    });
+
+    $scope.$watch('selected.time.end', function(val) {
+      if (!val) return;
+
+      if ($scope.selected.time.end <= $scope.selected.time.start) {
+        $scope.selected.time.start = new Date($scope.selected.time.end.getTime() - 30 * 60 * 1000);
       }
     })
   }

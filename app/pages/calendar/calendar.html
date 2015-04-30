@@ -13,6 +13,10 @@
     <timepicker data-ng-model="selected.time.end" hour-step="1" minute-step="30" show-meridian="ismeridian"></timepicker>
   </div>
 
+  <div class="resources">
+    <div data-ng-repeat="resource in resources" data-ng-click="setResource(resource)">{{resource.name}}</div>
+  </div>
+
   <!-- Calendar for chosen date -->
-  <booking-calendar selected-date="selected.date" selected-start="selected.time.start" selected-end="selected.time.end" interest-period="interestPeriod" disabled="disabled"></booking-calendar>
+  <booking-calendar selected-date="selected.date" selected-resource="selected.resource" selected-start="selected.time.start" selected-end="selected.time.end" interest-period="interestPeriod" disabled="disabled"></booking-calendar>
 </div>

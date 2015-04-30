@@ -1,5 +1,6 @@
 koba_booking:
   api_key: 1234567890
+  path: 'http://192.168.50.21'
   add_booking_header: booking/add
   created_booking_message: 'Your booking has been registered and is now pending. All bookings need to be confirmed by a system administrator. Your will receive an email when your booking has been accepted.'
   planning_state: 'first half year open'

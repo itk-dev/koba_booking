@@ -161,6 +161,12 @@ class BookingSettingsForm extends FormBase {
       '#default_value' => $config->get('koba_booking.api_key'),
     );
 
+    $form['admin_settings']['path'] = array(
+      '#type' => 'textfield',
+      '#title' => $this->t('Set the path to KOBA'),
+      '#default_value' => $config->get('koba_booking.path'),
+    );
+
     $form['admin_settings']['add_booking_header'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Set add booking header'),
@@ -188,7 +194,7 @@ class BookingSettingsForm extends FormBase {
     $old_fid = $config->get('koba_booking.create_booking_top_image', '');
 
     // Load the file set in the form.
-    $form_fid = $form_state->getValue('create_booking_top_image')['0'];
+    $form_fid = $form_state->getValue('create_booking_top_image')[0];
     $file = ($form_fid) ? File::load($form_fid) : FALSE;
 
     // If a file is set.
@@ -215,7 +221,7 @@ class BookingSettingsForm extends FormBase {
 
     // Set the last possible date for booking.
     $last_booking_date = setLastBookingDate($form_state);
-    $image_id = $form_state->getValue('create_booking_top_image')['0'];
+    $image_id = $form_state->getValue('create_booking_top_image')[0];
 
     $this->configFactory()->getEditable('koba_booking.settings')
       ->set('koba_booking.create_booking_title', $form_state->getValue('create_booking_title'))
@@ -225,6 +231,7 @@ class BookingSettingsForm extends FormBase {
       ->set('koba_booking.search_phase', $form_state->getValue('search_period'))
       ->set('koba_booking.last_booking_date', $last_booking_date)
       ->set('koba_booking.api_key', $form_state->getValue('api_key'))
+      ->set('koba_booking.path', $form_state->getValue('path'))
       ->set('koba_booking.add_booking_header', $form_state->getValue('add_booking_header'))
       ->save();
   }

@@ -15,6 +15,14 @@ koba_booking.api.resource:
     _permission: 'access content'
     _content_type_format: text/html
 
+koba_booking.api.resources:
+  path: '/admin/booking/api/resources'
+  defaults:
+    _controller: '\Drupal\koba_booking\Controller\KobaBookingApiController::resources'
+  requirements:
+    _permission: 'access content'
+    _content_type_format: text/html
+
 koba_booking.accepted:
   path: '/admin/booking/accepted'
   defaults:
