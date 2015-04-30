@@ -2,6 +2,8 @@ koba_booking:
   api_key: 1234567890
   add_booking_header: booking/add
   created_booking_message: 'Your booking has been registered and is now pending. All bookings need to be confirmed by a system administrator. Your will receive an email when your booking has been accepted.'
+  why_email: 'We need your email for confirming bookings and contact.'
+  why_title: 'We need a title for your booking to show next to the room on location.'
   planning_state: 'first half year open'
   search_phase: FALSE
   last_booking_date: '1435615200'

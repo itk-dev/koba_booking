@@ -32,6 +32,9 @@ class KobaBookingController extends ControllerBase  {
     return $build;
   }
 
+  /**
+   * Booking receipt page.
+   */
   public function receipt() {
 
     // Setup template for frontend.
@@ -43,7 +46,15 @@ class KobaBookingController extends ControllerBase  {
     return $build;
   }
 
-  public function actionAccept(BookingInterface $koba_booking_booking = NULL, Request $request) {
+  /**
+   * Accept action for admin list.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request for this action.
+   * @param \Drupal\koba_booking\BookingInterface $koba_booking_booking
+   *   The booking to perform the action on.
+   */
+  public function actionAccept(Request $request, BookingInterface $koba_booking_booking = NULL) {
     // Set redirect. (Original path.)
     $referer = $request->server->get('HTTP_REFERER');
     $response = new RedirectResponse($referer);
@@ -56,7 +67,15 @@ class KobaBookingController extends ControllerBase  {
     return;
   }
 
-  public function actionRefuse(BookingInterface $koba_booking_booking = NULL, Request $request) {
+  /**
+   * Refuse action for admin list.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request for this action.
+   * @param \Drupal\koba_booking\BookingInterface $koba_booking_booking
+   *   The booking to perform the action on.
+   */
+  public function actionRefuse(Request $request, BookingInterface $koba_booking_booking = NULL) {
     // Set redirect. (Original path.)
     $referer = $request->server->get('HTTP_REFERER');
     $response = new RedirectResponse($referer);
@@ -69,7 +88,15 @@ class KobaBookingController extends ControllerBase  {
     return;
   }
 
-  public function actionCancel(BookingInterface $koba_booking_booking = NULL, Request $request) {
+  /**
+   * Cancel action for admin list.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request for this action.
+   * @param \Drupal\koba_booking\BookingInterface $koba_booking_booking
+   *   The booking to perform the action on.
+   */
+  public function actionCancel(Request $request, BookingInterface $koba_booking_booking = NULL) {
     // Set redirect. (Original path.)
     $referer = $request->server->get('HTTP_REFERER');
     $response = new RedirectResponse($referer);

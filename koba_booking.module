@@ -49,9 +49,11 @@ function koba_booking_form_koba_booking_booking_form_alter(&$form, FormStateInte
     // Fetch module config settings.
     $config = \Drupal::config('koba_booking.settings');
 
+
     // Fetch header top file.
     $top_image_id = $config->get('koba_booking.create_booking_top_image', '');
     $file = ($top_image_id) ? File::load($top_image_id) : FALSE;
+
 
     // @todo caching af image.
     // Set variables
@@ -59,12 +61,28 @@ function koba_booking_form_koba_booking_booking_form_alter(&$form, FormStateInte
     $form['variables']['top_img'] = ($file) ? $file->url() : '';
     $form['variables']['manchet'] = $config->get('koba_booking.create_booking_description', '');
 
-    // Add template as prefix.
-    $form['#theme'] = array('booking_add_booking');
 
     // Change field descriptions.
-    $form['booking_email']['widget']['0']['value']['#description'] = '<div href="#" class="booking--description">' . t('Why do we need your email?') . '</div>';
-    $form['name']['widget']['0']['value']['#description'] = '<div class="booking--description">' . t('Why do we need a title?') . '</div>';
+    $form['booking_email']['widget']['0']['value']['#description'] = '<div class="booking--description-link" data-ng-click="showEmailDescription = !showEmailDescription">' . t('Why do we need your email?') . '</div>';
+    $form['name']['widget']['0']['value']['#description'] = '<div class="booking--description-link" data-ng-click="showTitleDescription = !showTitleDescription">' . t('Why do we need a title?') . '</div>';
+
+
+    // Filter help texts if they have a filter.
+    $email_help_text = is_array($config->get('koba_booking.why_email')) ? $config->get('koba_booking.why_email')['value'] : $config->get('koba_booking.why_email');
+    $title_help_text = is_array($config->get('koba_booking.why_title')) ? $config->get('koba_booking.why_title')['value'] : $config->get('koba_booking.title');
+    $email_help_text_format = is_array($config->get('koba_booking.why_email')) ? $config->get('koba_booking.why_email')['format'] : FALSE;
+    $title_help_text_format = is_array($config->get('koba_booking.why_title')) ? $config->get('koba_booking.why_title')['format'] : FALSE;
+    $form['variables']['why_email'] = ($email_help_text_format) ? check_markup($email_help_text, $email_help_text_format) : '';
+    $form['variables']['why_title'] = ($title_help_text_format) ? check_markup($title_help_text, $title_help_text_format) : '';
+
+
+    // Help texts are reused as headers.
+    $form['variables']['why_email_header'] = t('Why do we need your email?');
+    $form['variables']['why_title_header'] = t('Why do we need a title?');
+
+
+    // Add template as prefix.
+    $form['#theme'] = array('booking_add_booking');
 
 
     // Hide fields.
@@ -72,7 +90,6 @@ function koba_booking_form_koba_booking_booking_form_alter(&$form, FormStateInte
     $form['booking_to_date']['#access'] = FALSE;
     $form['booking_resource']['#access'] = FALSE;
     $form['booking_status']['#access'] = FALSE;
-
   }
   else {
     // Enable jquery calendar for date fields.

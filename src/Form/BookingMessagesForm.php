@@ -18,14 +18,14 @@ use Drupal\Core\Session\AccountInterface;
 class BookingMessagesForm extends FormBase {
 
   /**
-   * {@inheritdoc}.
+   * {@inheritdoc}
    */
   public function getFormId() {
     return 'koba_booking_messages';
   }
 
   /**
-   * {@inheritdoc}.
+   * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('koba_booking.settings');
@@ -56,8 +56,6 @@ class BookingMessagesForm extends FormBase {
       '#weight' => '2',
     );
 
-
-
     // Message settings.
     $form['message_settings_wrapper']['message_settings'] = array(
       '#type' => 'vertical_tabs',
@@ -69,7 +67,6 @@ class BookingMessagesForm extends FormBase {
       '#type' => 'details',
       '#weight' => '1',
       '#group' => 'message_settings',
-
     );
 
     $form['message_settings']['messages']['booking_created'] = array(
@@ -77,15 +74,47 @@ class BookingMessagesForm extends FormBase {
       '#title' => t('Created booking'),
       '#description' => t('The message displayed to the user when the booking is created.') . '</br>' . $tokens_description,
       '#default_value' => is_array($config->get('koba_booking.created_booking_message')) ? $config->get('koba_booking.created_booking_message')['value'] : $config->get('koba_booking.created_booking_message'),
+      '#weight' => '0',
     );
-
 
     $form['message_settings']['messages']['booking_created_submit'] = array(
       '#type' => 'submit',
       '#value' => t('Save booking created message'),
-      '#weight' => 1,
+      '#weight' => '1',
       '#submit' => array('::booking_created_submit'),
     );
+
+
+    $form['message_settings']['help_texts'] = array(
+      '#title' => $this->t('Help texts'),
+      '#type' => 'details',
+      '#weight' => '2',
+      '#group' => 'message_settings',
+    );
+
+    $form['message_settings']['help_texts']['why_email_description'] = array(
+      '#type' => 'text_format',
+      '#title' => t('Why we need your email'),
+      '#description' => t('The message displayed to the user when clicking "Why we need your email".') . '</br>' . $tokens_description,
+      '#default_value' => is_array($config->get('koba_booking.why_email')) ? $config->get('koba_booking.why_email')['value'] : $config->get('koba_booking.why_email'),
+      '#weight' => '0',
+    );
+
+    $form['message_settings']['help_texts']['why_title_description'] = array(
+      '#type' => 'text_format',
+      '#title' => t('Why we need a title'),
+      '#description' => t('The message displayed to the user when clicking "Why we need a title".') . '</br>' . $tokens_description,
+      '#default_value' => is_array($config->get('koba_booking.why_title')) ? $config->get('koba_booking.why_title')['value'] : $config->get('koba_booking.why_title'),
+      '#weight' => '1',
+    );
+
+    $form['message_settings']['help_texts']['booking_help_text_submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Save help text messages'),
+      '#weight' => '2',
+      '#submit' => array('::booking_help_text_submit'),
+    );
+
 
 
 
@@ -343,6 +372,23 @@ class BookingMessagesForm extends FormBase {
     drupal_set_message('Booking message settings saved');
     $this->configFactory()->getEditable('koba_booking.settings')
       ->set('koba_booking.created_booking_message', $form_state->getValue('booking_created'))
+      ->save();
+  }
+
+
+  /**
+   * Form submission handler for booking created message config.
+   *
+   * @param $form
+   *   An associative array containing the structure of the form.
+   * @param $form_state
+   *   The current state of the form.
+   */
+  public function booking_help_text_submit(array $form, FormStateInterface $form_state) {
+    drupal_set_message('Booking message settings saved');
+    $this->configFactory()->getEditable('koba_booking.settings')
+      ->set('koba_booking.why_email', $form_state->getValue('why_email_description'))
+      ->set('koba_booking.why_title', $form_state->getValue('why_title_description'))
       ->save();
   }
 

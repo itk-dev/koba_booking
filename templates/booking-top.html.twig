@@ -9,8 +9,21 @@
  *  - manchet
  */
 #}
-{% if top_img %}
-  <img src="{{ top_img }}"/>
-{% endif %}
-<h1 class="title" id="page-title">{{ title }}</h1>
-<div>{{ manchet }}</div>
+
+<div class="fields--header-image">
+  <div class="fields--header-gradient"></div>
+  <div class="fields--header-image">
+    <div class="fields--header-gradient"></div>
+    <div class="fields">
+      <div class="fields--items">
+        <div class="fields--item">
+          {% if top_img %}
+            <img src="{{ top_img }}"/>
+          {% else %}
+            <img src="/sites/all/themes/dokk/images/pngs/page-header-fallback.png" width="2000" height="400" alt="">
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
