@@ -196,7 +196,6 @@ class Booking extends ContentEntityBase implements BookingInterface {
    * in the GUI. The behaviour of the widgets used can be determined here.
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
-
     // Standard field, used as unique if primary index.
     $fields['id'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('ID'))
@@ -472,7 +471,6 @@ class Booking extends ContentEntityBase implements BookingInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-
     // Message
     $fields['booking_message'] = BaseFieldDefinition::create('string_long')
       ->setLabel(t('Message'))
@@ -490,8 +488,6 @@ class Booking extends ContentEntityBase implements BookingInterface {
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
-
-
 
     //<--------------------------------------->
 
