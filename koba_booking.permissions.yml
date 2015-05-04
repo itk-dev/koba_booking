@@ -19,3 +19,15 @@
 'view pending bookings list':
   title: View pending bookings list
   restrict access: true
+'edit status pending':
+  title: Change status to pending
+  restrict access: true
+'edit status accepted':
+  title: Change status to accepted
+  restrict access: true
+'edit status refused':
+  title: Change status to refused
+  restrict access: true
+'edit status cancelled':
+  title: Change status to cancelled
+  restrict access: true

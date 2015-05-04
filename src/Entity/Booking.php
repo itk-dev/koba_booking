@@ -25,6 +25,7 @@ use Drupal\user\UserInterface;
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
  *     "list_builder" = "Drupal\koba_booking\BookingListBuilder",
  *     "access" = "Drupal\koba_booking\BookingAccessControlHandler",
+ *     "views_data" = "Drupal\koba_booking\BookingViewsData",
  *     "form" = {
  *       "add" = "Drupal\koba_booking\Form\BookingForm",
  *       "edit" = "Drupal\koba_booking\Form\BookingForm",
@@ -32,12 +33,11 @@ use Drupal\user\UserInterface;
  *     },
  *
  *   },
+ *   translatable = FALSE,
  *   admin_permission = "administer koba_booking entity",
  *   base_table = "booking",
- *   data_table = "booking_field_data",
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "name",
  *     "uuid" = "uuid"
  *   },
  *  links = {
@@ -47,6 +47,7 @@ use Drupal\user\UserInterface;
  *     "collection" = "/booking/list"
  *   },
  *   field_ui_base_route = "koba_booking.booking_settings",
+ *   common_reference_target = TRUE
  * )
  */
 class Booking extends ContentEntityBase implements BookingInterface {
@@ -110,6 +111,52 @@ class Booking extends ContentEntityBase implements BookingInterface {
 
   /**
    * {@inheritdoc}
+   */
+  public function isNew() {
+    return !empty($this->enforceIsNew) || $this->id() === NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isPending() {
+    return $this->get('booking_status')->value == 'pending';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isRefused() {
+    return $this->get('booking_status')->value == 'refused';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isAccepted() {
+    return $this->get('booking_status')->value == 'accepted';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isRequested() {
+    return $this->get('booking_status')->value == 'requested';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isCancelled() {
+    return $this->get('booking_status')->value == 'cancelled';
+  }
+
+  public function isPublic() {
+    return $this->get('booking_public')->value;
+  }
+
+  /**
+   * {@inheritdoc}
    *
    * Define the field properties here.
    *
@@ -157,6 +204,25 @@ class Booking extends ContentEntityBase implements BookingInterface {
       ))
       ->setDisplayOptions('form', array(
         'type' => 'options_select',
+        'weight' => -10,
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
+    // Booking public status field.
+    // ListTextType with a drop down menu widget.
+    $fields['booking_public'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Public status'))
+      ->setDescription(t('Whether the booking is public avaiable.'))
+      ->setDefaultValue(TRUE)
+      ->setRequired(FALSE)
+      ->setDisplayOptions('view', array(
+        'label' => 'above',
+        'type' => 'string',
+        'weight' => -10,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'boolean_checkbox',
         'weight' => -10,
       ))
       ->setDisplayConfigurable('form', TRUE)
