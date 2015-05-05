@@ -22,9 +22,8 @@ angular:
     assets/libs/timepicker/ui-bootstrap-custom-0.12.1.js: {}
 
     app/app.js: {}
-    app/pages/calendar/calendarController.js: {}
-
     app/pages/calendar/bookingCalendar.js: {}
+    app/pages/calendar/calendarController.js: {}
 
   header: TRUE
   dependencies:
