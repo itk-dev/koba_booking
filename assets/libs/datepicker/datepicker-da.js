@@ -23,7 +23,7 @@ datepicker.regional['da'] = {
 	'Jul','Aug','Sep','Okt','Nov','Dec'],
 	dayNames: ['Søndag','Mandag','Tirsdag','Onsdag','Torsdag','Fredag','Lørdag'],
 	dayNamesShort: ['Søn','Man','Tir','Ons','Tor','Fre','Lør'],
-	dayNamesMin: ['Sø','Ma','Ti','On','To','Fr','Lø'],
+	dayNamesMin: ['Søn','Man','Tir','Ons','Tor','Fre','Lør'],
 	weekHeader: 'Uge',
 	dateFormat: 'dd-mm-yy',
 	firstDay: 1,

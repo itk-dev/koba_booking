@@ -80,6 +80,9 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      */
     $scope.toggleDate = function() {
       $scope.pickDate = !$scope.pickDate;
+
+      jQuery('html').toggleClass('is-locked');
+      jQuery('body').toggleClass('is-locked');
     };
 
     /**

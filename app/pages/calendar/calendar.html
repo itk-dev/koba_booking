@@ -1,22 +1,65 @@
-<div data-ng-controller="CalendarController">
-  <div data-ng-click="toggleDate()">{{ t('Date') }}</div>
-  <div data-ng-click="toggleTime()">{{ t('Time') }}</div>
-  <div data-ng-click="toggleDate()" >{{ getSelectedDate() | date }}</div>
-  <div data-ng-click="toggleTime()">{{ getSelectedStartTime() | date: 'HH:mm' }} - {{ getSelectedEndTime() | date: 'HH:mm' }}</div>
+<div class="booking--calendar-page" data-ng-controller="CalendarController">
+  <div class="booking--selection">
+    <div class="booking--date-picker">
+      <div class="booking--selection-header-date"
+           data-ng-click="toggleDate()">{{ t('Date') }}
+      </div>
+      <div class="booking--selection-display-date"
+           data-ng-click="toggleDate()">{{ getSelectedDate() | date }}
+      </div>
+      <div class="booking--popup-calendar" data-ng-cloak
+           data-ng-show="pickDate">
+        <div class="booking--popup-inner">
+          <!-- Datepicker -->
+          <div class="booking--calendar-header">
+            <h2 class="booking--calendar-header-text">{{ t('Date') }}</h2>
 
-  <!-- Datepicker -->
-  <div data-ng-model="selected.date" date-picker="" number-of-months="9" show-week-number="true" data-ng-if="pickDate"></div>
-
-  <!-- Timepickers -->
-  <div data-ng-if="pickTime">
-    <timepicker data-ng-model="selected.time.start" hour-step="1" minute-step="30" show-meridian="false"></timepicker>
-    <timepicker data-ng-model="selected.time.end" hour-step="1" minute-step="30" show-meridian="false"></timepicker>
+            <div class="booking--popup-close-text"
+                 data-ng-click="toggleDate()">{{ t('Close') }}
+            </div>
+          </div>
+          <div data-ng-model="selected.date" date-picker=""
+               close-function="toggleDate()" number-of-months="9"
+               class="booking--calendar-wrapper"></div>
+        </div>
+      </div>
+    </div>
+    <div class="booking--time-picker">
+      <div class="booking--selection-header-time"
+           data-ng-click="toggleTime()">{{ t('Time') }}
+      </div>
+      <div class="booking--selection-display-time"
+           data-ng-click="toggleTime()">{{ getSelectedStartTime() | date:
+        'HH:mm' }} - {{ getSelectedEndTime() | date: 'HH:mm' }}
+      </div>
+      <div class="booking--popup" data-ng-if="pickTime">
+        <div class="booking--popup-inner">
+          <div class="booking--popup-content">
+            <!-- Timepickers -->
+            <timepicker data-ng-model="selected.time.start" hour-step="1"
+                        minute-step="30"
+                        show-meridian="ismeridian"></timepicker>
+            <timepicker data-ng-model="selected.time.end" hour-step="1"
+                        minute-step="30"
+                        show-meridian="ismeridian"></timepicker>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="booking--resource-picker">
+      <div class="resources">
+        <div data-ng-repeat="resource in resources"
+             data-ng-click="setResource(resource)">{{resource.name}}
+        </div>
+      </div>
+    </div>
   </div>
-
-  <div class="resources">
-    <div data-ng-repeat="resource in resources" data-ng-click="setResource(resource)">{{resource.name}}</div>
+  <div class="booking--calendar">
+    <booking-calendar selected-date="selected.date"
+                      selected-resource="selected.resource"
+                      selected-start="selected.time.start"
+                      selected-end="selected.time.end"
+                      interest-period="interestPeriod"
+                      disabled="disabled"></booking-calendar>
   </div>
-
-  <!-- Calendar for chosen date -->
-  <booking-calendar selected-date="selected.date" selected-resource="selected.resource" selected-start="selected.time.start" selected-end="selected.time.end" interest-period="interestPeriod" disabled="disabled"></booking-calendar>
 </div>
