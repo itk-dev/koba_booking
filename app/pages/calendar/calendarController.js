@@ -59,6 +59,9 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      */
     $scope.toggleDate = function() {
       $scope.pickDate = !$scope.pickDate;
+
+      jQuery('html').toggleClass('is-locked');
+      jQuery('body').toggleClass('is-locked');
     };
 
     $scope.$watch('selected.time.start', function(val) {
@@ -67,6 +70,6 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       if ($scope.selected.time.end < $scope.selected.time.start) {
         $scope.selected.time.end = new Date($scope.selected.time.start.getTime() + 30 * 60 * 1000);
       }
-    })
+    });
   }
 ]);

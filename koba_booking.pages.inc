@@ -32,6 +32,7 @@ function template_preprocess_booking_calendar_page(&$variables) {
   $variables['top_img'] = ($file) ? $file->url() : '';
   $variables['manchet'] = $config->get('koba_booking.create_booking_description', '');
   $variables['submit_header'] = '/' . $config->get('koba_booking.add_booking_header', '');
+  $variables['app_dir'] = '/' .  drupal_get_path('module', 'koba_booking') . '/app';
 }
 
 

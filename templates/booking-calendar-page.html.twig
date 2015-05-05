@@ -8,13 +8,20 @@
  *  - top_img
  *  - manchet
  *  - submit_header : path
+ *  - app_dir
  */
 #}
-aa
+
 <div class="page--header-container">
   {% include "@koba_booking/booking-top.html.twig" %}
 </div>
-bb
-<div data-ng-app="kobaApp">
-  <div data-ng-include="'/modules/koba_booking/app/pages/calendar/calendar.html'"></div>
+
+<div class="page--content">
+  <div class="booking--add-prefix">
+    {{ manchet }}
+  </div>
+
+  <div data-ng-app="kobaApp">
+    <div data-ng-include="'{{ app_dir }}/pages/calendar/calendar.html'"></div>
+  </div>
 </div>
