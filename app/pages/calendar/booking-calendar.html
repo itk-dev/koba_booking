@@ -31,11 +31,11 @@
 <div class="calendar" data-ng-repeat="timeInterval in timeIntervals" data-ng-if="loaded">
   <div class="calendar-row" data-ng-class="{'is-disabled': timeInterval.disabled}">
     <div class="calendar-time"><span data-ng-if="!timeInterval.halfhour">{{ timeInterval.time | date:'HH:mm' }}</span></div>
-    <div class="calendar-description" data-ng-if="!timeInterval.disabled"
+    <div class="calendar-description" data-ng-if="!timeInterval.disabled" data-ng-click="selectTime(timeInterval)"
          data-ng-class="{
           'is-selected': !timeInterval.disabled && selected(timeInterval),
-          'is-free': !timeInterval.disabled && free(timeInterval) && !selected(timeInterval),
-          'is-booked': !timeInterval.disabled && !free(timeInterval)
+          'is-free': !timeInterval.disabled && !timeInterval.booked && !selected(timeInterval),
+          'is-booked': !timeInterval.disabled && timeInterval.booked
          }">Content</div>
   </div>
 </div>

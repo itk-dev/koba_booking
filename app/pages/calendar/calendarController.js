@@ -6,6 +6,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
     };
 
     // Defaults: Start of today
+    // For time we use a regular date to integrate with timepicker.
     $scope.selected = {
       "date": moment().startOf('day'),
       "time": {
@@ -15,15 +16,19 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       "resource": null
     };
 
+    // Interest period to show.
     $scope.interestPeriod = {
-      "start": moment().startOf('day').add(5, 'hours'),
-      "end": moment().startOf('day').add(21, 'hours')
+      "start": moment(0).add(5, 'hours'),
+      "end": moment(0).add(21, 'hours')
     };
+
+    // Disabled intervals.
     $scope.disabled = [
-      [moment().startOf('day').add(5, 'hours'), moment().startOf('day').add(7, 'hours')],
-      [moment().startOf('day').add(19, 'hours'), moment().startOf('day').add(21, 'hours')]
+      [moment(0).add(5, 'hours').format('x'), moment(0).add(7, 'hours').format('x')],
+      [moment(0).add(19, 'hours').format('x'), moment(0).add(21, 'hours').format('x')]
     ];
 
+    // Load available resources.
     $scope.resources = [];
     kobaFactory.getResources().then(
       function success(data) {
@@ -77,6 +82,10 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       $scope.pickDate = !$scope.pickDate;
     };
 
+    /**
+     * Impose constraints on start time.
+     * - Never more than end, push end time forward.
+     */
     $scope.$watch('selected.time.start', function(val) {
       if (!val) return;
 
@@ -85,6 +94,10 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       }
     });
 
+    /**
+     * Impose constraints on end time.
+     * - Never less than start time, push start time back.
+     */
     $scope.$watch('selected.time.end', function(val) {
       if (!val) return;
 

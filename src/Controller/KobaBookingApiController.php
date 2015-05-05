@@ -17,6 +17,11 @@ use GuzzleHttp\Exception\RequestException;
  * KobaBookingApiController.
  */
 class KobaBookingApiController extends ControllerBase {
+  /**
+   * Get available resources.
+   *
+   * @return JsonResponse
+   */
   public function resources() {
     // Fetch module config settings.
     $config = \Drupal::config('koba_booking.settings');
@@ -27,7 +32,8 @@ class KobaBookingApiController extends ControllerBase {
 
     // Instantiates a new guzzle client.
     $client = new \GuzzleHttp\Client();
-    // Get google.com’s main page as a response object.
+
+    // Get the url.
     $response = $client->get($url);
 
     $body = json_decode($response->getBody());
@@ -35,7 +41,13 @@ class KobaBookingApiController extends ControllerBase {
     return new JsonResponse($body, $response->getStatusCode());
   }
 
-  public function resource(Request $request) {
+  /**
+   * Get bookings for a resource.
+   *
+   * @param Request $request
+   * @return JsonResponse
+   */
+  public function bookings(Request $request) {
     $resource = $request->query->get('res');
     $from = $request->query->get('from');
     $to = $request->query->get('to');
@@ -45,15 +57,23 @@ class KobaBookingApiController extends ControllerBase {
     $apikey = $config->get('koba_booking.api_key', '');
     $path = $config->get('koba_booking.path', '');
 
-    $url = $path . '/api/resources/' . $resource . '/group/default/bookings/from/' . $from . '/to/' . $to . '?apikey=' . $apikey;
+    //$url = $path . '/api/resources/' . $resource . '/group/default/bookings/from/' . $from . '/to/' . $to . '?apikey=' . $apikey;
+    $url = $path . '/api/resources/' . $resource . '/group/default/freebusy/from/' . $from . '/to/' . $to . '?apikey=' . $apikey;
 
     // Instantiates a new guzzle client.
     $client = new \GuzzleHttp\Client();
-    // Get google.com’s main page as a response object.
-    $response = $client->get($url);
 
-    $body = json_decode($response->getBody());
+    try {
+      $response = $client->get($url);
+      $body = json_decode($response->getBody());
 
-    return new JsonResponse($body, $response->getStatusCode());
+      return new JsonResponse($body, $response->getStatusCode());
+    }
+    catch (RequestException $e) {
+      echo $e->getRequest() . "\n";
+      if ($e->hasResponse()) {
+        echo $e->getResponse() . "\n";
+      }
+    }
   }
 }

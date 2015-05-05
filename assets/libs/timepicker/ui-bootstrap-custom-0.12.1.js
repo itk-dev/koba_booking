@@ -14,7 +14,7 @@ angular.module('ui.bootstrap.timepicker', [])
   showMeridian: true,
   meridians: null,
   readonlyInput: true,
-  mousewheel: true
+  mousewheel: false
 })
 
 .controller('TimepickerController', ['$scope', '$attrs', '$parse', '$log', '$locale', 'timepickerConfig', function($scope, $attrs, $parse, $log, $locale, timepickerConfig) {
