@@ -15,7 +15,7 @@ use Drupal\system\Plugin\views\field\BulkForm;
 /**
  * Defines a user operations bulk form element.
  *
- * @ViewsField("koba_booking_bulk_form")
+ * @ViewsField("booking_bulk_form")
  */
 class BookingBulkForm extends BulkForm {
 

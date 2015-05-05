@@ -49,6 +49,14 @@ class BookingViewsData extends EntityViewsData {
 
     $data['booking']['name']['field']['id'] = 'standard';
 
+    $data['booking']['booking_bulk_form'] = array(
+      'title' => t('Bulk update'),
+      'help' => t('Add a form element that lets you run operations on multiple bookings.'),
+      'field' => array(
+        'id' => 'booking_bulk_form',
+      ),
+    );
+
     return $data;
   }
 

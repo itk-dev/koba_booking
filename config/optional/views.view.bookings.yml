@@ -95,6 +95,7 @@ display:
       row:
         type: fields
       fields:
+
         name_1:
           id: name_1
           table: booking
