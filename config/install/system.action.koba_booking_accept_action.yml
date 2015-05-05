@@ -2,7 +2,7 @@ id: koba_booking_accept_action
 label: 'Accept the selected booking(s)'
 status: true
 langcode: en
-type: booking
+type: koba_booking_booking
 plugin: koba_booking_accept_action
 dependencies:
   module:

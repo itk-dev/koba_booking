@@ -151,6 +151,9 @@ class Booking extends ContentEntityBase implements BookingInterface {
     return $this->get('booking_status')->value == 'cancelled';
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function isPublic() {
     return $this->get('booking_public')->value;
   }

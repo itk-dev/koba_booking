@@ -2,25 +2,24 @@
 
 /**
  * @file
- * Contains \Drupal\koba_booking\Plugin\Action\AcceptBooking.
+ * Contains \Drupal\koba_booking\Plugin\Action\RefuseBooking.
  */
 
 namespace Drupal\koba_booking\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\koba_booking\BookingInterface;
 
 /**
- * Blocks a user.
+ * Refuse booking.
  *
  * @Action(
- *   id = "koba_booking_accept_action",
- *   label = @Translation("Accept the selected booking(s)"),
+ *   id = "koba_booking_refuse_action",
+ *   label = @Translation("Refuse the selected booking(s)"),
  *   type = "koba_booking_booking"
  * )
  */
-class AcceptBooking extends ActionBase {
+class RefuseBooking extends ActionBase {
 
   /**
    * {@inheritdoc}
@@ -29,7 +28,7 @@ class AcceptBooking extends ActionBase {
     // For efficiency manually save the original booking before applying any
     // changes.
     $booking->original = clone $booking;
-    $booking->set('booking_status', 'accepted');
+    $booking->set('booking_status', 'refused');
     $booking->save();
   }
 

@@ -1,0 +1,13 @@
+# Schema for the configuration files of the koba_booking module.
+
+action.configuration.koba_booking_accept_action:
+  type: action_configuration_default
+  label: 'Accpet the selected booking configuration'
+
+action.configuration.koba_booking_refuse_action:
+  type: action_configuration_default
+  label: 'Refuse the selected booking configuration'
+
+action.configuration.koba_booking_cancel_action:
+  type: action_configuration_default
+  label: 'Cancel the selected booking configuration'
