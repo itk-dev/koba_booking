@@ -16,8 +16,12 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 class KobaBookingController extends ControllerBase  {
 
+  /**
+   * @TODO: Missing description.
+   *
+   * @return array
+   */
   public function calendarPage() {
-
     // Setup template for frontend.
     $build = array(
       '#type' => 'markup',
@@ -34,9 +38,10 @@ class KobaBookingController extends ControllerBase  {
 
   /**
    * Booking receipt page.
+   *
+   * @TODO: Missing return description.
    */
   public function receipt() {
-
     // Setup template for frontend.
     $build = array(
       '#type' => 'markup',
@@ -54,17 +59,15 @@ class KobaBookingController extends ControllerBase  {
    * @param \Drupal\koba_booking\BookingInterface $koba_booking_booking
    *   The booking to perform the action on.
    */
-  public function actionAccept(Request $request, BookingInterface $koba_booking_booking = NULL) {
-    // Set redirect. (Original path.)
-    $referer = $request->server->get('HTTP_REFERER');
-    $response = new RedirectResponse($referer);
-
+  public function actionAccept(Request $request, BookingInterface $koba_booking_booking) {
     // Change booking state.
     $koba_booking_booking->set('booking_status', 'accepted');
     $koba_booking_booking->save();
-    $response->send();
 
-    return;
+    // Set redirect. (Original path.)
+    $referer = $request->server->get('HTTP_REFERER');
+    $response = new RedirectResponse($referer);
+    $response->send();
   }
 
   /**
@@ -75,17 +78,15 @@ class KobaBookingController extends ControllerBase  {
    * @param \Drupal\koba_booking\BookingInterface $koba_booking_booking
    *   The booking to perform the action on.
    */
-  public function actionRefuse(Request $request, BookingInterface $koba_booking_booking = NULL) {
-    // Set redirect. (Original path.)
-    $referer = $request->server->get('HTTP_REFERER');
-    $response = new RedirectResponse($referer);
-
+  public function actionRefuse(Request $request, BookingInterface $koba_booking_booking) {
     // Change booking state.
     $koba_booking_booking->set('booking_status', 'refused');
     $koba_booking_booking->save();
-    $response->send();
 
-    return;
+    // Set redirect. (Original path.)
+    $referer = $request->server->get('HTTP_REFERER');
+    $response = new RedirectResponse($referer);
+    $response->send();
   }
 
   /**
@@ -97,15 +98,13 @@ class KobaBookingController extends ControllerBase  {
    *   The booking to perform the action on.
    */
   public function actionCancel(Request $request, BookingInterface $koba_booking_booking = NULL) {
-    // Set redirect. (Original path.)
-    $referer = $request->server->get('HTTP_REFERER');
-    $response = new RedirectResponse($referer);
-
     // Change booking state.
     $koba_booking_booking->set('booking_status', 'cancelled');
     $koba_booking_booking->save();
-    $response->send();
 
-    return;
+    // Set redirect. (Original path.)
+    $referer = $request->server->get('HTTP_REFERER');
+    $response = new RedirectResponse($referer);
+    $response->send();
   }
 }
