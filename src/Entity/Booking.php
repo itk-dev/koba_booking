@@ -136,7 +136,7 @@ class Booking extends ContentEntityBase implements BookingInterface {
     // The values shown in the menu represents the possible states of the booking, which is used for filtering in administration.
     // In the view the field content is shown as string.
     // In the form the choices are presented as options list.
-    // Possible values are: Request, accepted, refused, pending, cancelled
+    // Possible values are: Request, accepted, refused, pending, cancelled.
     $fields['booking_status'] = BaseFieldDefinition::create('list_string')
       ->setLabel(t('Status'))
       ->setDescription(t('The status of the Booking entity.'))
@@ -394,7 +394,7 @@ class Booking extends ContentEntityBase implements BookingInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    // Message
+    // Message.
     $fields['booking_message'] = BaseFieldDefinition::create('string_long')
       ->setLabel(t('Message'))
       ->setDisplayOptions('form', array(
@@ -412,7 +412,7 @@ class Booking extends ContentEntityBase implements BookingInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    //<--------------------------------------->
+    // <--------------------------------------->
 
     // Name field for the booking.
     // This is a required field for entities.

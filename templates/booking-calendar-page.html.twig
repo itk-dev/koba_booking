@@ -8,22 +8,20 @@
  *  - top_img
  *  - manchet
  *  - submit_header : path
+ *  - app_dir
  */
 #}
 
-{% include "@koba_booking/booking-top.html.twig" %}
-
-<div ng-app="kobaApp">
-  <label>Name:</label>
-  <input type="text" ng-model="yourName" placeholder="Enter a name here">
-  <hr>
-  <h1>Hello [[yourName]]!</h1>
-  <a href="{{ submit_header }}">Submit</a>
+<div class="page--header-container">
+  {% include "@koba_booking/booking-top.html.twig" %}
 </div>
 
+<div class="page--content">
+  <div class="booking--add-prefix">
+    {{ manchet }}
+  </div>
 
-{% include "@koba_booking/booking-datepicker.html.twig" %}
-
-{% include "@koba_booking/booking-resourcepicker.html.twig" %}
-
-{% include "@koba_booking/booking-timepicker.html.twig" %}
+  <div data-ng-app="kobaApp">
+    <div data-ng-include="'{{ app_dir }}/pages/calendar/calendar.html'"></div>
+  </div>
+</div>
