@@ -96,7 +96,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      */
     $scope.prevDate = function() {
       if ($scope.selected.date.day() > moment().day()) {
-        $scope.selected.date.add(-1, 'day');
+        $scope.selected.date = moment($scope.selected.date.add(-1, 'day'));
       }
     };
 
@@ -104,7 +104,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      * Go to next date.
      */
     $scope.nextDate = function() {
-      $scope.selected.date.add(1, 'day');
+      $scope.selected.date = moment($scope.selected.date.add(1, 'day'));
     };
 
     /**
