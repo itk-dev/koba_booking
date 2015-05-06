@@ -94,7 +94,9 @@ angular.module("kobaApp")
 
           /**
            * Is the time interval selected?
-           *   - return false, 'first', 'middle', 'last'
+           *   returns 'first', 'middle', 'last'
+           *     corresponding to whether it is the first, middle or last of a booking.
+           *
            *
            * @param timeInterval
            * @returns {*}
@@ -104,7 +106,12 @@ angular.module("kobaApp")
 
             if (startMoment <= t && endMoment > t) {
               if (startMoment == t) {
-                return 'first';
+                if (endMoment == t + 30 * 60 * 1000) {
+                  return 'first-last';
+                }
+                else {
+                  return 'first';
+                }
               }
               else if (endMoment == t + 30 * 60 * 1000) {
                 return 'last';

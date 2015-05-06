@@ -11,6 +11,7 @@
     <div class="booking--display-row-inner" data-ng-class="{
           'is-selected': !timeInterval.disabled && selected(timeInterval),
           'is-selected-first': !timeInterval.disabled && selected(timeInterval) === 'first',
+          'is-selected-first-last': !timeInterval.disabled && selected(timeInterval) === 'first-last',
           'is-selected-last': !timeInterval.disabled && selected(timeInterval) === 'last',
           'is-selected-middle': !timeInterval.disabled && selected(timeInterval) === 'middle',
           'is-free': !timeInterval.disabled && !timeInterval.booked && !selected(timeInterval),
