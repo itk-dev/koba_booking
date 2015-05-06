@@ -19,7 +19,7 @@ angular:
     assets/libs/datepicker/datepicker-da.js: {}
     assets/libs/datepicker/datepicker.js: {}
 
-    assets/libs/timepicker/ui-bootstrap-custom-0.12.1.js: {}
+    app/shared/itk-time-picker/itk-time-picker.js: {}
 
     app/app.js: {}
     app/pages/calendar/bookingCalendar.js: {}

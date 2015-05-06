@@ -1,4 +1,4 @@
-angular.module('kobaApp').controller("CalendarController", ['$scope', '$window', 'kobaFactory',
+angular.module('kobaApp').controller('CalendarController', ['$scope', '$window', 'kobaFactory',
   function ($scope, $window, kobaFactory) {
     // Open up for translations.
     $scope.t = function(str) {
@@ -6,24 +6,28 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
     };
 
     // Defaults: Start of today
+    // For time we use a regular date to integrate with timepicker.
     $scope.selected = {
       "date": moment().startOf('day'),
       "time": {
-        "start": (new Date(0)).setHours(7),
-        "end": (new Date(0)).setHours(8)
+        "start": (new Date(7 * 60 * 60 * 1000)),
+        "end": (new Date(8 * 60 * 60 * 1000))
       },
       "resource": null
     };
 
+    // Interest period to show.
     $scope.interestPeriod = {
-      "start": moment().startOf('day').add(5, 'hours'),
-      "end": moment().startOf('day').add(21, 'hours')
+      "start": 6,
+      "end": 24
     };
+
+    // Disabled intervals.
     $scope.disabled = [
-      [moment().startOf('day').add(5, 'hours'), moment().startOf('day').add(7, 'hours')],
-      [moment().startOf('day').add(19, 'hours'), moment().startOf('day').add(21, 'hours')]
+      [6,7], [23,24]
     ];
 
+    // Load available resources.
     $scope.resources = [];
     kobaFactory.getResources().then(
       function success(data) {
@@ -52,7 +56,15 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      * @returns {*}
      */
     $scope.getSelectedStartTime = function() {
-      return $scope.selected.time.start;
+      var hours = "" + $scope.selected.time.start.getUTCHours();
+      if (hours.length === 1) {
+        hours = "0" + hours;
+      }
+      var minutes = "" + $scope.selected.time.start.getUTCMinutes();
+      if (minutes.length === 1) {
+        minutes = "0" + minutes;
+      }
+      return hours + ":" + minutes;
     };
 
     /**
@@ -60,7 +72,15 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      * @returns {*}
      */
     $scope.getSelectedEndTime = function() {
-      return $scope.selected.time.end;
+      var hours = "" + $scope.selected.time.end.getUTCHours();
+      if (hours.length === 1) {
+        hours = "0" + hours;
+      }
+      var minutes = "" + $scope.selected.time.end.getUTCMinutes();
+      if (minutes.length === 1) {
+        minutes = "0" + minutes;
+      }
+      return hours + ":" + minutes;
     };
 
     /**
@@ -87,6 +107,10 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       $scope.pickResource = !$scope.pickResource;
     };
 
+    /**
+     * Impose constraints on start time.
+     * - Never more than end, push end time forward.
+     */
     $scope.$watch('selected.time.start', function(val) {
       if (!val) return;
 
@@ -95,6 +119,10 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       }
     });
 
+    /**
+     * Impose constraints on end time.
+     * - Never less than start time, push start time back.
+     */
     $scope.$watch('selected.time.end', function(val) {
       if (!val) return;
 
