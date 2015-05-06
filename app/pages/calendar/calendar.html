@@ -19,10 +19,16 @@
         <div class="booking--selection-display-time" data-ng-click="toggleTime()">{{ getSelectedStartTime() }} - {{ getSelectedEndTime() }}</div>
         <div class="booking--popup" data-ng-if="pickTime">
           <div class="booking--popup-inner">
+            <div class="booking--popup-header">
+              <h2 class="booking--popup-header-text">{{ t('Time') }}</h2>
+              <div class="booking--popup-close-text" data-ng-click="toggleTime()">{{ t('Close') }}</div>
+            </div>
             <div class="booking--popup-content">
-              <itk-time-picker time="selected.time.start" step="30"></itk-time-picker>
-              <itk-time-picker time="selected.time.end" step="30"></itk-time-picker>
-
+              <div class="booking--popup-timepicker-wrapper">
+                <itk-time-picker class="booking--popup-timepicker" time="selected.time.start" step="30"></itk-time-picker>
+                <div class="booking--popup-timepicker-text">til</div>
+                <itk-time-picker class="booking--popup-timepicker" time="selected.time.end" step="30"></itk-time-picker>
+              </div>
             </div>
           </div>
         </div>
