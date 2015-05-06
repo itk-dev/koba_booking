@@ -137,6 +137,7 @@ angular.module('kobaApp')
             function (val) {
               if (!val) return;
               if (!scope.selectedResource || !scope.selectedDate) return;
+              scope.loaded = true;
 
               kobaFactory.getBookings(scope.selectedResource.mail, parseInt(moment(scope.selectedDate).startOf('day').toDate() / 1000), parseInt(moment(scope.selectedDate).endOf('day').toDate() / 1000)).then(
                 function success(data) {

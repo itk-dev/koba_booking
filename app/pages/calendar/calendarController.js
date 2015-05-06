@@ -80,11 +80,26 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       jQuery('body').toggleClass('is-locked');
     };
 
+    /**
+     * Show/hide resource picker.
+     */
+    $scope.toggleResource = function() {
+      $scope.pickResource = !$scope.pickResource;
+    };
+
     $scope.$watch('selected.time.start', function(val) {
       if (!val) return;
 
       if ($scope.selected.time.end <= $scope.selected.time.start) {
         $scope.selected.time.end = new Date($scope.selected.time.start.getTime() + 30 * 60 * 1000);
+      }
+    });
+
+    $scope.$watch('selected.time.end', function(val) {
+      if (!val) return;
+
+      if ($scope.selected.time.end <= $scope.selected.time.start) {
+        $scope.selected.time.start = new Date($scope.selected.time.end.getTime() - 30 * 60 * 1000);
       }
     });
   }
