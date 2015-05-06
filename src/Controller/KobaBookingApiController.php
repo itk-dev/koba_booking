@@ -33,12 +33,18 @@ class KobaBookingApiController extends ControllerBase {
     // Instantiates a new guzzle client.
     $client = new \GuzzleHttp\Client();
 
-    // Get the url.
-    $response = $client->get($url);
+    try {
+      $response = $client->get($url);
+      $body = json_decode($response->getBody());
 
-    $body = json_decode($response->getBody());
-
-    return new JsonResponse($body, $response->getStatusCode());
+      return new JsonResponse($body, $response->getStatusCode());
+    }
+    catch (RequestException $e) {
+      echo $e->getRequest() . "\n";
+      if ($e->hasResponse()) {
+        echo $e->getResponse() . "\n";
+      }
+    }
   }
 
   /**

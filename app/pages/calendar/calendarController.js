@@ -10,8 +10,8 @@ angular.module('kobaApp').controller('CalendarController', ['$scope', '$window',
     $scope.selected = {
       "date": moment().startOf('day'),
       "time": {
-        "start": (new Date(0)).setHours(7),
-        "end": (new Date(0)).setHours(8)
+        "start": (new Date(7 * 60 * 60 * 1000)),
+        "end": (new Date(8 * 60 * 60 * 1000))
       },
       "resource": null
     };
@@ -56,7 +56,15 @@ angular.module('kobaApp').controller('CalendarController', ['$scope', '$window',
      * @returns {*}
      */
     $scope.getSelectedStartTime = function() {
-      return $scope.selected.time.start;
+      var hours = "" + $scope.selected.time.start.getUTCHours();
+      if (hours.length === 1) {
+        hours = "0" + hours;
+      }
+      var minutes = "" + $scope.selected.time.start.getUTCMinutes();
+      if (minutes.length === 1) {
+        minutes = "0" + minutes;
+      }
+      return hours + ":" + minutes;
     };
 
     /**
@@ -64,7 +72,15 @@ angular.module('kobaApp').controller('CalendarController', ['$scope', '$window',
      * @returns {*}
      */
     $scope.getSelectedEndTime = function() {
-      return $scope.selected.time.end;
+      var hours = "" + $scope.selected.time.end.getUTCHours();
+      if (hours.length === 1) {
+        hours = "0" + hours;
+      }
+      var minutes = "" + $scope.selected.time.end.getUTCMinutes();
+      if (minutes.length === 1) {
+        minutes = "0" + minutes;
+      }
+      return hours + ":" + minutes;
     };
 
     /**

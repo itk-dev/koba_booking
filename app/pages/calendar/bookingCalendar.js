@@ -86,10 +86,15 @@ angular.module('kobaApp')
 
           // @TODO: refactor.
           scope.selected = function(timeInterval) {
-            var startMoment = moment(scope.selectedDate).add(scope.selectedStart, 'milliseconds');
-            var endMoment = moment(scope.selectedDate).add(scope.selectedEnd, 'milliseconds');
+            var startMoment = moment(scope.selectedDate).add(scope.selectedStart.getTime(), 'milliseconds');
+            var endMoment = moment(scope.selectedDate).add(scope.selectedEnd.getTime(), 'milliseconds');
 
             return startMoment <= timeInterval.timeMoment && endMoment > timeInterval.timeMoment;
+          };
+
+          scope.select = function (timeInterval) {
+            scope.selectedStart = new Date(timeInterval.timeFromZero.hours * 60 * 60 * 1000 + timeInterval.timeFromZero.minutes * 60 * 1000);;
+            scope.selectedEnd = new Date((timeInterval.timeFromZero.hours + 1) * 60 * 60 * 1000 + timeInterval.timeFromZero.minutes * 60 * 1000);;
           };
 
           function renderCalendar() {
@@ -124,6 +129,10 @@ angular.module('kobaApp')
               }
 
               scope.timeIntervals.push({
+                'timeFromZero': {
+                  'hours': scope.interestPeriod.start + parseInt(i / 2),
+                  'minutes': (i % 2) * 30
+                },
                 'time': timeDate,
                 'timeMoment': time,
                 'halfhour': (time.minutes() > 0),
