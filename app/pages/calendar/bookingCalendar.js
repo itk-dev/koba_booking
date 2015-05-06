@@ -84,19 +84,46 @@ angular.module('kobaApp')
           var bookings = [];
           scope.loaded = false;
 
-          // @TODO: refactor.
+          var startMoment = parseInt(scope.selectedDate.format('x')) + scope.selectedStart.getTime();
+          var endMoment = parseInt(scope.selectedDate.format('x')) + scope.selectedEnd.getTime();
+
+          /**
+           * Is the time interval selected?
+           *   - return false, 'first', 'middle', 'last'
+           *
+           * @param timeInterval
+           * @returns {*}
+           */
           scope.selected = function(timeInterval) {
-            var startMoment = moment(scope.selectedDate).add(scope.selectedStart.getTime(), 'milliseconds');
-            var endMoment = moment(scope.selectedDate).add(scope.selectedEnd.getTime(), 'milliseconds');
+            var t = parseInt(timeInterval.timeMoment.format('x'));
 
-            return startMoment <= timeInterval.timeMoment && endMoment > timeInterval.timeMoment;
+            if (startMoment <= t && endMoment > t) {
+              if (startMoment == t) {
+                return 'first';
+              }
+              else if (endMoment == t + 30 * 60 * 1000) {
+                return 'last';
+              }
+              else {
+                return 'middle';
+              }
+            } else {
+              return false;
+            }
           };
 
+          /**
+           * Select a time interval and 1 hour forward.
+           * @param timeInterval
+           */
           scope.select = function (timeInterval) {
-            scope.selectedStart = new Date(timeInterval.timeFromZero.hours * 60 * 60 * 1000 + timeInterval.timeFromZero.minutes * 60 * 1000);;
-            scope.selectedEnd = new Date((timeInterval.timeFromZero.hours + 1) * 60 * 60 * 1000 + timeInterval.timeFromZero.minutes * 60 * 1000);;
+            scope.selectedStart = new Date(timeInterval.timeFromZero.hours * 60 * 60 * 1000 + timeInterval.timeFromZero.minutes * 60 * 1000);
+            scope.selectedEnd = new Date((timeInterval.timeFromZero.hours + 1) * 60 * 60 * 1000 + timeInterval.timeFromZero.minutes * 60 * 1000);
           };
 
+          /**
+           * Render the calendar.
+           */
           function renderCalendar() {
             scope.timeIntervals = [];
 
@@ -141,6 +168,14 @@ angular.module('kobaApp')
               });
             }
           }
+
+          scope.$watchGroup(['selectedStart', 'selectedEnd'],
+            function (val) {
+              if (!val) return;
+              startMoment = parseInt(scope.selectedDate.format('x')) + scope.selectedStart.getTime();
+              endMoment = parseInt(scope.selectedDate.format('x')) + scope.selectedEnd.getTime();
+            }
+          );
 
           // Watch for changes to selectedDate and selectedResource.
           // Update the calendar view accordingly.
