@@ -1,4 +1,4 @@
-angular.module('kobaApp').controller("CalendarController", ['$scope', '$window', 'kobaFactory',
+angular.module('kobaApp').controller('CalendarController', ['$scope', '$window', 'kobaFactory',
   function ($scope, $window, kobaFactory) {
     // Open up for translations.
     $scope.t = function(str) {
@@ -18,14 +18,13 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
 
     // Interest period to show.
     $scope.interestPeriod = {
-      "start": moment(0).add(5, 'hours'),
-      "end": moment(0).add(21, 'hours')
+      "start": 6,
+      "end": 24
     };
 
     // Disabled intervals.
     $scope.disabled = [
-      [moment(0).add(5, 'hours').format('x'), moment(0).add(7, 'hours').format('x')],
-      [moment(0).add(19, 'hours').format('x'), moment(0).add(21, 'hours').format('x')]
+      [6,7], [23,24]
     ];
 
     // Load available resources.
@@ -107,6 +106,6 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       if ($scope.selected.time.end <= $scope.selected.time.start) {
         $scope.selected.time.start = new Date($scope.selected.time.end.getTime() - 30 * 60 * 1000);
       }
-    })
+    });
   }
 ]);

@@ -95,18 +95,18 @@ angular.module('kobaApp')
           function renderCalendar() {
             scope.timeIntervals = [];
 
-            scope.interestPeriodEntries =
-              (scope.interestPeriod.end.hours() - scope.interestPeriod.start.hours()) * 2 +
-              (scope.interestPeriod.end.minutes() - scope.interestPeriod.start.minutes()) % 30;
+            scope.interestPeriodEntries = (scope.interestPeriod.end - scope.interestPeriod.start) * 2;
 
             // Render calendar.
             for (var i = 0; i < scope.interestPeriodEntries; i++) {
-              var time = moment(scope.interestPeriod.start).add(scope.selectedDate.format('x'), 'milliseconds').add(i * 30, 'minutes');
+              var time = moment(scope.selectedDate).add(i * 30, 'minutes').add(scope.interestPeriod.start, 'hours');
 
               var disabled = false;
               for (var j = 0; j < scope.disabled.length; j++) {
-                if (time >= moment(parseInt(scope.selectedDate.format('x')) + parseInt(scope.disabled[j][0])) &&
-                  time < moment(parseInt(scope.selectedDate.format('x')) + parseInt(scope.disabled[j][1]))) {
+                if (
+                  time >= moment(scope.selectedDate).add(scope.disabled[j][0], 'hours') &&
+                  time < moment(scope.selectedDate).add(scope.disabled[j][1], 'hours')
+                ) {
                   disabled = true;
                   break;
                 }
@@ -155,8 +155,6 @@ angular.module('kobaApp')
                   scope.loaded = true;
                 },
                 function error(reason) {
-                  renderCalendar();
-                  scope.loaded = true;
                   console.error(reason);
                 }
               );
