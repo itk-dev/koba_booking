@@ -169,6 +169,8 @@ angular.module('kobaApp')
             }
           }
 
+          // Watch for changed to selectedStart and selectedEnd.
+          // Update startMoment and endMoment, used for scope.selected()
           scope.$watchGroup(['selectedStart', 'selectedEnd'],
             function (val) {
               if (!val) return;
