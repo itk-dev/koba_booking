@@ -87,6 +87,11 @@ angular.module('kobaApp')
           var startMoment = parseInt(scope.selectedDate.format('x')) + scope.selectedStart.getTime();
           var endMoment = parseInt(scope.selectedDate.format('x')) + scope.selectedEnd.getTime();
 
+          // Open up for translations.
+          scope.t = function(str) {
+            return window.Drupal.t(str);
+          };
+
           /**
            * Is the time interval selected?
            *   - return false, 'first', 'middle', 'last'
@@ -129,10 +134,14 @@ angular.module('kobaApp')
 
             scope.interestPeriodEntries = (scope.interestPeriod.end - scope.interestPeriod.start) * 2;
 
+            // The last time interval's type.
+            var lastType = null;
+
             // Render calendar.
             for (var i = 0; i < scope.interestPeriodEntries; i++) {
               var time = moment(scope.selectedDate).add(i * 30, 'minutes').add(scope.interestPeriod.start, 'hours');
 
+              // See if the time interval is disabled.
               var disabled = false;
               for (var j = 0; j < scope.disabled.length; j++) {
                 if (
@@ -146,12 +155,30 @@ angular.module('kobaApp')
 
               var timeDate = time.toDate();
 
+              // See if the time interval is free.
               var free = true;
               for (j = 0; j < bookings.length; j++) {
                 if (timeDate.getTime() >= bookings[j].start * 1000 &&
                   timeDate.getTime() < bookings[j].end * 1000) {
                   free = false;
                   break;
+                }
+              }
+
+              // Set text
+              var text = '';
+              if (!disabled) {
+                if (free) {
+                  if (lastType !== 'Free') {
+                    text = 'Free';
+                    lastType = 'Free';
+                  }
+                }
+                else {
+                  if (lastType !== 'Booked') {
+                    text = 'Booked';
+                    lastType = 'Booked';
+                  }
                 }
               }
 
@@ -164,7 +191,8 @@ angular.module('kobaApp')
                 'timeMoment': time,
                 'halfhour': (time.minutes() > 0),
                 'disabled': disabled,
-                'booked': !free
+                'booked': !free,
+                'text': text
               });
             }
           }
