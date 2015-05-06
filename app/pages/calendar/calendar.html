@@ -35,7 +35,9 @@
       </div>
     </div>
     <div class="booking--selection-resource-picker">
-      <a href="" data-ng-click="toggleResource()">Select resource</a>
+      <span data-ng-click="prevResource()">-</span>
+      <a href="" data-ng-click="toggleResource()">{{ selected.resource ? selected.resource.name : t('Select resource')}}</a>
+      <span data-ng-click="nextResource()">+</span>
       <div class="booking--popup" data-ng-if="pickResource">
         <div class="booking--popup-inner">
           <div class="booking--popup-header">
