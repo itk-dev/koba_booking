@@ -39,22 +39,28 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="booking--selection-resource-picker">
-      <a href="" data-ng-click="toggleResource()">Select resource</a>
-      <div class="booking--popup" data-ng-if="pickResource">
-        <div class="booking--popup-inner">
-          <div class="booking--popup-header">
-            <h2 class="booking--popup-header-text">{{ t('Resources') }}</h2>
-            <div class="booking--popup-close-text" data-ng-click="toggleResource()">{{ t('Ok') }}</div>
-          </div>
-          <form class="booking--popup-content">
-            <div data-ng-repeat="resource in resources" data-ng-click="setResource(resource)" class="booking--radio-select">
-              <input class="booking--popup-radio-input" type="radio" name="resources-radio" value="{{resource.mail}}" id="resources-{{resource.name}}" />
-              <label class="booking--popup-radio-label" for="resources-{{resource.name}}">{{resource.name}}</label>
-            </div>
-          </form>
+      <div class="booking--selection-resource-picker">
+        <div class="booking--selection-header-resource" data-ng-click="toggleResource()">{{ t('Date') }}</div>
+        <div class="booking--selection-display-resource" data-ng-click="toggleResource()" >{{ getSelectedDate() | date }}</div>
+        <div class="booking--popup" data-ng-if="pickResource">
         </div>
+      </div>
+    </div>
+    <div class="booking--selection-resource-picker-mobile">
+      <a href="" data-ng-click="toggleResource()">Select resource</a>
+    </div>
+    <div class="booking--popup" data-ng-if="pickResource">
+      <div class="booking--popup-inner">
+        <div class="booking--popup-header">
+          <h2 class="booking--popup-header-text">{{ t('Resources') }}</h2>
+          <div class="booking--popup-close-text" data-ng-click="toggleResource()">{{ t('Ok') }}</div>
+        </div>
+        <form class="booking--popup-content">
+          <div data-ng-repeat="resource in resources" data-ng-click="setResource(resource)" class="booking--radio-select">
+            <input class="booking--popup-radio-input" type="radio" name="resources-radio" value="{{resource.mail}}" id="resources-{{resource.name}}" />
+            <label class="booking--popup-radio-label" for="resources-{{resource.name}}">{{resource.name}}</label>
+          </div>
+        </form>
       </div>
     </div>
   </div>
