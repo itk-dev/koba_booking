@@ -16,7 +16,7 @@
           'is-free': !timeInterval.disabled && !timeInterval.booked && !selected(timeInterval),
           'is-booked': !timeInterval.disabled && timeInterval.booked
          }">
-      <div class="booking--display-description" data-ng-if="!timeInterval.disabled">Content</div>
+      <div class="booking--display-description" data-ng-if="!timeInterval.disabled">{{ selected(timeInterval) === 'first' ? t('Your selection') : t(timeInterval.text) }}</div>
     </div>
   </div>
 </div>
