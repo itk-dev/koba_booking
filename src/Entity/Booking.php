@@ -41,7 +41,7 @@ use Drupal\user\UserInterface;
  *     "uuid" = "uuid"
  *   },
  *  links = {
- *     "canonical" = "booking/{koba_booking_booking}",
+ *     "canonical" = "/booking/{koba_booking_booking}",
  *     "edit-form" = "/booking/{koba_booking_booking}/edit",
  *     "delete-form" = "/booking/{koba_booking_booking}/delete",
  *     "collection" = "/booking/list"

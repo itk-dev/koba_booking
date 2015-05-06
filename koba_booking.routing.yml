@@ -7,10 +7,10 @@ koba_booking.booking:
   requirements:
     _permission: 'administer booking settings'
 
-koba_booking.api.resource:
-  path: '/admin/booking/api/resource'
+koba_booking.api.bookings:
+  path: '/admin/booking/api/bookings'
   defaults:
-    _controller: '\Drupal\koba_booking\Controller\KobaBookingApiController::resource'
+    _controller: '\Drupal\koba_booking\Controller\KobaBookingApiController::bookings'
   requirements:
     _permission: 'access content'
     _content_type_format: text/html

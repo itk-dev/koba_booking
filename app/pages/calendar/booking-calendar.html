@@ -1,41 +1,23 @@
-<style>
-.calendar {
-  border: 1px solid black;
-}
+<div class="booking--display-time-column">
+  <div class="booking--display-time-row" data-ng-repeat="timeInterval in timeIntervals" data-ng-if="!timeInterval.halfhour" data-ng-class="{'is-disabled': timeInterval.disabled}">
+    <div class="booking--display-row-inner">
+      <div class="booking--display-time"><span>{{ timeInterval.time | date:'HH:mm' }}</span></div>
+    </div>
+  </div>
+</div>
 
-.calendar-time {
-  display: inline-block;
-  width: 100px;
-}
-
-.calendar-description {
-  display: inline-block;
-}
-
-.is-disabled {
-  background-color: darkgray;
-}
-
-.is-selected {
-  background-color: green;
-}
-
-.is-free {
-  background-color: white;
-}
-
-.is-booked {
-  background-color: red;
-}
-</style>
-<div class="calendar" data-ng-repeat="timeInterval in timeIntervals" data-ng-if="loaded">
-  <div class="calendar-row" data-ng-class="{'is-disabled': timeInterval.disabled}">
-    <div class="calendar-time"><span data-ng-if="!timeInterval.halfhour">{{ timeInterval.time | date:'HH:mm' }}</span></div>
-    <div class="calendar-description" data-ng-if="!timeInterval.disabled"
-         data-ng-class="{
+<div class="booking--display-content-column">
+  <div class="booking--display-row" data-ng-click="select(timeInterval)" data-ng-repeat="timeInterval in timeIntervals" data-ng-if="loaded" data-ng-class="{'is-disabled': timeInterval.disabled, 'is-selected': !timeInterval.disabled && selected(timeInterval)}">
+    <div class="booking--display-row-inner" data-ng-class="{
           'is-selected': !timeInterval.disabled && selected(timeInterval),
-          'is-free': !timeInterval.disabled && free(timeInterval) && !selected(timeInterval),
-          'is-booked': !timeInterval.disabled && !free(timeInterval)
-         }">Content</div>
+          'is-selected-first': !timeInterval.disabled && selected(timeInterval) === 'first',
+          'is-selected-first-last': !timeInterval.disabled && selected(timeInterval) === 'first-last',
+          'is-selected-last': !timeInterval.disabled && selected(timeInterval) === 'last',
+          'is-selected-middle': !timeInterval.disabled && selected(timeInterval) === 'middle',
+          'is-free': !timeInterval.disabled && !timeInterval.booked && !selected(timeInterval),
+          'is-booked': !timeInterval.disabled && timeInterval.booked
+         }">
+      <div class="booking--display-description" data-ng-if="!timeInterval.disabled">{{ selected(timeInterval) === 'first' ? t('Your selection') : t(timeInterval.text) }}</div>
+    </div>
   </div>
 </div>
