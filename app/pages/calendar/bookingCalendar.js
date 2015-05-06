@@ -6,8 +6,8 @@
 /**
  * Booking calendar directive.
  */
-angular.module('kobaApp')
-  .factory('kobaFactory', ['$http', '$q',
+angular.module("kobaApp")
+  .factory("kobaFactory", ['$http', '$q',
     function ($http, $q) {
       'use strict';
 
@@ -67,8 +67,8 @@ angular.module('kobaApp')
       return factory;
     }
   ])
-  .directive('bookingCalendar', ['kobaFactory',
-    function (kobaFactory) {
+  .directive("bookingCalendar", ['kobaFactory', '$window',
+    function (kobaFactory, $window) {
       return {
         restrict: 'E',
         scope: {
@@ -89,7 +89,7 @@ angular.module('kobaApp')
 
           // Open up for translations.
           scope.t = function(str) {
-            return window.Drupal.t(str);
+            return $window.Drupal.t(str);
           };
 
           /**

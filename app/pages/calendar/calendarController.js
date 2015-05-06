@@ -1,4 +1,4 @@
-angular.module('kobaApp').controller('CalendarController', ['$scope', '$window', 'kobaFactory',
+angular.module('kobaApp').controller("CalendarController", ['$scope', '$window', 'kobaFactory',
   function ($scope, $window, kobaFactory) {
     // Open up for translations.
     $scope.t = function(str) {
