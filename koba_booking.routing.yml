@@ -109,7 +109,7 @@ koba_booking.calendar_page:
   path: '/booking/calendar'
   defaults:
     _controller: '\Drupal\koba_booking\Controller\KobaBookingController::calendarPage'
-    _title: 'Add booking'
+    _title: 'Booking'
   requirements:
     _permission: 'access content'
 
@@ -117,7 +117,7 @@ koba_booking.booking_add:
   path: '/booking/add'
   defaults:
     _entity_form: koba_booking_booking.add
-    _title: 'Add Booking'
+    _title: 'Booking'
   requirements:
     _entity_create_access: 'koba_booking_booking'
 

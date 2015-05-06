@@ -57,7 +57,6 @@ class KobaBookingApiController extends ControllerBase {
     $apikey = $config->get('koba_booking.api_key', '');
     $path = $config->get('koba_booking.path', '');
 
-    //$url = $path . '/api/resources/' . $resource . '/group/default/bookings/from/' . $from . '/to/' . $to . '?apikey=' . $apikey;
     $url = $path . '/api/resources/' . $resource . '/group/default/freebusy/from/' . $from . '/to/' . $to . '?apikey=' . $apikey;
 
     // Instantiates a new guzzle client.

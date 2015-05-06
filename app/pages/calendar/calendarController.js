@@ -85,6 +85,13 @@ angular.module('kobaApp').controller('CalendarController', ['$scope', '$window',
     };
 
     /**
+     * Show/hide resource picker.
+     */
+    $scope.toggleResource = function() {
+      $scope.pickResource = !$scope.pickResource;
+    };
+
+    /**
      * Impose constraints on start time.
      * - Never more than end, push end time forward.
      */

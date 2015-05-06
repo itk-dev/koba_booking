@@ -19,14 +19,14 @@ use Drupal\file\Entity\File;
 class BookingSettingsForm extends FormBase {
 
   /**
-   * {@inheritdoc}.
+   * {@inheritdoc}
    */
   public function getFormId() {
     return 'koba_booking_settings';
   }
 
   /**
-   * {@inheritdoc}.
+   * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('koba_booking.settings');
@@ -43,7 +43,7 @@ class BookingSettingsForm extends FormBase {
 
     // If form changed.
     if (!empty($input)) {
-      // Search period changed
+      // Search period changed.
       if ($input['search_period'] == 1) {
         drupal_set_message($search_period_message, $type = 'warning');
       }
@@ -68,7 +68,7 @@ class BookingSettingsForm extends FormBase {
     $form['booking_status']['half_year'] = array(
       '#type' => 'radios',
       '#options' => array(
-        'first half year open'=> t('Booking open') . ' ' . $first_half_year,
+        'first half year open' => t('Booking open') . ' ' . $first_half_year,
         'second half year open' => t('Booking open') . ' ' . $second_half_year,
       ),
       '#empty_value' => TRUE,
@@ -211,8 +211,8 @@ class BookingSettingsForm extends FormBase {
         // Add file to file_usage table.
         \Drupal::service('file.usage')->add($file, 'koba_booking', 'user', '1');
       }
-    } else {
-
+    }
+    else {
       // If old file exists but no file set in form, remove old file.
       if ($old_fid) {
         removeFile($old_fid);
@@ -241,9 +241,11 @@ class BookingSettingsForm extends FormBase {
 /**
  * Creates a last date for possible bookings based on current month and which planning state the system is set to.
  *
- * @param $form_state
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form.
+ *
  * @return int
+ *   Last booking date possible.
  */
 function setLastBookingDate($form_state) {
   $current_month = date('n');
@@ -256,7 +258,8 @@ function setLastBookingDate($form_state) {
     if ($planning_state == 'second half year open') {
       $last_booking_date = strtotime('31-12-' . date('Y'));
     }
-  } else {
+  }
+  else {
     // If currently 2nd half year.
     $last_booking_date = strtotime('31-12-' . date('Y'));
     // If the system is set to request phase or has opened for the next half year.
@@ -273,6 +276,7 @@ function setLastBookingDate($form_state) {
  * Creates an array of current and next half year strings depending on current time.
  *
  * @return array
+ *   An array containing the which two half years are upcoming.
  */
 function getHalfYears() {
   $half_years = array();
@@ -281,7 +285,8 @@ function getHalfYears() {
   if ($current_month < 7) {
     $half_years[] = t('1st half year') . ' ' . date('Y');
     $half_years[] = t('2nd half year') . ' ' . date('Y');
-  } else {
+  }
+  else {
     $half_years[] = t('1st half year') . ' ' . date('Y', strtotime('+1 year'));
     $half_years[] = t('2nd half year') . ' ' . date('Y');
   }
@@ -293,9 +298,8 @@ function getHalfYears() {
 /**
  * Deletes a a file from file usage table.
  *
- * @param $fid
- *  The file id of the file to delete.
- *
+ * @param int $fid
+ *   The file id of the file to delete.
  */
 function removeFile($fid) {
   // Load and delete old file.

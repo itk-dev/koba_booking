@@ -80,7 +80,6 @@ class KobaAutocompleteController implements ContainerInjectionInterface {
       // will display it as debugging information.
       return new Response(t('Taxonomy field @field_name not found.', array('@field_name' => $field_name)), 403);
     }
-    $field_storage = $field_storage_definitions[$field_name];
 
     $matches = array();
     if ($input_value != '') {
@@ -90,10 +89,11 @@ class KobaAutocompleteController implements ContainerInjectionInterface {
     return new JsonResponse($matches);
   }
 
-
   /**
    * Gets bookings which matches some typed value.
    *
+   * @param string $field_name
+   *   The name of the field.
    * @param string $input_value
    *   The full typed tags string.
    *
@@ -104,14 +104,15 @@ class KobaAutocompleteController implements ContainerInjectionInterface {
     $matches = array();
 
     switch ($field_name) {
-      case 'booking_name' :
+      case 'booking_name':
         // Select rows that match by booking_name.
         $booking_ids = \Drupal::entityQuery('koba_booking_booking')
           ->condition('booking_name', $input_value, 'CONTAINS')
           ->range(0, 10)
           ->execute();
         break;
-      case 'name' :
+
+      case 'name':
         // Select rows that match by title.
         $booking_ids = \Drupal::entityQuery('koba_booking_booking')
           ->condition('name', $input_value, 'CONTAINS')
@@ -119,7 +120,6 @@ class KobaAutocompleteController implements ContainerInjectionInterface {
           ->execute();
         break;
     }
-
 
     if (!empty($booking_ids)) {
       foreach ($booking_ids as $id) {

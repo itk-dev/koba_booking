@@ -32,7 +32,7 @@ class BookingForm extends ContentEntityForm {
       '#languages' => Language::STATE_ALL,
     );
 
-    $form['#attached']['library'][] = 'koba_booking/date-picker';
+    $form['#attached']['library'][] = 'koba_booking/angular';
 
     return $form;
   }

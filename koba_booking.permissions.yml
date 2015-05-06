@@ -1,14 +1,21 @@
 'delete booking entity':
   title: Delete booking content.
+  restrict access: true
 'add booking entity':
   title: Add booking content
+  restrict access: true
 'view booking entity':
   title: View booking content
+  restrict access: true
 'edit booking entity':
   title: Edit booking content
+  restrict access: true
 'administer booking settings':
   title: Administer settings
+  restrict access: true
 'configure booking api settings':
   title: Configure booking API settings
+  restrict access: true
 'view pending bookings list':
   title: View pending bookings list
+  restrict access: true

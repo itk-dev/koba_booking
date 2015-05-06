@@ -139,6 +139,7 @@ angular.module('kobaApp')
             function (val) {
               if (!val) return;
               if (!scope.selectedResource || !scope.selectedDate) return;
+              scope.loaded = true;
 
               scope.loaded = false;
 
