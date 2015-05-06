@@ -1,10 +1,9 @@
 # --- Administration pages routing --- #
-koba_booking.requests:
-  path: '/admin/booking/requests'
+koba_booking.booking:
+  path: '/admin/booking'
   defaults:
-#    _form: '\Drupal\koba_booking\Form\AdminRequestListForm'
     _entity_list: 'koba_booking_booking'
-    _title: 'New bookings list'
+    _title: 'Bookings list'
   requirements:
     _permission: 'administer booking settings'
 

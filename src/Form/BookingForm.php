@@ -55,7 +55,7 @@ class BookingForm extends ContentEntityForm {
     $stamp_to = mktime($to_time_elements['0'], $to_time_elements['1'], '00', $date_elements['1'], $date_elements['0'], $date_elements['2']);
 
     // Redirect after submit.
-    $form_state->setRedirect('koba_booking.requests');
+    $form_state->setRedirect('koba_booking.booking');
     $entity = $this->getEntity();
 
     // Save data.
