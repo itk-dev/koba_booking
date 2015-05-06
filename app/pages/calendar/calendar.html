@@ -4,7 +4,7 @@
       <div class="booking--selection-date-picker">
         <div class="booking--selection-header-date" data-ng-click="toggleDate()">{{ t('Date') }}</div>
         <div class="booking--selection-display-date" data-ng-click="toggleDate()" >{{ getSelectedDate() | date: 'd/M-yy' }}</div>
-        <div class="booking--popup" data-ng-cloak data-ng-show="pickDate">
+        <div class="booking--popup" data-ng-cloak data-ng-if="pickDate">
           <div class="booking--popup-inner">
             <div class="booking--popup-header">
               <h2 class="booking--popup-header-text">{{ t('Date') }}</h2>
@@ -59,7 +59,7 @@
     </div>
   </div>
   <div class="booking--display">
-    <div class="booking--display-date">{{ getSelectedDate() | date: 'EEEE d/M-yyyy' }}</div>
+    <div class="booking--display-date"><span data-ng-click="prevDate()">-</span> {{ getSelectedDate() | date: 'EEEE d/M-yyyy' }} <span data-ng-click="nextDate()">+</span></div>
     <booking-calendar selected-date="selected.date" selected-resource="selected.resource" selected-start="selected.time.start" selected-end="selected.time.end" interest-period="interestPeriod" disabled="disabled"></booking-calendar>
   </div>
 </div>

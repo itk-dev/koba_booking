@@ -91,6 +91,23 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
     };
 
     /**
+     * Go to previous date.
+     *   Not before today.
+     */
+    $scope.prevDate = function() {
+      if ($scope.selected.date.day() > moment().day()) {
+        $scope.selected.date.add(-1, 'day');
+      }
+    };
+
+    /**
+     * Go to next date.
+     */
+    $scope.nextDate = function() {
+      $scope.selected.date.add(1, 'day');
+    };
+
+    /**
      * Show/hide date picker.
      */
     $scope.toggleDate = function() {
