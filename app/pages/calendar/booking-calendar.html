@@ -1,20 +1,5 @@
-<style>
-  .is-disabled {
-    background-color: darkgray;
-  }
-  .is-selected {
-    background-color: green;
-  }
-  .is-free {
-    background-color: white;
-  }
-  .is-booked {
-    background-color: red;
-  }
-</style>
-
 <div class="booking--display-time-column">
-  <div class="booking--display-time-row" data-ng-repeat="timeInterval in timeIntervals" data-ng-if="!timeInterval.halfhour" data-ng-if="loaded" data-ng-class="{'is-disabled': timeInterval.disabled}">
+  <div class="booking--display-time-row" data-ng-repeat="timeInterval in timeIntervals" data-ng-if="!timeInterval.halfhour" data-ng-class="{'is-disabled': timeInterval.disabled}">
     <div class="booking--display-row-inner">
       <div class="booking--display-time"><span>{{ timeInterval.time | date:'HH:mm' }}</span></div>
     </div>
@@ -22,11 +7,11 @@
 </div>
 
 <div class="booking--display-content-column">
-  <div class="booking--display-row " data-ng-repeat="timeInterval in timeIntervals" data-ng-if="loaded" data-ng-class="{'is-disabled': timeInterval.disabled, 'is-selected': !timeInterval.disabled && selected(timeInterval)}">
+  <div class="booking--display-row" data-ng-click="select(timeInterval)" data-ng-repeat="timeInterval in timeIntervals" data-ng-if="loaded" data-ng-class="{'is-disabled': timeInterval.disabled, 'is-selected': !timeInterval.disabled && selected(timeInterval)}">
     <div class="booking--display-row-inner" data-ng-class="{
           'is-selected': !timeInterval.disabled && selected(timeInterval),
-          'is-free': !timeInterval.disabled && free(timeInterval) && !selected(timeInterval),
-          'is-booked': !timeInterval.disabled && !free(timeInterval)
+          'is-free': !timeInterval.disabled && !timeInterval.booked && !selected(timeInterval),
+          'is-booked': !timeInterval.disabled && timeInterval.booked
          }">
       <div class="booking--display-description" data-ng-if="!timeInterval.disabled">Content</div>
     </div>
