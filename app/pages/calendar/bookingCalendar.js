@@ -130,7 +130,28 @@ angular.module("kobaApp")
            */
           scope.select = function (timeInterval) {
             scope.selectedStart = new Date(timeInterval.timeFromZero.hours * 60 * 60 * 1000 + timeInterval.timeFromZero.minutes * 60 * 1000);
-            scope.selectedEnd = new Date((timeInterval.timeFromZero.hours + 1) * 60 * 60 * 1000 + timeInterval.timeFromZero.minutes * 60 * 1000);
+          };
+
+          /**
+           * Increase end time by half an hour.
+           */
+          scope.incTime = function incTime() {
+            var newTime = scope.selectedEnd.getTime() + 30 * 60 * 1000;
+            if (newTime > 24 * 60 * 60 * 1000) {
+              newTime = 24 * 60 * 60 * 1000;
+            }
+            scope.selectedEnd = new Date(newTime);
+          };
+
+          /**
+           * Decrease end time by half an hour.
+           */
+          scope.decTime = function decTime() {
+            var newTime = scope.selectedEnd.getTime() - 30 * 60 * 1000;
+            if (newTime < 0) {
+              newTime = 0;
+            }
+            scope.selectedEnd = new Date(newTime);
           };
 
           /**
