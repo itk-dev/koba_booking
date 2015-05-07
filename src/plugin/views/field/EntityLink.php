@@ -81,7 +81,9 @@ class EntityLink extends FieldPluginBase {
     if ($entity = $this->getEntity($values)) {
       $ref = $entity->booking_resource;
       $entity = array_pop($ref->referencedEntities());
-      return $this->renderLink($entity, $values);
+      if ($entity) {
+        return $this->renderLink($entity, $values);
+      }
     }
   }
 

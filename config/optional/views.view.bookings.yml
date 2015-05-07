@@ -705,6 +705,54 @@ display:
           entity_type: koba_booking_booking
           entity_field: name
           plugin_id: string
+        booking_name:
+          id: booking_name
+          table: booking
+          field: booking_name
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: booking_name_op
+            label: Name
+            description: ''
+            use_operator: false
+            operator: booking_name_op
+            identifier: booking_name
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              editor: '0'
+            autocomplete_filter: 1
+            autocomplete_route_name: koba_booking.autocomplete
+            autocomplete_min_chars: 0
+            autocomplete_items: 10
+            autocomplete_field: ''
+            autocomplete_raw_suggestion: true
+            autocomplete_raw_dropdown: true
+            autocomplete_dependent: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: koba_booking_booking
+          entity_field: booking_name
+          plugin_id: booking_autocomplete
       relationships: {  }
     cache_metadata:
       contexts:
