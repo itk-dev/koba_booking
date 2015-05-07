@@ -63,13 +63,15 @@ class KobaAutocompleteController implements ContainerInjectionInterface {
    *   The entity_type.
    * @param string $field_name
    *   The name of the booking field.
+   * @param array $view_args
+   *   Arguments from view.
    *
    * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\Response
    *   When valid field name is specified, a JSON response containing the
    *   autocomplete suggestions for a booking. Otherwise a normal response
    *   containing an error message.
    */
-  public function autocomplete(Request $request, $entity_type, $field_name) {
+  public function autocomplete(Request $request, $entity_type, $field_name, $view_args = array()) {
     $input_value = $request->query->get('q');
 
     // Make sure the field exists and is a taxonomy field.

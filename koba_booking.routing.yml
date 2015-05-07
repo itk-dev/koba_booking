@@ -1,9 +1,9 @@
 # --- Administration pages routing --- #
-koba_booking.requests:
-  path: '/admin/booking/requests'
+koba_booking.booking:
+  path: '/admin/booking'
   defaults:
-    _form: '\Drupal\koba_booking\Form\AdminRequestListForm'
-    _title: 'New bookings list'
+    _entity_list: 'koba_booking_booking'
+    _title: 'Bookings list'
   requirements:
     _permission: 'administer booking settings'
 
@@ -140,7 +140,7 @@ koba_booking.autocomplete:
 
 # --- Actions --- #
 koba_booking.action_accept:
-  path: '/booking/accept/{koba_booking_booking}'
+  path: '/booking/{koba_booking_booking}/accept'
   defaults:
     _controller: '\Drupal\koba_booking\Controller\KobaBookingController::actionAccept'
     _title: 'Cancel action'
@@ -150,7 +150,7 @@ koba_booking.action_accept:
     _admin_route: TRUE
 
 koba_booking.action_refuse:
-  path: '/booking/refuse/{koba_booking_booking}'
+  path: '/booking/{koba_booking_booking}/refuse'
   defaults:
     _controller: '\Drupal\koba_booking\Controller\KobaBookingController::actionRefuse'
     _title: 'Cancel action'
@@ -160,7 +160,7 @@ koba_booking.action_refuse:
     _admin_route: TRUE
 
 koba_booking.action_cancel:
-  path: '/booking/cancel/{koba_booking_booking}'
+  path: '/booking/{koba_booking_booking}/cancel/'
   defaults:
     _controller: '\Drupal\koba_booking\Controller\KobaBookingController::actionCancel'
     _title: 'Cancel action'

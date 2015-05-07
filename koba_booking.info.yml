@@ -10,3 +10,4 @@ dependencies:
   - entity_reference
   - datetime
   - file
+  - views
