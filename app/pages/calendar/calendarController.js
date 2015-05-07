@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @TODO: missing description.
+ */
+
 angular.module('kobaApp').controller("CalendarController", ['$scope', '$window', 'kobaFactory',
   function ($scope, $window, kobaFactory) {
     /**
@@ -48,6 +53,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
 
     /**
      * Set the selected resource.
+     *
      * @param resource
      *   The resource to select.
      */
@@ -185,6 +191,8 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
     /**
      * Impose constraints on start time.
      * - Never more than end, push end time forward.
+     *
+     * @TODO: Should this use moment to do calculations?
      */
     $scope.$watch('selected.time.start', function(val) {
       if (!val) return;
@@ -197,6 +205,8 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
     /**
      * Impose constraints on end time.
      * - Never less than start time, push start time back.
+     *
+     * @TODO: Should this use moment to do calculations?
      */
     $scope.$watch('selected.time.end', function(val) {
       if (!val) return;

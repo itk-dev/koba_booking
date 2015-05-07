@@ -1,0 +1,1515 @@
+uuid: 47c66d6f-c288-4607-8e5d-93975e6e6467
+langcode: da
+status: true
+dependencies:
+  module:
+    - koba_booking
+    - system
+    - user
+id: bookings
+label: Bookings
+module: koba_booking
+description: 'Find and manage bookings.'
+tag: bookings
+base_table: booking
+base_field: id
+core: 8.x
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: 0
+    display_options:
+      access:
+        type: perm
+        options:
+          perm: 'view booking entity'
+      cache:
+        type: none
+      query:
+        type: views_query
+        options:
+          disable_sql_rewrite: false
+          distinct: false
+          replica: false
+          query_comment: ''
+          query_tags: {  }
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Filter
+          reset_button: true
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      pager:
+        type: full
+        options:
+          items_per_page: 50
+          offset: 0
+          id: 0
+          total_pages: 0
+          tags:
+            previous: '‹ previous'
+            next: 'next ›'
+            first: '« first'
+            last: 'last »'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          quantity: 9
+      style:
+        type: table
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+          override: true
+          sticky: false
+          caption: ''
+          summary: ''
+          description: ''
+          columns:
+            booking_from_date_1: booking_from_date_1
+            booking_to_date: booking_to_date
+            koba_booking_booking_bulk_form: koba_booking_booking_bulk_form
+            name_1: name_1
+            booking_resource: booking_resource
+            name: name
+            booking_from_date: booking_from_date
+            nothing: nothing
+            operations: operations
+          info:
+            booking_from_date_1:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            booking_to_date:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            koba_booking_booking_bulk_form:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            name_1:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            booking_resource:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            name:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            booking_from_date:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            nothing:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            operations:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+          default: name
+          empty_table: true
+      row:
+        type: fields
+      fields:
+        booking_from_date_1:
+          id: booking_from_date_1
+          table: booking
+          field: booking_from_date
+          relationship: none
+          group_type: group
+          admin_label: 'Time from'
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          date_format: dokk_tidspunkt
+          custom_date_format: ''
+          timezone: ''
+          entity_type: koba_booking_booking
+          entity_field: booking_from_date
+          plugin_id: date
+        booking_to_date:
+          id: booking_to_date
+          table: booking
+          field: booking_to_date
+          relationship: none
+          group_type: group
+          admin_label: 'Time to'
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          date_format: dokk_tidspunkt
+          custom_date_format: ''
+          timezone: ''
+          entity_type: koba_booking_booking
+          entity_field: booking_to_date
+          plugin_id: date
+        koba_booking_booking_bulk_form:
+          id: koba_booking_booking_bulk_form
+          table: booking
+          field: koba_booking_booking_bulk_form
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'Bulk update'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          action_title: 'With selection'
+          include_exclude: exclude
+          selected_actions: {  }
+          entity_type: koba_booking_booking
+          plugin_id: bulk_form
+        name_1:
+          id: name_1
+          table: booking
+          field: name
+          entity_type: koba_booking_booking
+          entity_field: name
+          plugin_id: standard
+        booking_resource:
+          id: booking_resource
+          table: booking
+          field: booking_resource
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Resource
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          text: ''
+          link_to_entity: false
+          entity_type: koba_booking_booking
+          entity_field: booking_resource
+          plugin_id: entity_label
+        name:
+          id: name
+          table: booking
+          field: booking_name
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Name
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          link_to_user: false
+          overwrite_anonymous: false
+          anonymous_text: ''
+          entity_type: koba_booking_booking
+          entity_field: booking_name
+        booking_from_date:
+          id: booking_from_date
+          table: booking
+          field: booking_from_date
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Date
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          date_format: custom
+          custom_date_format: d-m-Y
+          timezone: ''
+          entity_type: koba_booking_booking
+          entity_field: booking_from_date
+          plugin_id: date
+        nothing:
+          id: nothing
+          table: views
+          field: nothing
+          relationship: none
+          group_type: group
+          admin_label: 'Custom: Time'
+          label: Time
+          exclude: false
+          alter:
+            alter_text: true
+            text: '{{ booking_from_date_1 }} - {{ booking_to_date }}'
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: false
+          plugin_id: custom
+        operations:
+          id: operations
+          table: booking
+          field: operations
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'Operations links'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          destination: true
+          entity_type: koba_booking_booking
+          plugin_id: entity_operations
+      title: 'New bookings'
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          tokenize: false
+          content: 'No bookings available.'
+          plugin_id: text_custom
+      use_more: false
+      use_more_always: false
+      use_more_text: more
+      display_comment: ''
+      use_ajax: false
+      hide_attachment_summary: false
+      show_admin_links: true
+      group_by: false
+      link_url: ''
+      link_display: page_1
+      css_class: ''
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      display_extenders: {  }
+      sorts:
+        booking_name:
+          id: booking_name
+          table: booking
+          field: booking_name
+          entity_type: koba_booking_booking
+          plugin_id: standard
+      filters:
+        booking_status:
+          id: booking_status
+          table: booking
+          field: booking_status
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: request
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: koba_booking_booking
+          entity_field: booking_status
+          plugin_id: string
+        name:
+          id: name
+          table: booking
+          field: name
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: name_op
+            label: Title
+            description: ''
+            use_operator: false
+            operator: name_op
+            identifier: name
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              editor: '0'
+            autocomplete_filter: 1
+            autocomplete_route_name: koba_booking.autocomplete
+            autocomplete_min_chars: '0'
+            autocomplete_items: '10'
+            autocomplete_field: name_1
+            autocomplete_raw_suggestion: 1
+            autocomplete_raw_dropdown: 1
+            autocomplete_dependent: 0
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: koba_booking_booking
+          entity_field: name
+          plugin_id: string
+        booking_name:
+          id: booking_name
+          table: booking
+          field: booking_name
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: booking_name_op
+            label: Name
+            description: ''
+            use_operator: false
+            operator: booking_name_op
+            identifier: booking_name
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              editor: '0'
+            autocomplete_filter: 1
+            autocomplete_route_name: koba_booking.autocomplete
+            autocomplete_min_chars: 0
+            autocomplete_items: 10
+            autocomplete_field: ''
+            autocomplete_raw_suggestion: true
+            autocomplete_raw_dropdown: true
+            autocomplete_dependent: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: koba_booking_booking
+          entity_field: booking_name
+          plugin_id: booking_autocomplete
+      relationships: {  }
+    cache_metadata:
+      contexts:
+        - 'languages:language_interface'
+        - url
+      cacheable: false
+  page_1:
+    display_plugin: page
+    id: page_1
+    display_title: List
+    position: 1
+    display_options:
+      path: admin/booking/requests
+      show_admin_links: false
+      menu:
+        type: 'default tab'
+        title: 'New bookings'
+        description: 'Find and manage bookings.'
+        parent: ''
+        weight: -50
+        context: '0'
+        menu_name: admin
+      tab_options:
+        type: normal
+        title: 'Koba Booking'
+        description: 'Manage requested bookings.'
+        weight: 0
+      defaults:
+        show_admin_links: false
+      display_extenders: {  }
+      display_description: ''
+    cache_metadata:
+      contexts:
+        - 'languages:language_interface'
+        - url
+      cacheable: false
+  page_2:
+    display_plugin: page
+    id: page_2
+    display_title: Accepted
+    position: 1
+    display_options:
+      path: admin/booking/accepted
+      show_admin_links: false
+      menu:
+        type: tab
+        title: 'Accepted bookings'
+        description: 'Find and manage bookings.'
+        parent: koba_booking.booking
+        weight: 1
+        context: '0'
+        menu_name: admin
+      tab_options:
+        type: normal
+        title: 'Koba Booking'
+        description: 'Manage requested bookings.'
+        weight: 0
+      defaults:
+        show_admin_links: false
+        filters: false
+        filter_groups: false
+        title: false
+      display_extenders: {  }
+      display_description: ''
+      filters:
+        booking_status:
+          id: booking_status
+          table: booking
+          field: booking_status
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: accepted
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            autocomplete_filter: 0
+            autocomplete_route_name: ''
+            autocomplete_min_chars: 0
+            autocomplete_items: 10
+            autocomplete_field: ''
+            autocomplete_raw_suggestion: true
+            autocomplete_raw_dropdown: true
+            autocomplete_dependent: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: koba_booking_booking
+          entity_field: booking_status
+          plugin_id: string
+        name:
+          id: name
+          table: booking
+          field: name
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: name_op
+            label: Title
+            description: ''
+            use_operator: false
+            operator: name_op
+            identifier: name
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              editor: '0'
+            autocomplete_filter: 1
+            autocomplete_route_name: koba_booking.autocomplete
+            autocomplete_min_chars: '0'
+            autocomplete_items: '10'
+            autocomplete_field: name_1
+            autocomplete_raw_suggestion: 1
+            autocomplete_raw_dropdown: 1
+            autocomplete_dependent: 0
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: koba_booking_booking
+          entity_field: name
+          plugin_id: string
+        booking_name:
+          id: booking_name
+          table: booking
+          field: booking_name
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: booking_name_op
+            label: Name
+            description: ''
+            use_operator: false
+            operator: booking_name_op
+            identifier: booking_name
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              editor: '0'
+            autocomplete_filter: 1
+            autocomplete_route_name: koba_booking.autocomplete
+            autocomplete_min_chars: 0
+            autocomplete_items: 10
+            autocomplete_field: ''
+            autocomplete_raw_suggestion: true
+            autocomplete_raw_dropdown: true
+            autocomplete_dependent: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: koba_booking_booking
+          entity_field: booking_name
+          plugin_id: booking_autocomplete
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      title: 'Accepted bookings'
+    cache_metadata:
+      contexts:
+        - 'languages:language_interface'
+        - url
+      cacheable: false
+  page_3:
+    display_plugin: page
+    id: page_3
+    display_title: Refused
+    position: 1
+    display_options:
+      path: admin/booking/refused
+      show_admin_links: false
+      menu:
+        type: tab
+        title: 'Refused bookings'
+        description: 'Find and manage bookings.'
+        parent: koba_booking.booking
+        weight: 2
+        context: '0'
+        menu_name: admin
+      tab_options:
+        type: normal
+        title: 'Koba Booking'
+        description: 'Manage requested bookings.'
+        weight: 0
+      defaults:
+        show_admin_links: false
+        filters: false
+        filter_groups: false
+        title: false
+      display_extenders: {  }
+      display_description: ''
+      filters:
+        booking_status:
+          id: booking_status
+          table: booking
+          field: booking_status
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: refused
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            autocomplete_filter: 0
+            autocomplete_route_name: ''
+            autocomplete_min_chars: 0
+            autocomplete_items: 10
+            autocomplete_field: ''
+            autocomplete_raw_suggestion: true
+            autocomplete_raw_dropdown: true
+            autocomplete_dependent: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: koba_booking_booking
+          entity_field: booking_status
+          plugin_id: string
+        name:
+          id: name
+          table: booking
+          field: name
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: name_op
+            label: Title
+            description: ''
+            use_operator: false
+            operator: name_op
+            identifier: name
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              editor: '0'
+            autocomplete_filter: 1
+            autocomplete_route_name: koba_booking.autocomplete
+            autocomplete_min_chars: '0'
+            autocomplete_items: '10'
+            autocomplete_field: name_1
+            autocomplete_raw_suggestion: 1
+            autocomplete_raw_dropdown: 1
+            autocomplete_dependent: 0
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: koba_booking_booking
+          entity_field: name
+          plugin_id: string
+        booking_name:
+          id: booking_name
+          table: booking
+          field: booking_name
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: booking_name_op
+            label: Name
+            description: ''
+            use_operator: false
+            operator: booking_name_op
+            identifier: booking_name
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              editor: '0'
+            autocomplete_filter: 1
+            autocomplete_route_name: koba_booking.autocomplete
+            autocomplete_min_chars: 0
+            autocomplete_items: 10
+            autocomplete_field: ''
+            autocomplete_raw_suggestion: true
+            autocomplete_raw_dropdown: true
+            autocomplete_dependent: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: koba_booking_booking
+          entity_field: booking_name
+          plugin_id: booking_autocomplete
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      title: 'Refused bookings'
+    cache_metadata:
+      contexts:
+        - 'languages:language_interface'
+        - url
+      cacheable: false
+  page_4:
+    display_plugin: page
+    id: page_4
+    display_title: Cancelled
+    position: 1
+    display_options:
+      path: admin/booking/cancelled
+      show_admin_links: false
+      menu:
+        type: tab
+        title: 'Cancelled bookings'
+        description: 'Find and manage bookings.'
+        parent: koba_booking.booking
+        weight: 3
+        context: '0'
+        menu_name: admin
+      tab_options:
+        type: normal
+        title: 'Koba Booking'
+        description: 'Manage requested bookings.'
+        weight: 0
+      defaults:
+        show_admin_links: false
+        filters: false
+        filter_groups: false
+        title: false
+      display_extenders: {  }
+      display_description: ''
+      filters:
+        booking_status:
+          id: booking_status
+          table: booking
+          field: booking_status
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: cancelled
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            autocomplete_filter: 0
+            autocomplete_route_name: ''
+            autocomplete_min_chars: 0
+            autocomplete_items: 10
+            autocomplete_field: ''
+            autocomplete_raw_suggestion: true
+            autocomplete_raw_dropdown: true
+            autocomplete_dependent: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: koba_booking_booking
+          entity_field: booking_status
+          plugin_id: string
+        name:
+          id: name
+          table: booking
+          field: name
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: name_op
+            label: Title
+            description: ''
+            use_operator: false
+            operator: name_op
+            identifier: name
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              editor: '0'
+            autocomplete_filter: 1
+            autocomplete_route_name: koba_booking.autocomplete
+            autocomplete_min_chars: '0'
+            autocomplete_items: '10'
+            autocomplete_field: name_1
+            autocomplete_raw_suggestion: 1
+            autocomplete_raw_dropdown: 1
+            autocomplete_dependent: 0
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: koba_booking_booking
+          entity_field: name
+          plugin_id: string
+        booking_name:
+          id: booking_name
+          table: booking
+          field: booking_name
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: booking_name_op
+            label: Name
+            description: ''
+            use_operator: false
+            operator: booking_name_op
+            identifier: booking_name
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              editor: '0'
+            autocomplete_filter: 1
+            autocomplete_route_name: koba_booking.autocomplete
+            autocomplete_min_chars: 0
+            autocomplete_items: 10
+            autocomplete_field: ''
+            autocomplete_raw_suggestion: true
+            autocomplete_raw_dropdown: true
+            autocomplete_dependent: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: koba_booking_booking
+          entity_field: booking_name
+          plugin_id: booking_autocomplete
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      title: 'Cancelled bookings'
+    cache_metadata:
+      contexts:
+        - 'languages:language_interface'
+        - url
+      cacheable: false
+  page_5:
+    display_plugin: page
+    id: page_5
+    display_title: Pending
+    position: 1
+    display_options:
+      path: admin/booking/pending
+      show_admin_links: false
+      menu:
+        type: tab
+        title: 'Pending bookings'
+        description: 'Find and manage bookings.'
+        parent: koba_booking.booking
+        weight: 5
+        context: '0'
+        menu_name: admin
+      tab_options:
+        type: normal
+        title: 'Koba Booking'
+        description: 'Manage requested bookings.'
+        weight: 0
+      defaults:
+        show_admin_links: false
+        filters: false
+        filter_groups: false
+        title: false
+      display_extenders: {  }
+      display_description: ''
+      filters:
+        booking_status:
+          id: booking_status
+          table: booking
+          field: booking_status
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: pending
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            autocomplete_filter: 0
+            autocomplete_route_name: ''
+            autocomplete_min_chars: 0
+            autocomplete_items: 10
+            autocomplete_field: ''
+            autocomplete_raw_suggestion: true
+            autocomplete_raw_dropdown: true
+            autocomplete_dependent: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: koba_booking_booking
+          entity_field: booking_status
+          plugin_id: string
+        name:
+          id: name
+          table: booking
+          field: name
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: name_op
+            label: Title
+            description: ''
+            use_operator: false
+            operator: name_op
+            identifier: name
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              editor: '0'
+            autocomplete_filter: 1
+            autocomplete_route_name: koba_booking.autocomplete
+            autocomplete_min_chars: '0'
+            autocomplete_items: '10'
+            autocomplete_field: name_1
+            autocomplete_raw_suggestion: 1
+            autocomplete_raw_dropdown: 1
+            autocomplete_dependent: 0
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: koba_booking_booking
+          entity_field: name
+          plugin_id: string
+        booking_name:
+          id: booking_name
+          table: booking
+          field: booking_name
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: booking_name_op
+            label: Name
+            description: ''
+            use_operator: false
+            operator: booking_name_op
+            identifier: booking_name
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              editor: '0'
+            autocomplete_filter: 1
+            autocomplete_route_name: koba_booking.autocomplete
+            autocomplete_min_chars: 0
+            autocomplete_items: 10
+            autocomplete_field: ''
+            autocomplete_raw_suggestion: true
+            autocomplete_raw_dropdown: true
+            autocomplete_dependent: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: koba_booking_booking
+          entity_field: booking_name
+          plugin_id: booking_autocomplete
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      title: 'Pending bookings'
+    cache_metadata:
+      contexts:
+        - 'languages:language_interface'
+        - url
+      cacheable: false

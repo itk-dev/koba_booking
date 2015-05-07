@@ -25,6 +25,7 @@ use Drupal\user\UserInterface;
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
  *     "list_builder" = "Drupal\koba_booking\BookingListBuilder",
  *     "access" = "Drupal\koba_booking\BookingAccessControlHandler",
+ *     "views_data" = "Drupal\koba_booking\BookingViewsData",
  *     "form" = {
  *       "add" = "Drupal\koba_booking\Form\BookingForm",
  *       "edit" = "Drupal\koba_booking\Form\BookingForm",
@@ -32,12 +33,11 @@ use Drupal\user\UserInterface;
  *     },
  *
  *   },
+ *   translatable = FALSE,
  *   admin_permission = "administer koba_booking entity",
  *   base_table = "booking",
- *   data_table = "booking_field_data",
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "name",
  *     "uuid" = "uuid"
  *   },
  *  links = {
@@ -47,6 +47,7 @@ use Drupal\user\UserInterface;
  *     "collection" = "/booking/list"
  *   },
  *   field_ui_base_route = "koba_booking.booking_settings",
+ *   common_reference_target = TRUE
  * )
  */
 class Booking extends ContentEntityBase implements BookingInterface {
@@ -110,6 +111,55 @@ class Booking extends ContentEntityBase implements BookingInterface {
 
   /**
    * {@inheritdoc}
+   */
+  public function isNew() {
+    return !empty($this->enforceIsNew) || $this->id() === NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isPending() {
+    return $this->get('booking_status')->value == 'pending';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isRefused() {
+    return $this->get('booking_status')->value == 'refused';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isAccepted() {
+    return $this->get('booking_status')->value == 'accepted';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isRequested() {
+    return $this->get('booking_status')->value == 'requested';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isCancelled() {
+    return $this->get('booking_status')->value == 'cancelled';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isPublic() {
+    return $this->get('booking_public')->value;
+  }
+
+  /**
+   * {@inheritdoc}
    *
    * Define the field properties here.
    *
@@ -149,7 +199,7 @@ class Booking extends ContentEntityBase implements BookingInterface {
           'cancelled' => 'Cancelled',
         ),
       ))
-      ->setRequired(TRUE)
+      ->setRequired(FALSE)
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'type' => 'string',
@@ -157,6 +207,25 @@ class Booking extends ContentEntityBase implements BookingInterface {
       ))
       ->setDisplayOptions('form', array(
         'type' => 'options_select',
+        'weight' => -10,
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
+    // Booking public status field.
+    // ListTextType with a drop down menu widget.
+    $fields['booking_public'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Public status'))
+      ->setDescription(t('Whether the booking is public avaiable.'))
+      ->setDefaultValue(TRUE)
+      ->setRequired(FALSE)
+      ->setDisplayOptions('view', array(
+        'label' => 'above',
+        'type' => 'string',
+        'weight' => -10,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'boolean_checkbox',
         'weight' => -10,
       ))
       ->setDisplayConfigurable('form', TRUE)
@@ -296,8 +365,8 @@ class Booking extends ContentEntityBase implements BookingInterface {
 
     // Usage field.
     $fields['booking_usage'] = BaseFieldDefinition::create('list_string')
-      ->setLabel(t('Resource'))
-      ->setDescription(t('The resource to book.'))
+      ->setLabel(t('Usage'))
+      ->setDescription(t('The usage of the booked resource.'))
       ->setSettings(array(
         'allowed_values' => array(
           'lecture' => t('Lecture'),
@@ -323,74 +392,65 @@ class Booking extends ContentEntityBase implements BookingInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     // Resource/room field.
-    $fields['booking_resource'] = BaseFieldDefinition::create('list_string')
+    $fields['booking_resource'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Resource'))
       ->setDescription(t('The resource to book.'))
       ->setSettings(array(
-        'allowed_values' => array(
-          'm1@aarhus.dk' => 'M1 - Munkecelle',
-          'm2@aarhus.dk' => 'M2 - Munkecelle',
-          'm3@aarhus.dk' => 'M3 - Munkecelle',
-          'meet_a@aarhus.dk' => 'Mødelokale A',
-          'meet_b@aarhus.dk' => 'Mødelokale B',
+        'target_type' => 'node',
+        'target_bundle' => 'room',
+        'handler' => 'default',
+        'handler_settings' => array(
+          'target_bundles' => array('room'),
+          'sort' => array(
+            'field' => 'title',
+            'direction' => 'ASC',
+          ),
         ),
       ))
       ->setDisplayOptions('view', array(
         'label' => 'above',
-        'type' => 'string',
+        'type' => 'entity_reference',
         'weight' => -4,
       ))
       ->setDisplayOptions('form', array(
-        'type' => 'options_select',
+        'type' => 'entity_reference_autocomplete',
         'weight' => -4,
       ))
-      ->setRequired(TRUE)
+      ->setRequired(FALSE)
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
-
 
     // From date.
-    $fields['booking_from_date'] = BaseFieldDefinition::create('string')
+    $fields['booking_from_date'] = BaseFieldDefinition::create('timestamp')
       ->setLabel(t('From'))
-      ->setDescription(t('From date.'))
-      ->setSettings(array(
-        'default_value' => '',
-        'max_length' => 255,
-        'text_processing' => 0,
-      ))
+      ->setDescription(t('Indtastes som åååå-mm-dd / tt:mm:ss.'))
       ->setDisplayOptions('view', array(
         'label' => 'above',
-        'type' => 'string',
+        'type' => 'datetime_timestamp',
         'weight' => -3,
       ))
       ->setDisplayOptions('form', array(
-        'type' => 'string',
+        'type' => 'datetime_timestamp',
         'weight' => -3,
       ))
-      ->setRequired(TRUE)
+      ->setRequired(FALSE)
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-
     // To date.
-    $fields['booking_to_date'] = BaseFieldDefinition::create('string')
+    $fields['booking_to_date'] = BaseFieldDefinition::create('timestamp')
       ->setLabel(t('To'))
-      ->setDescription(t('To date.'))
-      ->setSettings(array(
-        'default_value' => '',
-        'max_length' => 255,
-        'text_processing' => 0,
-      ))
+      ->setDescription(t('Indtastes som åååå-mm-dd / tt:mm:ss.'))
       ->setDisplayOptions('view', array(
         'label' => 'above',
-        'type' => 'string',
-        'weight' => -2,
+        'type' => 'datetime_timestamp',
+        'weight' => -3,
       ))
       ->setDisplayOptions('form', array(
-        'type' => 'string',
-        'weight' => -2,
+        'type' => 'datetime_timestamp',
+        'weight' => -3,
       ))
-      ->setRequired(TRUE)
+      ->setRequired(FALSE)
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 

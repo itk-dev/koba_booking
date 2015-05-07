@@ -7,6 +7,7 @@
 namespace Drupal\koba_booking\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Http\Client;
 use Drupal\koba_booking\BookingInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,13 +26,13 @@ class KobaBookingApiController extends ControllerBase {
   public function resources() {
     // Fetch module config settings.
     $config = \Drupal::config('koba_booking.settings');
-    $apikey = $config->get('koba_booking.api_key', '');
-    $path = $config->get('koba_booking.path', '');
+    $apikey = $config->get('koba_booking.api_key');
+    $path = $config->get('koba_booking.path');
 
     $url = $path . "/api/resources/group/default?apikey=" . $apikey;
 
     // Instantiates a new guzzle client.
-    $client = new \GuzzleHttp\Client();
+    $client = new Client();
 
     try {
       $response = $client->get($url);
@@ -51,6 +52,7 @@ class KobaBookingApiController extends ControllerBase {
    * Get bookings for a resource.
    *
    * @param Request $request
+   *   Represents an HTTP request.
    * @return JsonResponse
    */
   public function bookings(Request $request) {
@@ -66,7 +68,7 @@ class KobaBookingApiController extends ControllerBase {
     $url = $path . '/api/resources/' . $resource . '/group/default/freebusy/from/' . $from . '/to/' . $to . '?apikey=' . $apikey;
 
     // Instantiates a new guzzle client.
-    $client = new \GuzzleHttp\Client();
+    $client = new Client();
 
     try {
       $response = $client->get($url);
@@ -80,5 +82,16 @@ class KobaBookingApiController extends ControllerBase {
         echo $e->getResponse() . "\n";
       }
     }
+  }
+
+  /**
+   * Save booking information in session to pre-fill form later.
+   *
+   * @param Request $request
+   *   Represents an HTTP request.
+   * @return JsonResponse
+   */
+  public function storeSelections(Request $request) {
+
   }
 }

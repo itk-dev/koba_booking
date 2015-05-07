@@ -1,59 +1,11 @@
 # --- Administration pages routing --- #
-koba_booking.requests:
-  path: '/admin/booking/requests'
-  defaults:
-    _form: '\Drupal\koba_booking\Form\AdminRequestListForm'
-    _title: 'New bookings list'
-  requirements:
-    _permission: 'administer booking settings'
-
-koba_booking.api.bookings:
-  path: '/admin/booking/api/bookings'
-  defaults:
-    _controller: '\Drupal\koba_booking\Controller\KobaBookingApiController::bookings'
-  requirements:
-    _permission: 'access content'
-    _content_type_format: text/html
-
-koba_booking.api.resources:
-  path: '/admin/booking/api/resources'
-  defaults:
-    _controller: '\Drupal\koba_booking\Controller\KobaBookingApiController::resources'
-  requirements:
-    _permission: 'access content'
-    _content_type_format: text/html
-
-koba_booking.accepted:
-  path: '/admin/booking/accepted'
-  defaults:
-    _form: '\Drupal\koba_booking\Form\AdminAcceptedListForm'
-    _title: 'Bookings accepted list'
-  requirements:
-    _permission: 'administer booking settings'
-
-koba_booking.refused:
-  path: '/admin/booking/refused'
-  defaults:
-    _form: '\Drupal\koba_booking\Form\AdminRefusedListForm'
-    _title: 'Bookings refused list'
-  requirements:
-    _permission: 'administer booking settings'
-
-koba_booking.cancelled:
-  path: '/admin/booking/cancelled'
-  defaults:
-    _form: '\Drupal\koba_booking\Form\AdminCancelledListForm'
-    _title: 'Bookings cancelled list'
-  requirements:
-    _permission: 'administer booking settings'
-
-koba_booking.pending:
-  path: '/admin/booking/pending'
+koba_booking.booking:
+  path: '/admin/booking'
   defaults:
     _entity_list: 'koba_booking_booking'
-    _title: 'Bookings pending list'
+    _title: 'Bookings list'
   requirements:
-    _permission: 'view pending bookings list'
+    _permission: 'administer booking settings'
 
 koba_booking.booking_settings:
   path: '/admin/booking/settings'
@@ -71,6 +23,22 @@ koba_booking.booking_messages:
   requirements:
     _permission: 'administer booking settings'
 
+# --- Api routing --- #
+koba_booking.api.bookings:
+  path: '/admin/booking/api/bookings'
+  defaults:
+    _controller: '\Drupal\koba_booking\Controller\KobaBookingApiController::bookings'
+  requirements:
+    _permission: 'access content'
+    _content_type_format: text/html
+
+koba_booking.api.resources:
+  path: '/admin/booking/api/resources'
+  defaults:
+    _controller: '\Drupal\koba_booking\Controller\KobaBookingApiController::resources'
+  requirements:
+    _permission: 'access content'
+    _content_type_format: text/html
 
 # --- Entity related routing --- #
 entity.koba_booking_booking.canonical:
@@ -140,7 +108,7 @@ koba_booking.autocomplete:
 
 # --- Actions --- #
 koba_booking.action_accept:
-  path: '/booking/accept/{koba_booking_booking}'
+  path: '/booking/{koba_booking_booking}/accept'
   defaults:
     _controller: '\Drupal\koba_booking\Controller\KobaBookingController::actionAccept'
     _title: 'Cancel action'
@@ -150,7 +118,7 @@ koba_booking.action_accept:
     _admin_route: TRUE
 
 koba_booking.action_refuse:
-  path: '/booking/refuse/{koba_booking_booking}'
+  path: '/booking/{koba_booking_booking}/refuse'
   defaults:
     _controller: '\Drupal\koba_booking\Controller\KobaBookingController::actionRefuse'
     _title: 'Cancel action'
@@ -160,7 +128,7 @@ koba_booking.action_refuse:
     _admin_route: TRUE
 
 koba_booking.action_cancel:
-  path: '/booking/cancel/{koba_booking_booking}'
+  path: '/booking/{koba_booking_booking}/cancel/'
   defaults:
     _controller: '\Drupal\koba_booking\Controller\KobaBookingController::actionCancel'
     _title: 'Cancel action'

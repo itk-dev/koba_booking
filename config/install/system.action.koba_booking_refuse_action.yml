@@ -1,0 +1,9 @@
+id: koba_booking_refuse_action
+label: 'Refuse the selected booking(s)'
+status: true
+langcode: en
+type: koba_booking_booking
+plugin: koba_booking_refuse_action
+dependencies:
+  module:
+    - koba_booking

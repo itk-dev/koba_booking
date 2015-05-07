@@ -31,7 +31,7 @@ class BookingDeleteForm extends ContentEntityConfirmFormBase {
    * If the delete command is canceled, return to the booking list.
    */
   public function getCancelURL() {
-    return new Url('koba_booking.requests');
+    return new Url('koba_booking.booking');
   }
 
   /**
@@ -55,6 +55,6 @@ class BookingDeleteForm extends ContentEntityConfirmFormBase {
         '@type' => $this->entity->bundle(),
         '%title' => $this->entity->label(),
       ));
-    $form_state->setRedirect('koba_booking.requests');
+    $form_state->setRedirect('koba_booking.booking');
   }
 }
