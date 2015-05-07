@@ -26,8 +26,8 @@ class KobaBookingApiController extends ControllerBase {
   public function resources() {
     // Fetch module config settings.
     $config = \Drupal::config('koba_booking.settings');
-    $apikey = $config->get('koba_booking.api_key', '');
-    $path = $config->get('koba_booking.path', '');
+    $apikey = $config->get('koba_booking.api_key');
+    $path = $config->get('koba_booking.path');
 
     $url = $path . "/api/resources/group/default?apikey=" . $apikey;
 
