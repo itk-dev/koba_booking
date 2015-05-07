@@ -96,7 +96,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      */
     $scope.prevDate = function() {
       if ($scope.selected.date.day() > moment().day()) {
-        $scope.selected.date.add(-1, 'day');
+        $scope.selected.date = moment($scope.selected.date.add(-1, 'day'));
       }
     };
 
@@ -104,7 +104,47 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      * Go to next date.
      */
     $scope.nextDate = function() {
-      $scope.selected.date.add(1, 'day');
+      $scope.selected.date = moment($scope.selected.date.add(1, 'day'));
+    };
+
+
+    /**
+     * Go to resource.
+     */
+    $scope.prevResource = function() {
+      if (!$scope.selected.resource) {
+        $scope.selected.resource = $scope.resources[0];
+      } else {
+        for (var i = 0; i < $scope.resources.length; i++) {
+          var res = $scope.resources[i];
+          if (res.mail === $scope.selected.resource.mail) {
+            if (i === 0) {
+              $scope.selected.resource = $scope.resources[$scope.resources.length - 1];
+            }
+            else {
+              $scope.selected.resource = $scope.resources[i - 1];
+            }
+            return;
+          }
+        }
+      }
+    };
+
+    /**
+     * Go to next resource.
+     */
+    $scope.nextResource = function() {
+      if (!$scope.selected.resource) {
+        $scope.selected.resource = $scope.resources[0];
+      } else {
+        for (var i = 0; i < $scope.resources.length; i++) {
+          var res = $scope.resources[i];
+          if (res.mail === $scope.selected.resource.mail) {
+            $scope.selected.resource = $scope.resources[(i + 1) % $scope.resources.length];
+            return;
+          }
+        }
+      }
     };
 
     /**
