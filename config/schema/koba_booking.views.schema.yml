@@ -3,7 +3,3 @@
 views.field.booking_bulk_form:
   type: views_field_bulk_form
   label: 'Booking operations bulk form'
-
-#views.filter.booking_autocomplete:
-#  type: views.filter.string
-#  label: 'Booking auto-complete'

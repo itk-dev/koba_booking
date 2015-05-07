@@ -199,7 +199,7 @@ class Booking extends ContentEntityBase implements BookingInterface {
           'cancelled' => 'Cancelled',
         ),
       ))
-      ->setRequired(TRUE)
+      ->setRequired(FALSE)
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'type' => 'string',
@@ -365,8 +365,8 @@ class Booking extends ContentEntityBase implements BookingInterface {
 
     // Usage field.
     $fields['booking_usage'] = BaseFieldDefinition::create('list_string')
-      ->setLabel(t('Resource'))
-      ->setDescription(t('The resource to book.'))
+      ->setLabel(t('Usage'))
+      ->setDescription(t('The usage of the booked resource.'))
       ->setSettings(array(
         'allowed_values' => array(
           'lecture' => t('Lecture'),
@@ -392,74 +392,65 @@ class Booking extends ContentEntityBase implements BookingInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     // Resource/room field.
-    $fields['booking_resource'] = BaseFieldDefinition::create('list_string')
+    $fields['booking_resource'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Resource'))
       ->setDescription(t('The resource to book.'))
       ->setSettings(array(
-        'allowed_values' => array(
-          'm1@aarhus.dk' => 'M1 - Munkecelle',
-          'm2@aarhus.dk' => 'M2 - Munkecelle',
-          'm3@aarhus.dk' => 'M3 - Munkecelle',
-          'meet_a@aarhus.dk' => 'Mødelokale A',
-          'meet_b@aarhus.dk' => 'Mødelokale B',
+        'target_type' => 'node',
+        'target_bundle' => 'room',
+        'handler' => 'default',
+        'handler_settings' => array(
+          'target_bundles' => array('room'),
+          'sort' => array(
+            'field' => 'title',
+            'direction' => 'ASC',
+          ),
         ),
       ))
       ->setDisplayOptions('view', array(
         'label' => 'above',
-        'type' => 'string',
+        'type' => 'entity_reference',
         'weight' => -4,
       ))
       ->setDisplayOptions('form', array(
-        'type' => 'options_select',
+        'type' => 'entity_reference_autocomplete',
         'weight' => -4,
       ))
-      ->setRequired(TRUE)
+      ->setRequired(FALSE)
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
-
 
     // From date.
-    $fields['booking_from_date'] = BaseFieldDefinition::create('string')
+    $fields['booking_from_date'] = BaseFieldDefinition::create('datetime')
       ->setLabel(t('From'))
-      ->setDescription(t('From date.'))
-      ->setSettings(array(
-        'default_value' => '',
-        'max_length' => 255,
-        'text_processing' => 0,
-      ))
+      ->setDescription(t('Indtastes som åååå-mm-dd / tt:mm:ss.'))
       ->setDisplayOptions('view', array(
         'label' => 'above',
-        'type' => 'string',
+        'type' => 'datetime_default',
         'weight' => -3,
       ))
       ->setDisplayOptions('form', array(
-        'type' => 'string',
+        'type' => 'datetime_default',
         'weight' => -3,
       ))
-      ->setRequired(TRUE)
+      ->setRequired(FALSE)
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-
     // To date.
-    $fields['booking_to_date'] = BaseFieldDefinition::create('string')
+    $fields['booking_to_date'] = BaseFieldDefinition::create('datetime')
       ->setLabel(t('To'))
-      ->setDescription(t('To date.'))
-      ->setSettings(array(
-        'default_value' => '',
-        'max_length' => 255,
-        'text_processing' => 0,
-      ))
+      ->setDescription(t('Indtastes som åååå-mm-dd / tt:mm:ss.'))
       ->setDisplayOptions('view', array(
         'label' => 'above',
-        'type' => 'string',
+        'type' => 'datetime_default',
         'weight' => -2,
       ))
       ->setDisplayOptions('form', array(
-        'type' => 'string',
+        'type' => 'datetime_default',
         'weight' => -2,
       ))
-      ->setRequired(TRUE)
+      ->setRequired(FALSE)
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
