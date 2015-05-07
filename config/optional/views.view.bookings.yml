@@ -370,9 +370,11 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+          text: ''
+          link_to_entity: false
           entity_type: koba_booking_booking
           entity_field: booking_resource
-          plugin_id: standard
+          plugin_id: entity_label
         name:
           id: name
           table: booking
@@ -703,6 +705,7 @@ display:
           entity_type: koba_booking_booking
           entity_field: name
           plugin_id: string
+      relationships: {  }
     cache_metadata:
       contexts:
         - 'languages:language_interface'

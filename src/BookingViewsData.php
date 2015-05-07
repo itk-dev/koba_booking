@@ -32,7 +32,10 @@ class BookingViewsData extends EntityViewsData {
     $data['booking']['booking_phone']['field']['id'] = 'standard';
     $data['booking']['booking_usage']['field']['id'] = 'standard';
 
-    $data['booking']['booking_resource']['field']['id'] = 'standard';
+    $data['booking']['booking_resource']['field']['id'] = 'koba_entity_link';
+    $data['booking']['booking_from_date']['field']['argument'] = 'numeric';
+    $data['booking']['booking_from_date']['field']['filter'] = 'numeric';
+    $data['booking']['booking_from_date']['field']['sort'] = 'Standard';
 
     $data['booking']['booking_from_date']['field']['id'] = 'date';
     $data['booking']['booking_from_date']['field']['argument'] = 'date';
