@@ -52,15 +52,14 @@ function koba_booking_form_koba_booking_booking_form_alter(&$form, FormStateInte
 
 
     // Fetch header top file.
-    $top_image_id = $config->get('koba_booking.create_booking_top_image', '');
+    $top_image_id = $config->get('koba_booking.create_booking_top_image');
     $file = ($top_image_id) ? File::load($top_image_id) : FALSE;
-
 
     // @todo caching af image.
     // Set variables
-    $form['variables']['title'] = $config->get('koba_booking.create_booking_title', '');
+    $form['variables']['title'] = $config->get('koba_booking.create_booking_title');
     $form['variables']['top_img'] = ($file) ? $file->url() : '';
-    $form['variables']['manchet'] = $config->get('koba_booking.create_booking_description', '');
+    $form['variables']['manchet'] = $config->get('koba_booking.create_booking_description');
 
     // Change field descriptions.
     $form['booking_email']['widget']['0']['value']['#description'] = '<div class="booking--description-link" data-ng-click="showEmailDescription = !showEmailDescription">' . t('Why do we need your email?') . '</div>';
@@ -74,55 +73,11 @@ function koba_booking_form_koba_booking_booking_form_alter(&$form, FormStateInte
     $form['variables']['why_email'] = ($email_help_text_format) ? check_markup($email_help_text, $email_help_text_format) : '';
     $form['variables']['why_title'] = ($title_help_text_format) ? check_markup($title_help_text, $title_help_text_format) : '';
 
-
     // Help texts are reused as headers.
     $form['variables']['why_email_header'] = t('Why do we need your email?');
     $form['variables']['why_title_header'] = t('Why do we need a title?');
 
-
     // Add template as prefix.
     $form['#theme'] = array('booking_add_booking');
-
-    // Hide fields.
-    $form['booking_from_date']['#access'] = FALSE;
-    $form['booking_to_date']['#access'] = FALSE;
-    $form['booking_resource']['#access'] = FALSE;
-    $form['booking_status']['#access'] = FALSE;
-  }
-  else {
-    // Enable jquery calendar for date fields.
-    $form['booking_from_date']['widget']['0']['value']['#attributes']['class']['0'] = 'js-datepicker';
-    $form['booking_from_date']['widget']['0']['value']['#title'] = t('Date');
-    $form['booking_from_date']['widget']['0']['value']['#attributes']['readonly'] = 'readonly';
-
-    // Disable the two datefield (The actual date value saved in the DB is generated in the form submit handler).
-    $form['booking_to_date']['#access'] = FALSE;
-
-
-    // Add custom fields for to and from time based on from and to timestamps.
-    // We want the database to save two timestamps (From and two), but these timestamps should be generated from three input fields (Date, toTime and fromTime).
-    $form['booking_from_time'] = array(
-      '#type' => 'textfield',
-      '#title' => t('From'),
-      '#default_value' => ($form['#action'] == '/booking/add') ? '06:00' : date('H:i', $from_stamp),
-      '#size' => 60,
-      '#maxlength' => 128,
-      '#attributes' => array(
-        'class' => array('js-timepicker'),
-        'readonly' => 'readonly'
-      ),
-    );
-
-    $form['booking_to_time'] = array(
-      '#type' => 'textfield',
-      '#title' => t('To'),
-      '#default_value' => ($form['#action'] == '/booking/add') ? '06:00' : date('H:i', $to_stamp),
-      '#size' => 60,
-      '#maxlength' => 128,
-      '#attributes' => array(
-        'class' => array('js-timepicker'),
-        'readonly' => 'readonly'
-      ),
-    );
   }
 }
