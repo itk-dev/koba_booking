@@ -18,9 +18,7 @@
           'is-booked': !timeInterval.disabled && timeInterval.booked
          }">
       <div class="booking--display-description" data-ng-if="!timeInterval.disabled">
-        <span data-ng-if="selected(timeInterval) === 'first' || selected(timeInterval) === 'first-last'" data-ng-click="decTime()">-</span>
         {{ selected(timeInterval) === 'first' || selected(timeInterval) === 'first-last' ? t('Your selection') : t(timeInterval.text) }}
-        <span data-ng-if="selected(timeInterval) === 'first' || selected(timeInterval) === 'first-last'" data-ng-click="incTime()">+</span>
       </div>
     </div>
   </div>

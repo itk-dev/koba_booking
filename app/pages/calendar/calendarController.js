@@ -1,6 +1,13 @@
 angular.module('kobaApp').controller("CalendarController", ['$scope', '$window', 'kobaFactory',
   function ($scope, $window, kobaFactory) {
-    // Open up for translations.
+    /**
+     * Expose the Drupal.t() function to angularjs templates.
+     *
+     * @param str
+     *   The string to translate.
+     * @returns string
+     *   The translated string.
+     */
     $scope.t = function(str) {
       return $window.Drupal.t(str);
     };
@@ -39,13 +46,20 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       }
     );
 
+    /**
+     * Set the selected resource.
+     * @param resource
+     *   The resource to select.
+     */
     $scope.setResource = function setResource(resource) {
       $scope.selected.resource = resource;
     };
 
     /**
      * Get selected date.
+     *
      * @returns Date
+     *   The Date representation of scope.selected.date
      */
     $scope.getSelectedDate = function() {
       return $scope.selected.date.toDate();
@@ -53,7 +67,9 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
 
     /**
      * Get selected start time.
-     * @returns {*}
+     *
+     * @returns string
+     *   String representation of the selected start time.
      */
     $scope.getSelectedStartTime = function() {
       var hours = "" + $scope.selected.time.start.getUTCHours();
@@ -69,7 +85,9 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
 
     /**
      * Get selected end time.
-     * @returns {*}
+     *
+     * @returns string
+     *   String representation of the selected end time.
      */
     $scope.getSelectedEndTime = function() {
       var hours = "" + $scope.selected.time.end.getUTCHours();
@@ -95,6 +113,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      *   Not before today.
      */
     $scope.prevDate = function() {
+      // @TODO: Fix bug, when one month apart.
       if ($scope.selected.date.day() > moment().day()) {
         $scope.selected.date = moment($scope.selected.date.add(-1, 'day'));
       }
@@ -107,9 +126,8 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       $scope.selected.date = moment($scope.selected.date.add(1, 'day'));
     };
 
-
     /**
-     * Go to resource.
+     * Go to the previous resource.
      */
     $scope.prevResource = function() {
       if (!$scope.selected.resource) {
@@ -131,7 +149,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
     };
 
     /**
-     * Go to next resource.
+     * Go to the next resource.
      */
     $scope.nextResource = function() {
       if (!$scope.selected.resource) {
