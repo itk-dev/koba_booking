@@ -5,6 +5,8 @@
 
 /**
  * Booking calendar directive.
+ *
+ * @TODO: Move kobaFactory into own service file?
  */
 angular.module("kobaApp")
   .factory("kobaFactory", ['$http', '$q',
@@ -17,6 +19,7 @@ angular.module("kobaApp")
        * Get available resources from Koba.
        *
        * @returns {*}
+       *   Promise to resolve with the data or reject on failure.
        */
       factory.getResources = function getResources() {
         var defer = $q.defer();
@@ -25,12 +28,12 @@ angular.module("kobaApp")
           url: '/admin/booking/api/resources',
           method: 'GET',
           headers: {
-            "Content-Type": "text/html",
-            "Accept": "text/html"
+            "Content-Type": 'text/html',
+            "Accept": 'text/html'
           }
-        }).success(function(response){
+        }).success(function(response) {
           defer.resolve(response);
-        }).error(function(error){
+        }).error(function(error) {
           defer.reject(error);
         });
 
@@ -40,10 +43,14 @@ angular.module("kobaApp")
       /**
        * Get bookings from Koba.
        *
+       * @TODO: Missing parameter documentation?
+       *
        * @param resource
        * @param from
        * @param to
+       *
        * @returns {*}
+       *   Promise to resolve with the data or reject on failure.
        */
       factory.getBookings = function getBookings(resource, from, to) {
         var defer = $q.defer();
@@ -52,12 +59,12 @@ angular.module("kobaApp")
           url: '/admin/booking/api/bookings?res=' + resource + '&from=' + from + '&to=' + to,
           method: 'GET',
           headers: {
-            "Content-Type": "text/html",
-            "Accept": "text/html"
+            "Content-Type": 'text/html',
+            "Accept": 'text/html'
           }
-        }).success(function(response){
+        }).success(function(response) {
           defer.resolve(response);
-        }).error(function(error){
+        }).error(function(error) {
           defer.reject(error);
         });
 
@@ -126,6 +133,7 @@ angular.module("kobaApp")
 
           /**
            * Select a time interval and 1 hour forward.
+           *
            * @param timeInterval
            */
           scope.select = function (timeInterval) {
@@ -194,7 +202,7 @@ angular.module("kobaApp")
                 }
               }
 
-              // Set text
+              // Set text.
               var text = '';
               if (!disabled) {
                 if (free) {
@@ -259,6 +267,7 @@ angular.module("kobaApp")
                   scope.loaded = true;
                 },
                 function error(reason) {
+                  // @TODO: Report error properly.
                   console.error(reason);
                 }
               );
@@ -266,6 +275,6 @@ angular.module("kobaApp")
           );
         },
         templateUrl: '/modules/koba_booking/app/pages/calendar/booking-calendar.html'
-      }
+      };
     }
   ]);
