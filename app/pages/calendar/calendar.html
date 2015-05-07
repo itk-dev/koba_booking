@@ -35,37 +35,41 @@
       </div>
       <div class="booking--selection-resource-picker">
         <div class="booking--selection-header-resource" data-ng-click="toggleResource()">{{ t('Resources') }}</div>
-        <div class="booking--selection-display-resource" data-ng-click="toggleResource()" >{{ getSelectedDate() | date }}</div>
-        <div class="booking--popup" data-ng-if="pickResource">
-        </div>
-      </div>
-    </div>
-    <div class="booking--selection-resource-picker">
-      <span data-ng-click="prevResource()">-</span>
-      <a href="" data-ng-click="toggleResource()">{{ selected.resource ? selected.resource.name : t('Select resource')}}</a>
-      <span data-ng-click="nextResource()">+</span>
-      <div class="booking--popup" data-ng-if="pickResource">
-        <div class="booking--popup-inner">
-          <div class="booking--popup-header">
-            <h2 class="booking--popup-header-text">{{ t('Resources') }}</h2>
-            <div class="booking--popup-close-text" data-ng-click="toggleResource()">{{ t('Ok') }}</div>
-          </div>
-          <form class="booking--popup-content">
-            <div data-ng-repeat="resource in resources" data-ng-click="setResource(resource)" class="booking--radio-select">
-              <input class="booking--popup-radio-input" type="radio" name="resources-radio" value="{{resource.mail}}" id="resources-{{resource.name}}" />
-              <label class="booking--popup-radio-label" for="resources-{{resource.name}}">{{resource.name}}</label>
-            </div>
-          </form>
-        </div>
+        <div class="booking--selection-display-resource" data-ng-click="toggleResource()" >{{ getSelectedResource() }}</div>
       </div>
     </div>
   </div>
+  <div class="booking--popup" data-ng-if="pickResource">
+    <div class="booking--popup-inner">
+      <div class="booking--popup-header">
+        <h2 class="booking--popup-header-text">{{ t('Resources') }}</h2>
+        <div class="booking--popup-close-text" data-ng-click="toggleResource()">{{ t('Ok') }}</div>
+      </div>
+      <form class="booking--popup-content">
+        <div data-ng-repeat="resource in resources" data-ng-click="setResource(resource)" class="booking--radio-select">
+          <input class="booking--popup-radio-input" type="radio" name="resources-radio" value="{{resource.mail}}" id="resources-{{resource.name}}" />
+          <label class="booking--popup-radio-label" for="resources-{{resource.name}}">{{resource.name}}</label>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="booking--selection-resource-picker-mobile">
+    <div data-ng-click="toggleResource()">{{ t('Select resource')}}</div>
+  </div>
   <div class="booking--display">
-    <div class="booking--display-date"><span data-ng-click="prevDate()">-</span> {{ getSelectedDate() | date: 'EEEE d/M-yyyy' }} <span data-ng-click="nextDate()">+</span></div>
+    <div class="booking--display-date">
+      <span class="booking--display-date-arrow-left" data-ng-click="prevDate()">
+        <span class="booking--arrow-large is-left" data-ng-include="'/modules/koba_booking/templates/svgs/arrow.svg'"></span>
+      </span>
+      <span class="booking--display-header">{{ getSelectedDate() | date: 'EEEE d/M-yyyy' }}</span>
+      <span class="booking--display-date-arrow-right" data-ng-click="nextDate()">
+        <span class="booking--arrow-large is-right" data-ng-include="'/modules/koba_booking/templates/svgs/arrow.svg'"></span>
+      </span>
+    </div>
     <booking-calendar selected-date="selected.date" selected-resource="selected.resource" selected-start="selected.time.start" selected-end="selected.time.end" interest-period="interestPeriod" disabled="disabled"></booking-calendar>
   </div>
 
-  <div class="booking--submit-wrapper"  data-ng-class="{'is-active': selected.time.start && selected.time.end && selected.date && selected.resource}">
+  <div class="booking--submit-wrapper" data-ng-class="{'is-active': selected.time.start && selected.time.end && selected.date && selected.resource}">
     <a href="" class="booking--add-submit-date">{{ t('Continue') }}</a>
   </div>
 </div>
