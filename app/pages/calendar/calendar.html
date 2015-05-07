@@ -62,4 +62,8 @@
     <div class="booking--display-date"><span data-ng-click="prevDate()">-</span> {{ getSelectedDate() | date: 'EEEE d/M-yyyy' }} <span data-ng-click="nextDate()">+</span></div>
     <booking-calendar selected-date="selected.date" selected-resource="selected.resource" selected-start="selected.time.start" selected-end="selected.time.end" interest-period="interestPeriod" disabled="disabled"></booking-calendar>
   </div>
+
+  <div class="booking--submit-wrapper"  data-ng-class="{'is-active': selected.time.start && selected.time.end && selected.date && selected.resource}">
+    <a href="" class="booking--add-submit-date">{{ t('Continue') }}</a>
+  </div>
 </div>

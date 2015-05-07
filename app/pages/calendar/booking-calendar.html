@@ -7,7 +7,8 @@
 </div>
 
 <div class="booking--display-content-column">
-  <div class="booking--display-row" data-ng-click="select(timeInterval)" data-ng-repeat="timeInterval in timeIntervals" data-ng-if="loaded" data-ng-class="{'is-disabled': timeInterval.disabled, 'is-selected': !timeInterval.disabled && selected(timeInterval)}">
+  <div class="booking--display-row" data-ng-click="select(timeInterval)" data-ng-repeat="timeInterval in timeIntervals" data-ng-if="loaded" data-ng-class="{'is-free': !timeInterval.disabled && !timeInterval.booked && !selected(timeInterval), 'is-disabled': timeInterval.disabled, 'is-selected': !timeInterval.disabled && selected(timeInterval)}">
+
     <div class="booking--display-row-inner" data-ng-class="{
           'is-selected': !timeInterval.disabled && selected(timeInterval),
           'is-selected-first': !timeInterval.disabled && selected(timeInterval) === 'first',
@@ -18,6 +19,7 @@
           'is-booked': !timeInterval.disabled && timeInterval.booked
          }">
       <div class="booking--display-description" data-ng-if="!timeInterval.disabled">{{ selected(timeInterval) === 'first' ? t('Your selection') : t(timeInterval.text) }}</div>
+      <div data-ng-if="!timeInterval.disabled && selected(timeInterval) === 'first'" data-ng-click="addHalfHour()" class="booking--display-row-expand">{{ t( 'Expand duration' ) }}</div>
     </div>
   </div>
 </div>

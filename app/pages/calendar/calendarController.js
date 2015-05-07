@@ -146,6 +146,5 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       if ($scope.selected.time.end <= $scope.selected.time.start) {
         $scope.selected.time.start = new Date($scope.selected.time.end.getTime() - 30 * 60 * 1000);
       }
-    });
-  }
+    });}
 ]);
