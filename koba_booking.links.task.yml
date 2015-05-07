@@ -2,7 +2,7 @@
 
 # Administration related local tasks
 koba_booking.booking:
-  title: List
+  title: New bookings
   route_name: koba_booking.booking
   base_route: koba_booking.booking
   weight: 0
