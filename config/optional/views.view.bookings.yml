@@ -9,8 +9,8 @@ dependencies:
 id: bookings
 label: Bookings
 module: koba_booking
-description: 'Find and manage bookings interacting with your site.'
-tag: default
+description: 'Find and manage bookings.'
+tag: bookings
 base_table: booking
 base_field: id
 core: 8.x
@@ -78,18 +78,43 @@ display:
           summary: ''
           description: ''
           columns:
+            booking_from_date_1: booking_from_date_1
+            booking_to_date: booking_to_date
             koba_booking_booking_bulk_form: koba_booking_booking_bulk_form
             name_1: name_1
+            booking_resource: booking_resource
             name: name
-            booking_usage: booking_usage
+            booking_from_date: booking_from_date
+            nothing: nothing
             operations: operations
           info:
+            booking_from_date_1:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            booking_to_date:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
             koba_booking_booking_bulk_form:
               align: ''
               separator: ''
               empty_column: false
               responsive: ''
             name_1:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            booking_resource:
               sortable: true
               default_sort_order: asc
               align: ''
@@ -103,8 +128,15 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
-            booking_usage:
-              sortable: false
+            booking_from_date:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            nothing:
+              sortable: true
               default_sort_order: asc
               align: ''
               separator: ''
@@ -122,6 +154,114 @@ display:
       row:
         type: fields
       fields:
+        booking_from_date_1:
+          id: booking_from_date_1
+          table: booking
+          field: booking_from_date
+          relationship: none
+          group_type: group
+          admin_label: 'Time from'
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          date_format: dokk_tidspunkt
+          custom_date_format: ''
+          timezone: ''
+          entity_type: koba_booking_booking
+          entity_field: booking_from_date
+          plugin_id: date
+        booking_to_date:
+          id: booking_to_date
+          table: booking
+          field: booking_to_date
+          relationship: none
+          group_type: group
+          admin_label: 'Time to'
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          date_format: dokk_tidspunkt
+          custom_date_format: ''
+          timezone: ''
+          entity_type: koba_booking_booking
+          entity_field: booking_to_date
+          plugin_id: date
         koba_booking_booking_bulk_form:
           id: koba_booking_booking_bulk_form
           table: booking
@@ -182,6 +322,57 @@ display:
           entity_type: koba_booking_booking
           entity_field: name
           plugin_id: standard
+        booking_resource:
+          id: booking_resource
+          table: booking
+          field: booking_resource
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Resource
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          entity_type: koba_booking_booking
+          entity_field: booking_resource
+          plugin_id: standard
         name:
           id: name
           table: booking
@@ -235,14 +426,14 @@ display:
           anonymous_text: ''
           entity_type: koba_booking_booking
           entity_field: booking_name
-        booking_usage:
-          id: booking_usage
+        booking_from_date:
+          id: booking_from_date
           table: booking
-          field: booking_usage
+          field: booking_from_date
           relationship: none
           group_type: group
           admin_label: ''
-          label: Resource
+          label: Date
           exclude: false
           alter:
             alter_text: false
@@ -275,7 +466,7 @@ display:
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: false
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
@@ -283,9 +474,61 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+          date_format: custom
+          custom_date_format: d-m-Y
+          timezone: ''
           entity_type: koba_booking_booking
-          entity_field: booking_usage
-          plugin_id: standard
+          entity_field: booking_from_date
+          plugin_id: date
+        nothing:
+          id: nothing
+          table: views
+          field: nothing
+          relationship: none
+          group_type: group
+          admin_label: 'Custom: Time'
+          label: Time
+          exclude: false
+          alter:
+            alter_text: true
+            text: '{{ booking_from_date_1 }} - {{ booking_to_date }}'
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: false
+          plugin_id: custom
         operations:
           id: operations
           table: booking

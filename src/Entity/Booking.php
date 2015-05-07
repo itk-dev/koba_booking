@@ -421,16 +421,16 @@ class Booking extends ContentEntityBase implements BookingInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     // From date.
-    $fields['booking_from_date'] = BaseFieldDefinition::create('datetime')
+    $fields['booking_from_date'] = BaseFieldDefinition::create('timestamp')
       ->setLabel(t('From'))
       ->setDescription(t('Indtastes som åååå-mm-dd / tt:mm:ss.'))
       ->setDisplayOptions('view', array(
         'label' => 'above',
-        'type' => 'datetime_default',
+        'type' => 'datetime_timestamp',
         'weight' => -3,
       ))
       ->setDisplayOptions('form', array(
-        'type' => 'datetime_default',
+        'type' => 'datetime_timestamp',
         'weight' => -3,
       ))
       ->setRequired(FALSE)
@@ -438,17 +438,17 @@ class Booking extends ContentEntityBase implements BookingInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     // To date.
-    $fields['booking_to_date'] = BaseFieldDefinition::create('datetime')
+    $fields['booking_to_date'] = BaseFieldDefinition::create('timestamp')
       ->setLabel(t('To'))
       ->setDescription(t('Indtastes som åååå-mm-dd / tt:mm:ss.'))
       ->setDisplayOptions('view', array(
         'label' => 'above',
-        'type' => 'datetime_default',
-        'weight' => -2,
+        'type' => 'datetime_timestamp',
+        'weight' => -3,
       ))
       ->setDisplayOptions('form', array(
-        'type' => 'datetime_default',
-        'weight' => -2,
+        'type' => 'datetime_timestamp',
+        'weight' => -3,
       ))
       ->setRequired(FALSE)
       ->setDisplayConfigurable('form', TRUE)
