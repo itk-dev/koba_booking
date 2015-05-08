@@ -2,46 +2,22 @@
 
 # Administration related local tasks
 koba_booking.booking:
-  title: List
+  title: New bookings
   route_name: koba_booking.booking
   base_route: koba_booking.booking
   weight: 0
-
-koba_booking.bookingsaccepted:
-  title: Accepted bookings
-  route_name: koba_booking.accepted
-  base_route: koba_booking.booking
-  weight: 1
-#
-#koba_booking.bookingsrefused:
-#  title: Refused bookings
-#  route_name: koba_booking.refused
-#  base_route: koba_booking.bookingrequests
-#  weight: 2
-#
-#koba_booking.bookingscancelled:
-#  title: Cancelled bookings
-#  route_name: koba_booking.cancelled
-#  base_route: koba_booking.bookingrequests
-#  weight: 3
-#
-#koba_booking.pending:
-#  title: Bookings pending
-#  route_name: koba_booking.pending
-#  base_route: koba_booking.bookingrequests
-#  weight: 4
 
 koba_booking.bookingsettings:
   title: Settings
   route_name: koba_booking.booking_settings
   base_route: koba_booking.booking
-  weight: 5
+  weight: 40
 
 koba_booking.bookingmails:
   title: Messages
   route_name: koba_booking.booking_messages
   base_route: koba_booking.booking
-  weight: 6
+  weight: 50
 
 # Entity related local tasks
 booking.view:

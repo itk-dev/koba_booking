@@ -20,9 +20,7 @@
           'is-booked': !timeInterval.disabled && timeInterval.booked
          }">
         <div class="booking--display-description" data-ng-if="!timeInterval.disabled">
-          <span data-ng-if="selected(timeInterval) === 'first' || selected(timeInterval) === 'first-last'" data-ng-click="decTime()"><div class="booking--arrow is-up" data-ng-include="'/modules/koba_booking/templates/svgs/arrow.svg'"></div></span>
           <span class="booking--display-text">{{ selected(timeInterval) === 'first' || selected(timeInterval) === 'first-last' ? t('Your selection') : t(timeInterval.text) }}</span>
-          <span data-ng-if="selected(timeInterval) === 'first' || selected(timeInterval) === 'first-last'" data-ng-click="incTime()"><div class="booking--arrow" data-ng-include="'/modules/koba_booking/templates/svgs/arrow.svg'"></div></span>
         </div>
       </div>
     </div>
