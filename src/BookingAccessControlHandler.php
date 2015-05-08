@@ -27,6 +27,9 @@ class BookingAccessControlHandler extends EntityAccessControlHandler {
    */
   protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
     switch ($operation) {
+      case 'add':
+        return AccessResult::allowedIfHasPermission($account, 'add booking entity');
+
       case 'view':
         return AccessResult::allowedIfHasPermission($account, 'view booking entity');
 
