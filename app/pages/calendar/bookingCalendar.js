@@ -105,15 +105,10 @@ angular.module("kobaApp")
 
           // Watch for changes to selectedStart and selectedEnd.
           // Update startMoment and endMoment.
-          scope.$watch('selectedStart',
+          scope.$watchGroup(['selectedStart', 'selectedEnd', 'selectedDate'],
             function (val) {
               if (!val) return;
               startMoment = parseInt(scope.selectedDate.format('x')) + scope.selectedStart.getTime();
-            }
-          );
-          scope.$watch('selectedEnd',
-            function (val) {
-              if (!val) return;
               endMoment = parseInt(scope.selectedDate.format('x')) + scope.selectedEnd.getTime();
             }
           );
