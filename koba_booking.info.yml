@@ -11,3 +11,4 @@ dependencies:
   - datetime
   - file
   - views
+  - wayf_dk_login

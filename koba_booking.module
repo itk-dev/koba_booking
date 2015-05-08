@@ -39,7 +39,6 @@ function koba_booking_theme() {
   );
 }
 
-
 /**
  * Implements hook_form_FORM_ID_alter().
  */
@@ -80,4 +79,16 @@ function koba_booking_form_koba_booking_booking_form_alter(&$form, FormStateInte
     // Add template as prefix.
     $form['#theme'] = array('booking_add_booking');
   }
+}
+
+/**
+ * Implements hook_wayf_dk_login_create_user().
+ *
+ * Store information in session and redirect to logout.
+ */
+function koba_booking_wayf_dk_login_create_user($attributes) {
+
+
+  $data = \Drupal::service('session')->set('koba_booking_request');
+  $t = 1;
 }

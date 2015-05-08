@@ -67,7 +67,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       var from = moment($scope.selected.date).add($scope.selected.time.start.getTime(), 'milliseconds');
       var to = moment($scope.selected.date).add($scope.selected.time.end.getTime(), 'milliseconds');
 
-      return '/admin/booking/api/login?res=' + $scope.selected.resource.mail + '&from=' + from.format('X') + '&to=' + to.format('X');
+      return encodeURI('/admin/booking/api/login?res=' + $scope.selected.resource.mail + '&from=' + from.format('X') + '&to=' + to.format('X'));
     };
 
     /**

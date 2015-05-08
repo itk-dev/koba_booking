@@ -40,6 +40,14 @@ koba_booking.api.resources:
     _permission: 'access content'
     _content_type_format: text/html
 
+koba_booking.api.resources:
+  path: '/admin/booking/api/login'
+  defaults:
+    _controller: '\Drupal\koba_booking\Controller\KobaBookingApiController::login'
+  requirements:
+    _permission: 'access content'
+    _content_type_format: text/html
+
 # --- Entity related routing --- #
 entity.koba_booking_booking.canonical:
   path: '/booking/{koba_booking_booking}'

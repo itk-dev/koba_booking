@@ -87,11 +87,35 @@ class KobaBookingApiController extends ControllerBase {
   /**
    * Save booking information in session to pre-fill form later.
    *
+   * This also makes an redirect to WAYF login.
+   *
    * @param Request $request
    *   Represents an HTTP request.
    * @return JsonResponse
    */
-  public function storeSelections(Request $request) {
+  public function login(Request $request) {
+    // Get requested parameters.
+    $resource_id = $request->query->get('res');
+    $from = $request->query->get('from');
+    $to = $request->query->get('to');
+
+    /**
+     * @TODO: Validate the request.
+     */
+
+    // Store information in session.
+    \Drupal::service('session')->set('koba_booking_request', array(
+      'ressource' => $resource_id,
+      'from' => $from,
+      'to' => $to,
+    ));
+
+    // Redirect to WAYF login.
+    return $this->redirect('wayf_dk_login.consume');
+  }
+
+  public function logout() {
+    // Set destination (booking/add) and redirect til wayf logout.
 
   }
 }
