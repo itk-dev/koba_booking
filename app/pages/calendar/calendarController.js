@@ -30,12 +30,14 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
 
 
     // Interest period to show.
+    // @TODO: Make this configurable.
     $scope.interestPeriod = {
       "start": 6,
       "end": 24
     };
 
     // Disabled intervals.
+    // @TODO: Make this configurable.
     $scope.disabled = [
       [6,7], [23,24]
     ];
@@ -58,10 +60,14 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      * @TODO: Avoid hardcoded link
      */
     $scope.getLink = function getLink() {
-      var from = 0;
-      var to = 1;
+      if (!$scope.selected.resource) {
+        return null;
+      }
 
-      return '/admin/booking/api/login?res=' + $scope.selected.resource + '&from=' +  + '&to=xx';
+      var from = moment($scope.selected.date).add($scope.selected.time.start.getTime(), 'milliseconds');
+      var to = moment($scope.selected.date).add($scope.selected.time.end.getTime(), 'milliseconds');
+
+      return '/admin/booking/api/login?res=' + $scope.selected.resource.mail + '&from=' + from.format('X') + '&to=' + to.format('X');
     };
 
     /**
@@ -125,7 +131,10 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      * @returns Date
      */
     $scope.getSelectedResource = function() {
-      return $scope.selected.resource.name;
+      if ($scope.selected.resource) {
+        return $scope.selected.resource.name;
+      }
+      return null;
     };
 
 
@@ -207,7 +216,6 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      * Show/hide resource picker.
      */
     $scope.toggleResource = function() {
-      console.log('123');
       $scope.pickResource = !$scope.pickResource;
     };
 

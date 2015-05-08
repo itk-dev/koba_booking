@@ -35,7 +35,7 @@
       </div>
       <div class="booking--selection-resource-picker">
         <div class="booking--selection-header-resource" data-ng-click="toggleResource()">{{ t('Resources') }}</div>
-        <div class="booking--selection-display-resource" data-ng-click="toggleResource()" >{{ getSelectedResource() }}</div>
+        <div class="booking--selection-display-resource" data-ng-click="toggleResource()" >{{ (resourceName = getSelectedResource()) ? resourceName : t('Select resource') }}</div>
       </div>
     </div>
   </div>
@@ -70,6 +70,6 @@
   </div>
 
   <div class="booking--submit-wrapper" data-ng-class="{'is-active': selected.time.start && selected.time.end && selected.date && selected.resource}">
-    <a href="/booking/add" class="booking--add-submit-date">{{ t('Continue') }}</a>
+    <a data-ng-href="{{ getLink() }}" class="booking--add-submit-date">{{ t('Continue') }}</a>
   </div>
 </div>
