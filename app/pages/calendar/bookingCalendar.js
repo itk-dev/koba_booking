@@ -26,7 +26,7 @@ angular.module("kobaApp")
         var defer = $q.defer();
 
         $http({
-          url: '/admin/booking/api/resources',
+          url: '/booking/api/resources',
           method: 'GET',
           headers: {
             "Content-Type": 'text/html',
@@ -61,7 +61,7 @@ angular.module("kobaApp")
         var defer = $q.defer();
 
         $http({
-          url: '/admin/booking/api/bookings?res=' + resource + '&from=' + from + '&to=' + to,
+          url: '/booking/api/bookings?res=' + resource + '&from=' + from + '&to=' + to,
           method: 'GET',
           headers: {
             "Content-Type": 'text/html',

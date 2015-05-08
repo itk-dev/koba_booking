@@ -8,6 +8,7 @@ namespace Drupal\koba_booking\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Http\Client;
+use Drupal\Core\Url;
 use Drupal\koba_booking\BookingInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -89,6 +90,9 @@ class KobaBookingApiController extends ControllerBase {
    *
    * This also makes an redirect to WAYF login.
    *
+   * @TODO: This is really not the right place for this function, as it has
+   *        about wayf.
+   *
    * @param Request $request
    *   Represents an HTTP request.
    * @return JsonResponse
@@ -110,12 +114,28 @@ class KobaBookingApiController extends ControllerBase {
       'to' => $to,
     ));
 
+    /**
+     * @TODO: check if data exists in the session and then not redirect to login...
+     */
+
     // Redirect to WAYF login.
     return $this->redirect('wayf_dk_login.consume');
   }
 
+  /**
+   * @TODO: This is really not the right place for this function, as it has
+   *        about wayf.
+   *
+   */
   public function logout() {
     // Set destination (booking/add) and redirect til wayf logout.
+    $generator = \Drupal::urlGenerator();
+    $url = $generator->generateFromRoute('wayf_dk_login.logout', array(), array(
+      'query' => array(
+        'destination' => '/booking/add'
+      )
+    ));
 
+    return (new RedirectResponse($url))->send();
   }
 }
