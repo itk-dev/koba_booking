@@ -35,6 +35,7 @@ function koba_booking_theme() {
     ),
     'booking_add_booking' => array(
       'render element' => 'form',
+      'file' => 'koba_booking.pages.inc',
     ),
   );
 }
@@ -48,7 +49,6 @@ function koba_booking_form_koba_booking_booking_form_alter(&$form, FormStateInte
 
     // Fetch module config settings.
     $config = \Drupal::config('koba_booking.settings');
-
 
     // Fetch header top file.
     $top_image_id = $config->get('koba_booking.create_booking_top_image');

@@ -59,3 +59,19 @@ function template_preprocess_booking_receipt(&$variables) {
   $variables['top_img'] = ($file) ? $file->url() : '';
   $variables['manchet'] = $config->get('koba_booking.create_booking_description', '');
 }
+
+/**
+ * Implements hook_preprocess_booking_add_booking().
+
+ * @param $variables
+ */
+function template_preprocess_booking_add_booking(&$variables) {
+  $defaults = \Drupal::service('session')->get('koba_booking_request');
+  if (!empty($defaults)) {
+    $variables['booking'] = array(
+      'resource' => '52',
+      'from' => $defaults['from'],
+      'to' => $defaults['to'],
+    );
+  }
+}
