@@ -52,6 +52,18 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
     );
 
     /**
+     * Return the link.
+     *
+     * @TODO: Avoid hardcoded link
+     */
+    $scope.getLink = function getLink() {
+      var from = 0;
+      var to = 1;
+
+      return '/admin/booking/api/login?res=' + $scope.selected.resource + '&from=' +  + '&to=xx';
+    };
+
+    /**
      * Set the selected resource.
      *
      * @param resource
