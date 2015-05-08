@@ -7,8 +7,10 @@
 </div>
 
 <div class="booking--display-content-column">
-  <div class="booking--display-row" data-ng-click="!selected(timeInterval) ? select(timeInterval) : noop()" data-ng-repeat="timeInterval in timeIntervals" data-ng-if="loaded" data-ng-class="{'is-disabled': timeInterval.disabled, 'is-selected': !timeInterval.disabled && selected(timeInterval)}">
-    <div class="booking--display-row-inner" data-ng-class="{
+  <div class="booking--display-row-wrapper" data-ng-repeat="timeInterval in timeIntervals" data-ng-if="loaded">
+    <div class="booking--display-row-disable" data-ng-class="{'is-active': timeInterval.disabled || timeInterval.booked) }" data-ng-if="timeInterval.disabled || timeInterval.booked"></div>
+    <div class="booking--display-row" data-ng-click="!selected(timeInterval) ? select(timeInterval) : noop()" data-ng-class="{'is-disabled': timeInterval.disabled, 'is-selected': !timeInterval.disabled && selected(timeInterval)}">
+      <div class="booking--display-row-inner" data-ng-class="{
           'is-selected': !timeInterval.disabled && selected(timeInterval),
           'is-selected-first': !timeInterval.disabled && selected(timeInterval) === 'first',
           'is-selected-first-last': !timeInterval.disabled && selected(timeInterval) === 'first-last',
@@ -17,8 +19,9 @@
           'is-free': !timeInterval.disabled && !timeInterval.booked && !selected(timeInterval),
           'is-booked': !timeInterval.disabled && timeInterval.booked
          }">
-      <div class="booking--display-description" data-ng-if="!timeInterval.disabled">
-        {{ selected(timeInterval) === 'first' || selected(timeInterval) === 'first-last' ? t('Your selection') : t(timeInterval.text) }}
+        <div class="booking--display-description" data-ng-if="!timeInterval.disabled">
+          <span class="booking--display-text">{{ selected(timeInterval) === 'first' || selected(timeInterval) === 'first-last' ? t('Your selection') : t(timeInterval.text) }}</span>
+        </div>
       </div>
     </div>
   </div>

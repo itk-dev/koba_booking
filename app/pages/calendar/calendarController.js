@@ -28,6 +28,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       "resource": null
     };
 
+
     // Interest period to show.
     $scope.interestPeriod = {
       "start": 6,
@@ -120,6 +121,15 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
     };
 
     /**
+     * Get selected resource.
+     * @returns Date
+     */
+    $scope.getSelectedResource = function() {
+      return $scope.selected.resource.name;
+    };
+
+
+    /**
      * Show/hide time picker.
      */
     $scope.toggleTime = function() {
@@ -197,6 +207,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      * Show/hide resource picker.
      */
     $scope.toggleResource = function() {
+      console.log('123');
       $scope.pickResource = !$scope.pickResource;
     };
 
