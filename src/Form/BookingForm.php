@@ -6,6 +6,7 @@
 
 namespace Drupal\koba_booking\Form;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Form\FormStateInterface;
@@ -60,18 +61,23 @@ class BookingForm extends ContentEntityForm {
     $config = \Drupal::config('koba_booking.settings');
     $message_text = is_array($config->get('koba_booking.created_booking_message')) ? $config->get('koba_booking.created_booking_message')['value'] : $config->get('koba_booking.created_booking_message');
 
+    // Generate hash value (based on name, mail, date).
+    $hash = Crypt::hashBase64(Crypt::randomBytes(1024));
+
     // Redirect after submit.
-    $form_state->setRedirect('koba_booking.receipt', array(
-      'hash' => '12345'));
+    $form_state->setRedirect('koba_booking.receipt', array('hash' => $hash));
 
     drupal_set_message($message_text);
     $entity = $this->getEntity();
 
     // On first save set the booking state.
-    if ($form['#action'] == "/booking/add") {
+    if ($entity->isNew()) {
       $entity->set('booking_status', 'request');
     }
     $entity->save();
+
+    // Remove booking information from session (comment out during tests).
+//    \Drupal::service('session')->remove('koba_booking_request');
   }
 }
 
