@@ -59,6 +59,7 @@ function koba_booking_form_koba_booking_booking_form_alter(&$form, FormStateInte
     $form['variables']['title'] = $config->get('koba_booking.create_booking_title');
     $form['variables']['top_img'] = ($file) ? $file->url() : '';
     $form['variables']['manchet'] = $config->get('koba_booking.create_booking_description');
+    $form['variables']['search_phase'] = $config->get('koba_booking.search_phase');
 
     // Change field descriptions.
     $form['booking_email']['widget']['0']['value']['#description'] = '<div class="booking--description-link" data-ng-click="showEmailDescription = !showEmailDescription">' . t('Why do we need your email?') . '</div>';
