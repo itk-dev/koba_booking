@@ -3,7 +3,7 @@
     <div class="booking--selection-date-time-wrapper">
       <div class="booking--selection-date-picker">
         <div class="booking--selection-header-date" data-ng-click="toggleDate()">{{ t('Date') }}</div>
-        <div class="booking--selection-display-date" data-ng-click="toggleDate()" ><span class="icon--calendar" data-ng-include="'/modules/koba_booking/templates/svgs/calendar-icon.svg'"></span>{{ getSelectedDate() | date: 'd/M-yy' }}</div>
+        <div class="booking--selection-display-date" data-ng-click="toggleDate()"><span class="icon--calendar" data-ng-include="'/modules/koba_booking/templates/svgs/calendar-icon.svg'"></span>{{ getSelectedDate() | date: 'd/M-yy' }}</div>
         <div class="booking--popup" data-ng-cloak data-ng-if="pickDate">
           <div class="booking--popup-inner">
             <div class="booking--popup-header">
