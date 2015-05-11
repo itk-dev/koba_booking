@@ -25,6 +25,21 @@ class BookingForm extends ContentEntityForm {
     $form = parent::buildForm($form, $form_state);
     $entity = $this->entity;
 
+    // Get information for the current session to fill in default values. Only
+    // the ones need in the form is set here, reset in page process functions.
+    if ($this->getOperation() == 'add') {
+      $defaults = \Drupal::service('session')->get('koba_booking_request');
+      if (!empty($defaults)) {
+        // Set mail.
+        if (isset($defaults['mail'])) {
+          $form['booking_email']['widget'][0]['value']['#default_value'] = $defaults['mail'];
+        }
+
+        // Set name.
+        $form['booking_name']['widget'][0]['value']['#default_value'] = implode(' ', $defaults['name']);
+      }
+    }
+
     $form['langcode'] = array(
       '#title' => $this->t('Language'),
       '#type' => 'language_select',
@@ -32,6 +47,7 @@ class BookingForm extends ContentEntityForm {
       '#languages' => Language::STATE_ALL,
     );
 
+    // Attach overlays with more information about the fields.
     $form['#attached']['library'][] = 'koba_booking/angular';
 
     return $form;
