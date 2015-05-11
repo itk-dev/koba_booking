@@ -107,19 +107,34 @@ class KobaBookingApiController extends ControllerBase {
      * @TODO: Validate the request.
      */
 
-    // Store information in session.
-    \Drupal::service('session')->set('koba_booking_request', array(
+    $data = $defaults = \Drupal::service('session')->get('koba_booking_request');
+    if (empty($data)) {
+      // Create new data array, as nothing was store in current session.
+      $data = array();
+    }
+
+    // Set newest booking information.
+    $data = array(
       'ressource' => $resource_id,
       'from' => $from,
       'to' => $to,
-    ));
+    ) + $data;
+
+    // Store information in session.
+    \Drupal::service('session')->set('koba_booking_request', $data);
 
     /**
      * @TODO: check if data exists in the session and then not redirect to login...
      */
 
-    // Redirect to WAYF login.
-    return $this->redirect('wayf_dk_login.consume');
+    // Check if the user has authenticated with WAYF.
+    if (empty($data['uuid'])) {
+      // Redirect to WAYF login.
+      return $this->redirect('wayf_dk_login.consume');
+    }
+
+    // No need to login once more, so send the user to add booking.
+    return $this->redirect('koba_booking.booking_add');
   }
 
   /**
