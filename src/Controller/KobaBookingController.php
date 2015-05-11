@@ -24,7 +24,6 @@ class KobaBookingController extends ControllerBase  {
    *   Render array for calendar page.
    */
   public function calendarPage() {
-
     $build = array(
       '#type' => 'markup',
       '#theme' => 'booking_calendar_page',
@@ -32,6 +31,11 @@ class KobaBookingController extends ControllerBase  {
         'library' => array(
           'koba_booking/angular',
         ),
+        'drupalSettings' => array(
+          'koba_booking' => array(
+            'module_path' => \Drupal::moduleHandler()->getModule('koba_booking')->getPath()
+          )
+        )
       ),
     );
 
