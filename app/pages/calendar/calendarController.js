@@ -17,6 +17,8 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       return $window.Drupal.t(str);
     };
 
+    $scope.modulePath = '/' + drupalSettings['koba_booking']['module_path'];
+
     // Defaults: Start of today
     // For time we use a regular date to integrate with timepicker.
     $scope.selected = {
@@ -67,7 +69,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       var from = moment($scope.selected.date).add($scope.selected.time.start.getTime(), 'milliseconds');
       var to = moment($scope.selected.date).add($scope.selected.time.end.getTime(), 'milliseconds');
 
-      return encodeURI('/booking/wayf/login?res=' + $scope.selected.resource.mail + '&from=' + from.format('X') + '&to=' + to.format('X'));
+      return encodeURI('/booking/wayf/login?res=' + $scope.selected.resource.id + '&from=' + from.format('X') + '&to=' + to.format('X'));
     };
 
     /**
