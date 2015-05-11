@@ -35,7 +35,6 @@ function template_preprocess_booking_calendar_page(&$variables) {
   $variables['app_dir'] = '/' .  drupal_get_path('module', 'koba_booking') . '/app';
 }
 
-
 /**
  * Prepares variables for a receipt.
  *
@@ -62,16 +61,26 @@ function template_preprocess_booking_receipt(&$variables) {
 
 /**
  * Implements hook_preprocess_booking_add_booking().
-
+ *
+ * @TODO: There must be a better way to get values out of a field.
+ *
  * @param $variables
  */
 function template_preprocess_booking_add_booking(&$variables) {
   $defaults = \Drupal::service('session')->get('koba_booking_request');
   if (!empty($defaults)) {
+    // Load "lokale" entity information.
+    $defaults['room'] = entity_load('node', 52);
+
     $variables['booking'] = array(
-      'resource' => '52',
-      'from' => $defaults['from'],
-      'to' => $defaults['to'],
+      'room' => array(
+        'name' => array_pop($defaults['room']->title->getValue())['value'],
+        'price' => array_pop($defaults['room']->field_price->getValue())['value'],
+        'url' => $defaults['room']->url(),
+      ),
+      'day' => format_date($defaults['from'], 'dokk_dato'),
+      'timeIntreval' => format_date($defaults['from'], 'dokk_tidspunkt') . ' - ' . format_date($defaults['to'], 'dokk_tidspunkt'),
+      'raw' => $defaults,
     );
   }
 }
