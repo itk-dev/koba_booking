@@ -150,8 +150,9 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      *   Not before today.
      */
     $scope.prevDate = function() {
-      // @TODO: Fix bug, when one month apart.
-      if ($scope.selected.date.day() > moment().day()) {
+      var now = moment();
+
+      if ($scope.selected.date.dayOfYear() + $scope.selected.date.year() * 365 > now.dayOfYear() + now.year() * 365) {
         $scope.selected.date = moment($scope.selected.date.add(-1, 'day'));
       }
     };
