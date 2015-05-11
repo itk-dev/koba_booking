@@ -70,6 +70,9 @@ class BookingForm extends ContentEntityForm {
     drupal_set_message($message_text);
     $entity = $this->getEntity();
 
+    // Store hash value on the booking.
+    $entity->booking_hash->setValue(array($hash));
+
     // On first save set the booking state.
     if ($entity->isNew()) {
       $entity->set('booking_status', 'request');
