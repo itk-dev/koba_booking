@@ -3,7 +3,7 @@
     <div class="booking--selection-date-time-wrapper">
       <div class="booking--selection-date-picker">
         <div class="booking--selection-header-date" data-ng-click="toggleDate()">{{ t('Date') }}</div>
-        <div class="booking--selection-display-date" data-ng-click="toggleDate()"><span class="icon--calendar" data-ng-include="'/modules/koba_booking/templates/svgs/calendar-icon.svg'"></span>{{ getSelectedDate() | date: 'd/M-yy' }}</div>
+        <div class="booking--selection-display-date" data-ng-click="toggleDate()"><span class="icon--calendar" data-ng-include="modulePath + '/templates/svgs/calendar-icon.svg'"></span>{{ getSelectedDate() | date: 'd/M-yy' }}</div>
         <div class="booking--popup" data-ng-cloak data-ng-if="pickDate">
           <div class="booking--popup-inner">
             <div class="booking--popup-header">
@@ -16,7 +16,7 @@
       </div>
       <div class="booking--selection-time-picker">
         <div class="booking--selection-header-time" data-ng-click="toggleTime()">{{ t('Time') }}</div>
-        <div class="booking--selection-display-time" data-ng-click="toggleTime()"><span class="icon--clock" data-ng-include="'/modules/koba_booking/templates/svgs/clock-icon.svg'"></span>{{ getSelectedStartTime() }} - {{ getSelectedEndTime() }}</div>
+        <div class="booking--selection-display-time" data-ng-click="toggleTime()"><span class="icon--clock" data-ng-include="modulePath + '/templates/svgs/clock-icon.svg'"></span>{{ getSelectedStartTime() }} - {{ getSelectedEndTime() }}</div>
         <div class="booking--popup" data-ng-if="pickTime">
           <div class="booking--popup-inner">
             <div class="booking--popup-header">
@@ -59,11 +59,11 @@
   <div class="booking--display">
     <div class="booking--display-date">
       <span class="booking--display-date-arrow-left" data-ng-click="prevDate()">
-        <span class="booking--arrow-large is-left" data-ng-include="'/modules/koba_booking/templates/svgs/arrow.svg'"></span>
+        <span class="booking--arrow-large is-left" data-ng-include="modulePath + '/templates/svgs/arrow.svg'"></span>
       </span>
       <span class="booking--display-header">{{ getSelectedDate() | date: 'EEEE d/M-yyyy' }}</span>
       <span class="booking--display-date-arrow-right" data-ng-click="nextDate()">
-        <span class="booking--arrow-large is-right" data-ng-include="'/modules/koba_booking/templates/svgs/arrow.svg'"></span>
+        <span class="booking--arrow-large is-right" data-ng-include="modulePath + '/templates/svgs/arrow.svg'"></span>
       </span>
     </div>
     <booking-calendar selected-date="selected.date" selected-resource="selected.resource" selected-start="selected.time.start" selected-end="selected.time.end" interest-period="interestPeriod" disabled="disabled"></booking-calendar>
