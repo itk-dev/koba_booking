@@ -41,8 +41,14 @@ class BookingForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
+    $config = \Drupal::config('koba_booking.settings');
+    $message_text = is_array($config->get('koba_booking.created_booking_message')) ? $config->get('koba_booking.created_booking_message')['value'] : $config->get('koba_booking.created_booking_message');
+
     // Redirect after submit.
-    $form_state->setRedirect('koba_booking.booking');
+    $form_state->setRedirect('koba_booking.receipt', array(
+      'hash' => '12345'));
+
+    drupal_set_message($message_text);
     $entity = $this->getEntity();
 
     // On first save set the booking state.
