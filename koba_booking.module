@@ -30,7 +30,9 @@ function koba_booking_theme() {
       'file' => 'koba_booking.pages.inc',
     ),
     'booking_receipt' => array(
-      'variables' => array(),
+      'variables' => array(
+        'booking' => NULL,
+      ),
       'file' => 'koba_booking.pages.inc',
     ),
     'booking_add_booking' => array(

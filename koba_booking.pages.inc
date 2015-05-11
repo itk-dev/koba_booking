@@ -57,6 +57,29 @@ function template_preprocess_booking_receipt(&$variables) {
   $variables['title'] = $config->get('koba_booking.create_booking_title', '');
   $variables['top_img'] = ($file) ? $file->url() : '';
   $variables['manchet'] = $config->get('koba_booking.create_booking_description', '');
+
+  // Extract information about the booking.
+  $booking = $variables['booking'];
+  $variables['id'] = array_pop($booking->id->getValue())['value'];
+
+  // Load resource and set room information.
+  $room = entity_load('node', array_pop($booking->booking_resource->getValue())['target_id']);
+  $variables['room'] = array(
+    'name' => array_pop($room->title->getValue())['value'],
+    'price' => array_pop($room->field_price->getValue())['value'],
+    'url' => $room->url(),
+  );
+
+  // Set date information.
+  $variables['day'] = format_date(array_pop($booking->booking_from_date->getValue())['value'], 'dokk_dato');
+  $variables['timeInterval'] = format_date(array_pop($booking->booking_from_date->getValue())['value'], 'dokk_tidspunkt') . ' - ' . format_date(array_pop($booking->booking_to_date->getValue())['value'], 'dokk_tidspunkt');
+
+  // Set user information.
+  $variables['name'] = \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->booking_name->getValue())['value']);
+  $variables['mail'] = \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->booking_email->getValue())['value']);
+  $variables['phone'] = \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->booking_phone->getValue())['value']);
+  $variables['type'] = \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->booking_usage->getValue())['value']);
+  $variables['message'] = \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->booking_message->getValue())['value']);
 }
 
 /**

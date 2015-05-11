@@ -7,9 +7,13 @@
 namespace Drupal\koba_booking\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Render\Element\Link;
+use Drupal\Core\Url;
 use Drupal\koba_booking\BookingInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * KobaBookingController.
@@ -45,17 +49,36 @@ class KobaBookingController extends ControllerBase  {
   /**
    * Booking receipt page.
    *
+   * @param string $hash
+   *   Hash value that identifies a given booking.
+   *
    * @return array
    *   Render array for calendar page.
    */
-  public function receipt() {
-    // Setup template for frontend.
-    $build = array(
-      '#type' => 'markup',
-      '#theme' => 'booking_receipt',
-    );
+  public function receipt($hash) {
+    // Load entity base on hash value.
+    $query = \Drupal::entityQuery('koba_booking_booking')
+      ->condition('booking_hash', $hash);
+    $nids = $query->execute();
 
-    return $build;
+    if (!empty($nids)) {
+      // Load booking.
+      $booking = entity_load('koba_booking_booking', array_pop($nids));
+
+      // Setup template for frontend.
+      $build = array(
+        '#theme' => 'booking_receipt',
+        '#booking' => $booking,
+      );
+
+      return $build;
+    }
+
+    // Build sub-request with page not found.
+    $subrequest = Request::create('/system/404', 'GET');
+    $response = \Drupal::service('httpKernel')->handle($subrequest, HttpKernelInterface::SUB_REQUEST);
+
+    return $response;
   }
 
   /**

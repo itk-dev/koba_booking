@@ -58,20 +58,29 @@ class BookingForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
+    // Load configuration and session defaults.
     $config = \Drupal::config('koba_booking.settings');
+    $defaults = \Drupal::service('session')->get('koba_booking_request');
+
+    // Set message.
     $message_text = is_array($config->get('koba_booking.created_booking_message')) ? $config->get('koba_booking.created_booking_message')['value'] : $config->get('koba_booking.created_booking_message');
+    drupal_set_message($message_text);
 
     // Generate hash value (based on name, mail, date).
     $hash = Crypt::hashBase64(Crypt::randomBytes(1024));
 
-    // Redirect after submit.
-    $form_state->setRedirect('koba_booking.receipt', array('hash' => $hash));
-
-    drupal_set_message($message_text);
+    // Get the entity.
     $entity = $this->getEntity();
 
     // Store hash value on the booking.
     $entity->booking_hash->setValue(array($hash));
+
+    // Store resource.
+    $entity->booking_resource->setValue(array($defaults['resource']));
+
+    // Store dates.
+    $entity->booking_from_date->setValue(array($defaults['from']));
+    $entity->booking_to_date->setValue(array($defaults['to']));
 
     // On first save set the booking state.
     if ($entity->isNew()) {
@@ -79,8 +88,11 @@ class BookingForm extends ContentEntityForm {
     }
     $entity->save();
 
+    // Redirect after submit.
+    $form_state->setRedirect('koba_booking.receipt', array('hash' => $hash));
+
     // Remove booking information from session (comment out during tests).
-//    \Drupal::service('session')->remove('koba_booking_request');
+    \Drupal::service('session')->remove('koba_booking_request');
   }
 }
 
