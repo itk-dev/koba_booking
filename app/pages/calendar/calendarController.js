@@ -69,7 +69,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       var from = moment($scope.selected.date).add($scope.selected.time.start.getTime(), 'milliseconds');
       var to = moment($scope.selected.date).add($scope.selected.time.end.getTime(), 'milliseconds');
 
-      return encodeURI('/booking/wayf/login?res=' + $scope.selected.resource.mail + '&from=' + from.format('X') + '&to=' + to.format('X'));
+      return encodeURI('/booking/wayf/login?res=' + $scope.selected.resource.id + '&from=' + from.format('X') + '&to=' + to.format('X'));
     };
 
     /**
@@ -210,9 +210,12 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      */
     $scope.toggleDate = function() {
       $scope.pickDate = !$scope.pickDate;
-
-      jQuery('html').toggleClass('is-locked');
-      jQuery('body').toggleClass('is-locked');
+      var browserSize =  document.body.clientWidth;
+      console.log(browserSize);
+      if (browserSize < 1024) {
+        jQuery('html').toggleClass('is-locked');
+        jQuery('body').toggleClass('is-locked');
+      }
     };
 
     /**
