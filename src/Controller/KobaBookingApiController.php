@@ -19,34 +19,34 @@ use GuzzleHttp\Exception\RequestException;
  * KobaBookingApiController.
  */
 class KobaBookingApiController extends ControllerBase {
+
   /**
    * Get available resources.
+   *
+   * @TODO: Maybe use a cache as rooms don't change.
    *
    * @return JsonResponse
    */
   public function resources() {
-    // Fetch module config settings.
-    $config = \Drupal::config('koba_booking.settings');
-    $apikey = $config->get('koba_booking.api_key');
-    $path = $config->get('koba_booking.path');
+    $rooms = array();
 
-    $url = $path . "/api/resources/group/default?apikey=" . $apikey;
+    // Get all rooms that is connected to a koba resource.
+    $query = \Drupal::entityQuery('node')
+      ->condition('type', 'room')
+      ->condition('status', 1);
+    $nids = $query->execute();
 
-    // Instantiates a new guzzle client.
-    $client = new Client();
-
-    try {
-      $response = $client->get($url);
-      $body = json_decode($response->getBody());
-
-      return new JsonResponse($body, $response->getStatusCode());
+    // Load nodes and build response.
+    $nodes = entity_load_multiple('node', $nids);
+    foreach ($nodes as $node) {
+      $rooms[] = array(
+        'id' => array_pop($node->nid->getValue())['value'],
+        'name' => array_pop($node->title->getValue())['value'],
+        'mail' => array_pop($node->field_resource->getValue())['value'],
+      );
     }
-    catch (RequestException $e) {
-      echo $e->getRequest() . "\n";
-      if ($e->hasResponse()) {
-        echo $e->getResponse() . "\n";
-      }
-    }
+
+    return new JsonResponse($rooms, '200');
   }
 
   /**
@@ -115,7 +115,7 @@ class KobaBookingApiController extends ControllerBase {
 
     // Set newest booking information.
     $data = array(
-      'ressource' => $resource_id,
+      'resource' => $resource_id,
       'from' => $from,
       'to' => $to,
     ) + $data;
@@ -123,12 +123,8 @@ class KobaBookingApiController extends ControllerBase {
     // Store information in session.
     \Drupal::service('session')->set('koba_booking_request', $data);
 
-    /**
-     * @TODO: check if data exists in the session and then not redirect to login...
-     */
-
-    // Check if the user has authenticated with WAYF.
-    if (empty($data['uuid'])) {
+    // Check if the user has authenticated with WAYF and .
+    if (empty($data['uuid']) || !\Drupal::moduleHandler()->moduleExists('wayf_dk_login')) {
       // Redirect to WAYF login.
       return $this->redirect('wayf_dk_login.consume');
     }

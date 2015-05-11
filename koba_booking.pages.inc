@@ -70,7 +70,7 @@ function template_preprocess_booking_add_booking(&$variables) {
   $defaults = \Drupal::service('session')->get('koba_booking_request');
   if (!empty($defaults)) {
     // Load "lokale" entity information.
-    $defaults['room'] = entity_load('node', 52);
+    $defaults['room'] = entity_load('node', $defaults['resource']);
 
     $variables['booking'] = array(
       'room' => array(
