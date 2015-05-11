@@ -208,9 +208,12 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      */
     $scope.toggleDate = function() {
       $scope.pickDate = !$scope.pickDate;
-
-      jQuery('html').toggleClass('is-locked');
-      jQuery('body').toggleClass('is-locked');
+      var browserSize =  document.body.clientWidth;
+      console.log(browserSize);
+      if (browserSize < 1024) {
+        jQuery('html').toggleClass('is-locked');
+        jQuery('body').toggleClass('is-locked');
+      }
     };
 
     /**
