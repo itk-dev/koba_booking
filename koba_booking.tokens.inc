@@ -68,12 +68,15 @@ function koba_booking_token_info() {
  * Usage:
  *  // Load an entity.
  *  $booking = entity_load('koba_booking_booking', '1');
+ *
  *  // Initiate the token service
  *  $token_service = \Drupal::token();
+ *
  *  // Fetch current language for language options.
  *  $language_interface = \Drupal::languageManager()->getCurrentLanguage();
+ *
  *  // Output the content with tokens replaced.
- *  $output = $token_service->replace($config->get('koba_booking.email_pending_body')['value'], array('booking' => $booking), array('langcode' => $language_interface->getId()));
+ *  $output = $token_service->replace($config->get('koba_booking.email_pending_body'), array('booking' => $booking), array('langcode' => $language_interface->getId()));
  */
 function koba_booking_tokens($type, $tokens, array $data = array(), array $options = array()) {
 

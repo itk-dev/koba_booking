@@ -23,7 +23,7 @@ use Drupal\Core\StringTranslation\TranslationInterface;
 /**
  * Implements hook_theme().
  */
-function koba_booking_theme() {
+function koba_booking_theme($existing, $type, $theme, $path) {
   return array(
     'booking_calendar_page' => array(
       'variables' => array(),
@@ -39,7 +39,157 @@ function koba_booking_theme() {
       'render element' => 'form',
       'file' => 'koba_booking.pages.inc',
     ),
+    // Request mail.
+    'booking_mail_request' => array(
+      'template' => 'booking-mail-request',
+      'variables' => array(
+        'message' => 'No message',
+        'booking' => array(
+          'title' => '',
+          'dato' => '',
+          'time' => '',
+          'room' => array(
+            'title' => '',
+            'price' => 0,
+            'url' => '',
+          ),
+          'name' => '',
+          'mail' => '',
+          'phone' => '',
+          'type' => '',
+          'message' => '',
+          'url' => '',
+        ),
+      ),
+    ),
   );
+}
+
+/**
+ * Helper function to send mail based on a booking.
+ *
+ * @param $type
+ *   The type of the mail (request, accpeted, etc.)
+ * @param \Drupal\koba_booking\BookingInterface $booking
+ *   Booking object that this mail is about.
+ */
+function koba_booking_send_mail($type, \Drupal\koba_booking\BookingInterface $booking) {
+  // Get to mail address.
+  $to = array_pop($booking->booking_email->getValue())['value'];
+
+  // Try to get and from address from the site configuration.
+  $site_config =\Drupal::config('system.site');
+  $from = $site_config->get('mail');
+  if (empty($from)) {
+    $from = ini_get('sendmail_from');
+  }
+
+  // Build render array for the mail body.
+  $subject = 'Unknown mail type';
+  $content = array();
+  switch ($type) {
+    case 'request':
+      $config = \Drupal::config('koba_booking.settings');
+      $subject = $config->get('koba_email.email_pending_title');
+
+      // Build render array.
+      $content = array(
+        '#theme' => 'booking_mail_request',
+        '#message' => $config->get('koba_email.email_pending_body'),
+      ) + _koba_booking_generate_booking_array($booking);
+      break;
+  }
+
+  // Render the body content for the mail.
+  $body = render($content);
+
+  // Send the mail.
+  _koba_booking_mailer($to, $from, $subject, $body);
+}
+
+/**
+ * Build render array with booking information.
+ *
+ * @param \Drupal\koba_booking\BookingInterface $booking
+ *   Booking object to generate array for.
+ *
+ * @return array
+ *   Array with booking information.
+ */
+function _koba_booking_generate_booking_array(\Drupal\koba_booking\BookingInterface $booking) {
+  // Load room for the booking.
+  $room = entity_load('node', array_pop($booking->booking_resource->getValue())['target_id']);
+
+  $generator = \Drupal::urlGenerator();
+  $url = $generator->generateFromRoute('koba_booking.receipt', array(
+    'hash' => array_pop($booking->booking_hash->getValue())['value'],
+  ), array(
+    'absolute' => TRUE,
+  ));
+
+  return array(
+    '#booking' => array(
+      'title' => \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->name->getValue())['value']),
+      'dato' => format_date(array_pop($booking->booking_from_date->getValue())['value'], 'dokk1_booking_dato'),
+      'time' => format_date(array_pop($booking->booking_from_date->getValue())['value'], 'dokk1_booking_time') . ' - ' . format_date(array_pop($booking->booking_to_date->getValue())['value'], 'dokk1_booking_time'),
+      'room' => array(
+        'title' => array_pop($room->title->getValue())['value'],
+        'price' => array_pop($room->field_price->getValue())['value'],
+        'url' => $room->url(),
+      ),
+      'name' => \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->booking_name->getValue())['value']),
+      'mail' => \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->booking_email->getValue())['value']),
+      'phone' => \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->booking_phone->getValue())['value']),
+      'type' => \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->booking_usage->getValue())['value']),
+      'message' => \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->booking_message->getValue())['value']),
+      'url' => $url
+    ),
+  );
+}
+/**
+ * Send HTML mails.
+ *
+ * @TODO: This is not the Drupal way to send mail, but rather a hack to send
+ *        HTML mails. Drupal MailManger service hardcode plain/text as content
+ *        type, so HTML is not supported.
+ *
+ *        When the SwiftMailer module have been ported to D8... USE IT.
+ *
+ * @param $to
+ *   Mail address to send mail to.
+ * @param $from
+ *   The sender of the mail.
+ * @param $subject
+ *   The mails subject.
+ * @param $body
+ *   The HTML body content to send.
+ * @param string $name
+ *   The name of the sender. Defaults to 'Dokk1'.
+ */
+function _koba_booking_mailer($to, $from, $subject, $body, $name = 'Dokk1') {
+  // Get hold of the RAW mailer client.
+  $key = \Drupal\Component\Utility\Crypt::randomBytesBase64();
+  $mailer = \Drupal::service('plugin.manager.mail')->getInstance(array('module' => 'koba_bookinf', 'key' => $key));
+
+  // Build mail configuration and set the type to HTML.
+  $params = array(
+    'headers' => array(
+      'MIME-Version' => '1.0',
+      'Content-Type' => 'text/html; charset=UTF-8; format=flowed; delsp=yes',
+      'Content-Transfer-Encoding' => '8Bit',
+      'X-Mailer' => 'Drupal',
+      'Return-Path' => $from,
+      'Replay-to' => $from,
+      'Sender' => $from,
+      'From' => $name . ' <' . $from . '>',
+    ),
+    'to' => $to,
+    'body' => $body,
+    'subject' => $subject,
+  );
+
+  // Send the mail.
+  $mailer->mail($params);
 }
 
 /**
@@ -72,12 +222,8 @@ function koba_booking_form_koba_booking_booking_form_alter(&$form, FormStateInte
     $form['booking_email']['widget']['0']['value']['#attributes']['class'][] = 'booking--readonly';
 
     // Filter help texts if they have a filter.
-    $email_help_text = is_array($config->get('koba_booking.why_email')) ? $config->get('koba_booking.why_email')['value'] : $config->get('koba_booking.why_email');
-    $title_help_text = is_array($config->get('koba_booking.why_title')) ? $config->get('koba_booking.why_title')['value'] : $config->get('koba_booking.title');
-    $email_help_text_format = is_array($config->get('koba_booking.why_email')) ? $config->get('koba_booking.why_email')['format'] : FALSE;
-    $title_help_text_format = is_array($config->get('koba_booking.why_title')) ? $config->get('koba_booking.why_title')['format'] : FALSE;
-    $form['variables']['why_email'] = ($email_help_text_format) ? check_markup($email_help_text, $email_help_text_format) : '';
-    $form['variables']['why_title'] = ($title_help_text_format) ? check_markup($title_help_text, $title_help_text_format) : '';
+    $form['variables']['why_email'] = check_markup($config->get('koba_booking.why_email'), 'editor_format');
+    $form['variables']['why_title'] = check_markup($config->get('koba_booking.why_title'), 'editor_format');
 
     // Help texts are reused as headers.
     $form['variables']['why_email_header'] = t('Why do we need your email?');

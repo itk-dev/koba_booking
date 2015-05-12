@@ -85,6 +85,9 @@ class BookingForm extends ContentEntityForm {
     // On first save set the booking state.
     if ($entity->isNew()) {
       $entity->set('booking_status', 'request');
+
+      // Send mail with request received information.
+      koba_booking_send_mail('request', $entity);
     }
     $entity->save();
 

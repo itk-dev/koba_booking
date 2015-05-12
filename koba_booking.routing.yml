@@ -123,11 +123,21 @@ koba_booking.autocomplete:
 
 
 # --- Actions --- #
+koba_booking.action_pending:
+  path: '/booking/{koba_booking_booking}/pending'
+  defaults:
+    _controller: '\Drupal\koba_booking\Controller\KobaBookingController::actionPending'
+    _title: 'Pending action'
+  requirements:
+    _permission: 'edit booking entity'
+  options:
+    _admin_route: TRUE
+
 koba_booking.action_accept:
   path: '/booking/{koba_booking_booking}/accept'
   defaults:
     _controller: '\Drupal\koba_booking\Controller\KobaBookingController::actionAccept'
-    _title: 'Cancel action'
+    _title: 'Accept action'
   requirements:
     _permission: 'edit booking entity'
   options:
@@ -137,7 +147,7 @@ koba_booking.action_refuse:
   path: '/booking/{koba_booking_booking}/refuse'
   defaults:
     _controller: '\Drupal\koba_booking\Controller\KobaBookingController::actionRefuse'
-    _title: 'Cancel action'
+    _title: 'Refuse action'
   requirements:
     _permission: 'edit booking entity'
   options:
