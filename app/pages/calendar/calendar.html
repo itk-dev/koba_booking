@@ -3,12 +3,12 @@
     <div class="booking--selection-date-time-wrapper">
       <div class="booking--selection-date-picker">
         <div class="booking--selection-header-date" data-ng-click="toggleDate()">{{ t('Date') }}</div>
-        <div class="booking--selection-display-date" data-ng-click="toggleDate()"><span class="icon--calendar" data-ng-include="modulePath + '/templates/svgs/calendar-icon.svg'"></span>{{ getSelectedDate() | date: 'd/M-yy' }}</div>
+        <div class="booking--selection-display-date" data-ng-click="toggleDate()"><span class="icon--calendar" data-ng-include="themePath + '/templates/svgs/calendar-icon.svg'"></span>{{ getSelectedDate() | date: 'd/M-yy' }}</div>
         <div class="booking--popup" data-ng-cloak data-ng-if="pickDate">
           <div class="booking--popup-inner">
             <div class="booking--popup-header">
               <h2 class="booking--popup-header-text">{{ t('Date') }}</h2>
-              <div class="booking--popup-close-text" data-ng-click="toggleDate()">{{ t('Close') }}</div>
+              <div class="booking--popup-close-text" data-ng-click="toggleDate()"><span class="booking--close-icon" data-ng-include="themePath + '/templates/svgs/close-icon.svg'"></span>{{ t('Close') }}</div>
             </div>
             <div data-ng-model="selected.date" date-picker="" close-function="toggleDate()" number-of-months="9" class="booking--popup-calendar-wrapper"></div>
           </div>
@@ -16,12 +16,12 @@
       </div>
       <div class="booking--selection-time-picker">
         <div class="booking--selection-header-time" data-ng-click="toggleTime()">{{ t('Time') }}</div>
-        <div class="booking--selection-display-time" data-ng-click="toggleTime()"><span class="icon--clock" data-ng-include="modulePath + '/templates/svgs/clock-icon.svg'"></span>{{ getSelectedStartTime() }} - {{ getSelectedEndTime() }}</div>
+        <div class="booking--selection-display-time" data-ng-click="toggleTime()"><span class="icon--clock" data-ng-include="themePath + '/templates/svgs/clock-icon.svg'"></span>{{ getSelectedStartTime() }} - {{ getSelectedEndTime() }}</div>
         <div class="booking--popup" data-ng-if="pickTime">
           <div class="booking--popup-inner">
             <div class="booking--popup-header">
               <h2 class="booking--popup-header-text">{{ t('Time') }}</h2>
-              <div class="booking--popup-close-text" data-ng-click="toggleTime()">{{ t('Close') }}</div>
+              <div class="booking--popup-close-text" data-ng-click="toggleTime()"><span class="booking--arrow-close is-left is-yellow" data-ng-include="themePath + '/templates/svgs/arrow.svg'"></span>{{ t('Ok') }}</div>
             </div>
             <div class="booking--popup-content">
               <div class="booking--popup-timepicker-wrapper">
@@ -36,9 +36,9 @@
       <div class="booking--selection-resource-picker">
         <div class="booking--selection-header-resource" data-ng-click="toggleResource()">{{ t('Resources') }}</div>
         <div class="booking--selection-display-resource" >
-          <span class="booking--arrow is-left" data-ng-include="'/modules/koba_booking/templates/svgs/arrow.svg'" data-ng-click="prevResource()"></span>
+          <span class="booking--arrow is-left" data-ng-include="themePath + '/templates/svgs/arrow.svg'" data-ng-click="prevResource()"></span>
           <span data-ng-click="toggleResource()">{{ (resourceName = getSelectedResource()) ? resourceName : t('Select resource') }}</span>
-          <span class="booking--arrow is-right" data-ng-include="'/modules/koba_booking/templates/svgs/arrow.svg'" data-ng-click="nextResource()"></span>
+          <span class="booking--arrow is-right" data-ng-include="themePath + '/templates/svgs/arrow.svg'" data-ng-click="nextResource()"></span>
         </div>
       </div>
     </div>
@@ -47,7 +47,7 @@
     <div class="booking--popup-inner">
       <div class="booking--popup-header">
         <h2 class="booking--popup-header-text">{{ t('Resources') }}</h2>
-        <div class="booking--popup-close-text" data-ng-click="toggleResource()">{{ t('Ok') }}</div>
+        <div class="booking--popup-close-text" data-ng-click="toggleResource()"><span class="booking--arrow-close is-left is-yellow" data-ng-include="themePath + '/templates/svgs/arrow.svg'"></span>{{ t('Ok') }}</div>
       </div>
       <form class="booking--popup-content">
         <div data-ng-repeat="resource in resources" data-ng-click="setResource(resource)" class="booking--radio-select">
@@ -60,11 +60,11 @@
   <div class="booking--display">
     <div class="booking--display-date">
       <span class="booking--display-date-arrow-left" data-ng-click="prevDate()">
-        <span class="booking--arrow-large is-left" data-ng-include="modulePath + '/templates/svgs/arrow.svg'"></span>
+        <span class="booking--arrow-large is-left" data-ng-include="themePath + '/templates/svgs/arrow.svg'"></span>
       </span>
       <span class="booking--display-header">{{ getSelectedDate() | date: 'EEEE d/M-yyyy' }}</span>
       <span class="booking--display-date-arrow-right" data-ng-click="nextDate()">
-        <span class="booking--arrow-large is-right" data-ng-include="modulePath + '/templates/svgs/arrow.svg'"></span>
+        <span class="booking--arrow-large is-right" data-ng-include="themePath + '/templates/svgs/arrow.svg'"></span>
       </span>
     </div>
     <booking-calendar selected-date="selected.date" selected-resource="selected.resource" selected-start="selected.time.start" selected-end="selected.time.end" interest-period="interestPeriod" disabled="disabled"></booking-calendar>

@@ -18,6 +18,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
     };
 
     $scope.modulePath = '/' + drupalSettings['koba_booking']['module_path'];
+    $scope.themePath = '/' + drupalSettings['koba_booking']['theme_path'];
 
     // Defaults: Start of today
     // For time we use a regular date to integrate with timepicker.

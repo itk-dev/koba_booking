@@ -1,15 +1,59 @@
 {#
 /**
  * @file
- * Theme implementation for booking calendar.
+ * Theme implementation for Booking add form.
  *
  * Available variables:
  *  - title
  *  - top_img
  *  - manchet
+ *
  */
 #}
 
-{% include "@koba_booking/booking-top.html.twig" %}
-
-Receipt page
+<div class="page--header-container">
+  {% include "@koba_booking/booking-top.html.twig" %}
+</div>
+<div class="page--content">
+  <div class="booking--add-prefix">
+    <div>{{ 'Your booking id:'|t }} <span class="booking--id-display">{{ id }}</span></div>
+    </br>
+    <div>
+      {{ 'We regularly look through new booking requests, usually you will receive a reply within 24 hours.'|t }}
+      {{ 'If you have any questions you can send an email to booking@dokk1.dk, when contacting us please use your booking id in the email subject:'|t }} <span class="booking--id-display">{{ id }}</span>
+    </div>
+  </div>
+  <div class="booking--confirmation">
+    <div class="booking--header-information">
+      <h3 class="booking--header-text-information">{{ 'Booking confirmation'|t }}</h3>
+      <div class="booking--header-line-through-information"></div>
+    </div>
+    <div class="booking--information">
+      <div class="booking--information-item"><span class="icon--calendar">{% include '@dokk/svgs/calendar-icon.svg' %}</span>{{ day }}</div>
+      <div class="booking--information-item"><span class="icon--clock">{% include '@dokk/svgs/clock-icon.svg' %}</span>{{ timeInterval }}</div>
+      <div class="booking--information-item">
+        <div class="booking--icon"><span class="icon--wayfinding">{% include '@dokk/svgs/wayfinding-marker-icon.svg' %}</span></div>
+        <div class="booking--content">
+          <div>{{ room.name }}</div>
+          <div>{{ 'Price'|t }}: {{ room.price }} kr.</div>
+            <a href="{{ room.url }}">{{ 'Information about'|t }} {{ room.name }}</a>
+        </div>
+      </div>
+      <div class="booking--information-item">
+        <span class="booking--information-label">{{ 'Name'|t }}</span><span class="booking--information-content">{{ name }}</span>
+      </div>
+      <div class="booking--information-item">
+        <span class="booking--information-label">{{ 'Email'|t }}</span><span class="booking--information-content">{{ mail }}</span>
+      </div>
+      <div class="booking--information-item">
+        <span class="booking--information-label">{{ 'Phone'|t }}</span><span class="booking--information-content">{{ phone }}</span>
+      </div>
+      <div class="booking--information-item">
+        <span class="booking--information-label">{{ 'Type'|t }}</span><span class="booking--information-content">{{ type }}</span>
+      </div>
+      <div class="booking--information-item">
+        <div class="booking--information-label">{{ 'Message'|t }}</div><div class="booking--information-message-content">{{ message }}</div></div>
+      </div>
+    </div>
+  </div>
+</div>

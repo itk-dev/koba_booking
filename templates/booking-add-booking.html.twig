@@ -5,28 +5,94 @@
  *
  * Available variables:
  *  - form : Booking form
+ *    - variables:
+ *      - why_email_header
+ *      - why_email
+ *      - why_title_header
+ *      - why_title
  *  - user : Active user
  *  - title
  *  - top_img
  *  - manchet
-  * - why_email
- *  - why_title
+ *
  */
 #}
 
-{% include "@koba_booking/booking-top.html.twig" %}
+<div class="page--header-container">
+  <div class="fields--header-image">
+    <div class="fields--header-gradient"></div>
+    <div class="fields--header-image">
+      <div class="fields--header-gradient"></div>
+      <div class="fields">
+        <div class="fields--items">
+          <div class="fields--item">
+            {% if form.variables.top_img %}
+              <img src="{{ form.variables.top_img }}"/>
+            {% else %}
+              <img src="/sites/all/themes/dokk/images/pngs/page-header-fallback.png" width="2000" height="400" alt="">
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="page--content">
+  <div class="booking--add-prefix">{{ 'Please look through the information and confirm, to send your booking request.'|t }}</div>
+  <div class="booking--add-request">
+    <div class="booking--header-information">
+      <h3 class="booking--header-text-information">{{ '1. Your booking request'|t }}</h3>
+      <div class="booking--header-line-through-information"></div>
+    </div>
+    <div class="booking--information">
+      <div class="booking--information-item">
+          <span class="icon--calendar">{% include '@dokk/svgs/calendar-icon.svg' %}</span> {{ booking.day }}
+      </div>
+      <div class="booking--information-item">
+          <span class="icon--clock">{% include '@dokk/svgs/clock-icon.svg' %}</span> {{ booking.timeIntreval }}
+      </div>
+      <div class="booking--information-item">
+        <div class="booking--icon"><span class="icon--wayfinding">{% include '@dokk/svgs/wayfinding-marker-icon.svg' %}</span></div>
+        <div class="booking--content">
+          <div> {{ booking.room.name }}</div>
+          <div>{{ 'Price'|t }}: {{ booking.room.price }} kr.</div>
+          <a href="{{ booking.room.url }}">{{ 'Information about'|t }} {{ booking.room.name }}</a>
+        </div>
+      </div>
+    </div>
+    <a href="/booking/calendar" class="booking--calendar-button">{{ 'Edit your choices'|t }}</a>
+  </div>
+  <div class="booking--add-information" data-ng-app="">
+    <div class="booking--header">
+      <h3 class="booking--header-text">{{ '2. Your information'|t }}</h3>
+      <div class="booking--header-line-through"></div>
+    </div>
 
-{{ form.name }}
-{{ form.booking_name }}
-{{ form.booking_email }}
-{{ form.booking_phone }}
-{{ form.booking_resource }}
-{{ form.booking_from_date }}
-{{ form.booking_from_time }}
-{{ form.booking_to_time }}
-{{ form.booking_usage }}
-{{ form.form_build_id }}
-{{ form.form_token }}
-{{ form.form_id }}
-{{ form.booking_message }}
-{{ form.actions }}
+    <div class="booking--wrapper">
+      {{ form.booking_name }}
+      <div class="booking--field-wrapper">
+        {{ form.booking_email }}
+        <div data-ng-cloak data-ng-show="showEmailDescription">{% include "@koba_booking/booking-email-description.html.twig" %}</div>
+      </div>
+      {{ form.booking_phone }}
+      <div class="booking--field-wrapper">
+        {{ form.name }}
+        <div data-ng-cloak data-ng-show="showTitleDescription">{% include "@koba_booking/booking-title-description.html.twig" %}</div>
+      </div>
+      {{ form.booking_usage }}
+      {{ form.booking_message }}
+    </div>
+  </div>
+  <div class="booking--add-submit">
+    <div class="booking--header">
+      <h3 class="booking--header-text">{{ '3. Conditions and continue'|t }}</h3>
+      <div class="booking--header-line-through"></div>
+    </div>
+
+    <div class="booking--add-prefix">{{ 'You are about to perform a booking of a room at Dokk1. By confirming this booking request you accept our'|t }} <a href="/">{{ 'Conditions for booking.'|t }}</a></div>
+    {{ form.form_build_id }}
+    {{ form.form_token }}
+    {{ form.form_id }}
+    {{ form.actions }}
+  </div>
+</div>

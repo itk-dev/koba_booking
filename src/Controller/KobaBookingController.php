@@ -37,12 +37,12 @@ class KobaBookingController extends ControllerBase  {
         ),
         'drupalSettings' => array(
           'koba_booking' => array(
-            'module_path' => \Drupal::moduleHandler()->getModule('koba_booking')->getPath()
-          )
-        )
+            'module_path' => \Drupal::moduleHandler()->getModule('koba_booking')->getPath(),
+            'theme_path' => \Drupal::theme()->getActiveTheme()->getPath(),
+          ),
+        ),
       ),
     );
-
     return $build;
   }
 

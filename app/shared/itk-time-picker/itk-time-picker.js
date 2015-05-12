@@ -46,6 +46,8 @@ angular.module('itkTimePicker', [])
           }
           return minutes;
         }
+        scope.modulePath = '/' + drupalSettings['koba_booking']['module_path'];
+        scope.themePath = '/' + drupalSettings['koba_booking']['theme_path'];
       },
       templateUrl: '/modules/koba_booking/app/shared/itk-time-picker/template/itk-time-picker.html'
     }
