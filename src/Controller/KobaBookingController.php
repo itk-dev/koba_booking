@@ -28,6 +28,8 @@ class KobaBookingController extends ControllerBase  {
    *   Render array for calendar page.
    */
   public function calendarPage() {
+    $defaults = \Drupal::service('session')->get('koba_booking_request');
+
     $build = array(
       '#type' => 'markup',
       '#theme' => 'booking_calendar_page',
@@ -37,7 +39,10 @@ class KobaBookingController extends ControllerBase  {
         ),
         'drupalSettings' => array(
           'koba_booking' => array(
-            'module_path' => \Drupal::moduleHandler()->getModule('koba_booking')->getPath()
+            'module_path' => \Drupal::moduleHandler()->getModule('koba_booking')->getPath(),
+            'resource' => $defaults['resource'],
+            'from' => $defaults['from'],
+            'to' => $defaults['to']
           )
         )
       ),
