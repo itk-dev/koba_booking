@@ -40,6 +40,7 @@ class KobaBookingController extends ControllerBase  {
         'drupalSettings' => array(
           'koba_booking' => array(
             'module_path' => \Drupal::moduleHandler()->getModule('koba_booking')->getPath(),
+            'theme_path' => \Drupal::theme()->getActiveTheme()->getPath(),
             'resource' => $defaults['resource'],
             'from' => $defaults['from'],
             'to' => $defaults['to']
@@ -47,7 +48,6 @@ class KobaBookingController extends ControllerBase  {
         )
       ),
     );
-
     return $build;
   }
 

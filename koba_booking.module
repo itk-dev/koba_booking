@@ -129,6 +129,10 @@ function koba_booking_form_koba_booking_booking_form_alter(&$form, FormStateInte
     // Change field descriptions.
     $form['booking_email']['widget']['0']['value']['#description'] = '<div class="booking--description-link" data-ng-click="showEmailDescription = !showEmailDescription">' . t('Why do we need your email?') . '</div>';
     $form['name']['widget']['0']['value']['#description'] = '<div class="booking--description-link" data-ng-click="showTitleDescription = !showTitleDescription">' . t('Why do we need a title?') . '</div>';
+    $form['booking_name']['widget']['0']['value']['#attributes']['readonly'] = 'readonly';
+    $form['booking_name']['widget']['0']['value']['#attributes']['class'][] = 'booking--readonly';
+    $form['booking_email']['widget']['0']['value']['#attributes']['readonly'] = 'readonly';
+    $form['booking_email']['widget']['0']['value']['#attributes']['class'][] = 'booking--readonly';
 
     // Filter help texts if they have a filter.
     $email_help_text = is_array($config->get('koba_booking.why_email')) ? $config->get('koba_booking.why_email')['value'] : $config->get('koba_booking.why_email');

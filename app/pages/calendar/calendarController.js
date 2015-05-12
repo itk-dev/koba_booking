@@ -18,6 +18,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
     };
 
     $scope.modulePath = '/' + drupalSettings['koba_booking']['module_path'];
+    $scope.themePath = '/' + drupalSettings['koba_booking']['theme_path'];
 
     // Get booking information from drupalSettings.
     var initBooking = {
