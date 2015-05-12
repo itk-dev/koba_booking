@@ -254,6 +254,28 @@ class Booking extends ContentEntityBase implements BookingInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
+    // Hash value that is calculated to display the booking in links in mails
+    // etc.
+    $fields['booking_hash'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Hash'))
+      ->setDescription(t('Hash'))
+      ->setSettings(array(
+        'default_value' => '',
+        'max_length' => 255,
+        'text_processing' => 0,
+      ))
+      ->setDisplayOptions('view', array(
+        'label' => 'above',
+        'type' => 'hidden',
+        'weight' => -6,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'hidden',
+        'weight' => -6,
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
     // Exchange id field. Used to identify the resource in exchange.
     // Used for deleting a resource in exchange.
     $fields['booking_exchange_id'] = BaseFieldDefinition::create('string')

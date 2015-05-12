@@ -30,15 +30,17 @@ function koba_booking_theme() {
       'file' => 'koba_booking.pages.inc',
     ),
     'booking_receipt' => array(
-      'variables' => array(),
+      'variables' => array(
+        'booking' => NULL,
+      ),
       'file' => 'koba_booking.pages.inc',
     ),
     'booking_add_booking' => array(
       'render element' => 'form',
+      'file' => 'koba_booking.pages.inc',
     ),
   );
 }
-
 
 /**
  * Implements hook_form_FORM_ID_alter().
@@ -50,7 +52,6 @@ function koba_booking_form_koba_booking_booking_form_alter(&$form, FormStateInte
     // Fetch module config settings.
     $config = \Drupal::config('koba_booking.settings');
 
-
     // Fetch header top file.
     $top_image_id = $config->get('koba_booking.create_booking_top_image');
     $file = ($top_image_id) ? File::load($top_image_id) : FALSE;
@@ -60,10 +61,15 @@ function koba_booking_form_koba_booking_booking_form_alter(&$form, FormStateInte
     $form['variables']['title'] = $config->get('koba_booking.create_booking_title');
     $form['variables']['top_img'] = ($file) ? $file->url() : '';
     $form['variables']['manchet'] = $config->get('koba_booking.create_booking_description');
+    $form['variables']['search_phase'] = $config->get('koba_booking.search_phase');
 
     // Change field descriptions.
     $form['booking_email']['widget']['0']['value']['#description'] = '<div class="booking--description-link" data-ng-click="showEmailDescription = !showEmailDescription">' . t('Why do we need your email?') . '</div>';
     $form['name']['widget']['0']['value']['#description'] = '<div class="booking--description-link" data-ng-click="showTitleDescription = !showTitleDescription">' . t('Why do we need a title?') . '</div>';
+    $form['booking_name']['widget']['0']['value']['#attributes']['readonly'] = 'readonly';
+    $form['booking_name']['widget']['0']['value']['#attributes']['class'][] = 'booking--readonly';
+    $form['booking_email']['widget']['0']['value']['#attributes']['readonly'] = 'readonly';
+    $form['booking_email']['widget']['0']['value']['#attributes']['class'][] = 'booking--readonly';
 
     // Filter help texts if they have a filter.
     $email_help_text = is_array($config->get('koba_booking.why_email')) ? $config->get('koba_booking.why_email')['value'] : $config->get('koba_booking.why_email');
@@ -80,4 +86,31 @@ function koba_booking_form_koba_booking_booking_form_alter(&$form, FormStateInte
     // Add template as prefix.
     $form['#theme'] = array('booking_add_booking');
   }
+}
+
+/**
+ * Implements hook_wayf_dk_login_create_user().
+ *
+ * Store information in session and redirect to logout.
+ */
+function koba_booking_wayf_dk_login_create_user($attributes) {
+  // Get data stored in session.
+  $data = \Drupal::service('session')->get('koba_booking_request');
+
+  // The mail attribute changes its status from MUST into MAY as of May 2013 - WAYF.
+  if (!empty($attributes['urn:oid:0.9.2342.19200300.100.1.3'])) {
+    $data['mail'] = array_pop($attributes['urn:oid:0.9.2342.19200300.100.1.3']);
+  }
+
+  // Get name.
+  $data['name'] = array(
+    'first' => array_pop($attributes['gn']),
+    'last' => array_pop($attributes['sn']),
+  );
+
+  // Get unique wayf ID.
+  $data['uuid'] = array_pop($attributes['urn:oid:1.3.6.1.4.1.5923.1.1.1.10']);
+
+  // Store the data in the session.
+  \Drupal::service('session')->set('koba_booking_request', $data);
 }

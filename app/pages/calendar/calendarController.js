@@ -17,6 +17,16 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       return $window.Drupal.t(str);
     };
 
+    $scope.modulePath = '/' + drupalSettings['koba_booking']['module_path'];
+    $scope.themePath = '/' + drupalSettings['koba_booking']['theme_path'];
+
+    // Get booking information from drupalSettings.
+    var initBooking = {
+      "resource": drupalSettings['koba_booking']['resource'],
+      "from": drupalSettings['koba_booking']['from'],
+      "to": drupalSettings['koba_booking']['to']
+    };
+
     // Defaults: Start of today
     // For time we use a regular date to integrate with timepicker.
     $scope.selected = {
@@ -28,23 +38,24 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       "resource": null
     };
 
+    if (initBooking.from && initBooking.to) {
+      $scope.selected.date = moment(initBooking.from * 1000).startOf('day');
 
-    // Interest period to show.
-    $scope.interestPeriod = {
-      "start": 6,
-      "end": 24
-    };
-
-    // Disabled intervals.
-    $scope.disabled = [
-      [6,7], [23,24]
-    ];
+      $scope.selected.time.start = new Date((initBooking.from - parseInt($scope.selected.date.format('X'))) * 1000);
+      $scope.selected.time.end = new Date((initBooking.to - parseInt($scope.selected.date.format('X'))) * 1000);
+    }
 
     // Load available resources.
     $scope.resources = [];
     kobaFactory.getResources().then(
       function success(data) {
         $scope.resources = data;
+
+        for (var i = 0; i < $scope.resources.length; i++) {
+          if ($scope.resources[i].id === initBooking.resource) {
+            $scope.selected.resource = $scope.resources[i];
+          }
+        }
       },
       function error(error) {
         // @TODO: Report error properly.
@@ -52,16 +63,33 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       }
     );
 
+    // Interest period to show.
+    // @TODO: Make this configurable.
+    $scope.interestPeriod = {
+      "start": 6,
+      "end": 24
+    };
+
+    // Disabled intervals.
+    // @TODO: Make this configurable.
+    $scope.disabled = [
+      [6,7], [23,24]
+    ];
+
     /**
      * Return the link.
      *
      * @TODO: Avoid hardcoded link
      */
     $scope.getLink = function getLink() {
-      var from = 0;
-      var to = 1;
+      if (!$scope.selected.resource) {
+        return null;
+      }
 
-      return '/admin/booking/api/login?res=' + $scope.selected.resource + '&from=' +  + '&to=xx';
+      var from = moment($scope.selected.date).add($scope.selected.time.start.getTime(), 'milliseconds');
+      var to = moment($scope.selected.date).add($scope.selected.time.end.getTime(), 'milliseconds');
+
+      return encodeURI('/booking/wayf/login?res=' + $scope.selected.resource.id + '&from=' + from.format('X') + '&to=' + to.format('X'));
     };
 
     /**
@@ -125,7 +153,10 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      * @returns Date
      */
     $scope.getSelectedResource = function() {
-      return $scope.selected.resource.name;
+      if ($scope.selected.resource) {
+        return $scope.selected.resource.name;
+      }
+      return null;
     };
 
 
@@ -199,9 +230,11 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      */
     $scope.toggleDate = function() {
       $scope.pickDate = !$scope.pickDate;
-
-      jQuery('html').toggleClass('is-locked');
-      jQuery('body').toggleClass('is-locked');
+      var browserSize =  document.body.clientWidth;
+      if (browserSize < 1024) {
+        jQuery('html').toggleClass('is-locked');
+        jQuery('body').toggleClass('is-locked');
+      }
     };
 
     /**

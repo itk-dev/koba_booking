@@ -25,7 +25,7 @@ koba_booking.booking_messages:
 
 # --- Api routing --- #
 koba_booking.api.bookings:
-  path: '/admin/booking/api/bookings'
+  path: '/booking/api/bookings'
   defaults:
     _controller: '\Drupal\koba_booking\Controller\KobaBookingApiController::bookings'
   requirements:
@@ -33,9 +33,25 @@ koba_booking.api.bookings:
     _content_type_format: text/html
 
 koba_booking.api.resources:
-  path: '/admin/booking/api/resources'
+  path: '/booking/api/resources'
   defaults:
     _controller: '\Drupal\koba_booking\Controller\KobaBookingApiController::resources'
+  requirements:
+    _permission: 'access content'
+    _content_type_format: text/html
+
+koba_booking.api.login:
+  path: '/booking/wayf/login'
+  defaults:
+    _controller: '\Drupal\koba_booking\Controller\KobaBookingApiController::login'
+  requirements:
+    _permission: 'access content'
+    _content_type_format: text/html
+
+koba_booking.api.logout:
+  path: '/booking/wayf/logout'
+  defaults:
+    _controller: '\Drupal\koba_booking\Controller\KobaBookingApiController::logout'
   requirements:
     _permission: 'access content'
     _content_type_format: text/html
