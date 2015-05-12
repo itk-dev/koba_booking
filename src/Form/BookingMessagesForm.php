@@ -371,7 +371,7 @@ class BookingMessagesForm extends FormBase {
   public function booking_created_submit(array $form, FormStateInterface $form_state) {
     drupal_set_message('Booking message settings saved');
     $this->configFactory()->getEditable('koba_booking.settings')
-      ->set('koba_booking.created_booking_message', $form_state->getValue('booking_created'))
+      ->set('koba_booking.created_booking_message', $form_state->getValue('booking_created')['value'])
       ->save();
   }
 
@@ -387,8 +387,8 @@ class BookingMessagesForm extends FormBase {
   public function booking_help_text_submit(array $form, FormStateInterface $form_state) {
     drupal_set_message('Booking message settings saved');
     $this->configFactory()->getEditable('koba_booking.settings')
-      ->set('koba_booking.why_email', $form_state->getValue('why_email_description'))
-      ->set('koba_booking.why_title', $form_state->getValue('why_title_description'))
+      ->set('koba_booking.why_email', $form_state->getValue('why_email_description')['value'])
+      ->set('koba_booking.why_title', $form_state->getValue('why_title_description')['value'])
       ->save();
   }
 
@@ -405,7 +405,7 @@ class BookingMessagesForm extends FormBase {
     drupal_set_message('Pending email settings saved');
     $this->configFactory()->getEditable('koba_booking.settings')
       ->set('koba_email.email_pending_title', $form_state->getValue('pending_email_title'))
-      ->set('koba_email.email_pending_body', $form_state->getValue('pending_email_body'))
+      ->set('koba_email.email_pending_body', $form_state->getValue('pending_email_body')['value'])
       ->save();
   }
 
@@ -422,7 +422,7 @@ class BookingMessagesForm extends FormBase {
     drupal_set_message('Accepted email settings saved');
     $this->configFactory()->getEditable('koba_booking.settings')
       ->set('koba_email.email_accepted_title', $form_state->getValue('accepted_email_title'))
-      ->set('koba_email.email_accepted_body', $form_state->getValue('accepted_email_body'))
+      ->set('koba_email.email_accepted_body', $form_state->getValue('accepted_email_body')['value'])
       ->save();
   }
 
@@ -439,7 +439,7 @@ class BookingMessagesForm extends FormBase {
     drupal_set_message('Rejected email settings saved');
     $this->configFactory()->getEditable('koba_booking.settings')
       ->set('koba_email.email_rejected_title', $form_state->getValue('rejected_email_title'))
-      ->set('koba_email.email_rejected_body', $form_state->getValue('rejected_email_body'))
+      ->set('koba_email.email_rejected_body', $form_state->getValue('rejected_email_body')['value'])
       ->save();
   }
 
@@ -456,7 +456,7 @@ class BookingMessagesForm extends FormBase {
     drupal_set_message('Cancelled email settings saved');
     $this->configFactory()->getEditable('koba_booking.settings')
       ->set('koba_email.email_cancelled_title', $form_state->getValue('cancelled_email_title'))
-      ->set('koba_email.email_cancelled_body', $form_state->getValue('cancelled_email_body'))
+      ->set('koba_email.email_cancelled_body', $form_state->getValue('cancelled_email_body')['value'])
       ->save();
   }
 
@@ -474,7 +474,7 @@ class BookingMessagesForm extends FormBase {
     drupal_set_message('Pending email settings saved');
     $this->configFactory()->getEditable('koba_booking.settings')
       ->set('koba_email_admin.email_admin_pending_title', $form_state->getValue('pending_admin_email_title'))
-      ->set('koba_email_admin.email_admin_pending_body', $form_state->getValue('pending_admin_email_body'))
+      ->set('koba_email_admin.email_admin_pending_body', $form_state->getValue('pending_admin_email_body')['value'])
       ->save();
   }
 
@@ -491,7 +491,7 @@ class BookingMessagesForm extends FormBase {
     drupal_set_message('Accepted email settings saved');
     $this->configFactory()->getEditable('koba_booking.settings')
       ->set('koba_email_admin.email_admin_accepted_title', $form_state->getValue('accepted_admin_email_title'))
-      ->set('koba_email_admin.email_admin_accepted_body', $form_state->getValue('accepted_admin_email_body'))
+      ->set('koba_email_admin.email_admin_accepted_body', $form_state->getValue('accepted_admin_email_body')['value'])
       ->save();
   }
 
@@ -508,7 +508,7 @@ class BookingMessagesForm extends FormBase {
     drupal_set_message('Rejected email settings saved');
     $this->configFactory()->getEditable('koba_booking.settings')
       ->set('koba_email_admin.email_admin_rejected_title', $form_state->getValue('rejected_admin_email_title'))
-      ->set('koba_email_admin.email_admin_rejected_body', $form_state->getValue('rejected_admin_email_body'))
+      ->set('koba_email_admin.email_admin_rejected_body', $form_state->getValue('rejected_admin_email_body')['value'])
       ->save();
   }
 
@@ -525,7 +525,7 @@ class BookingMessagesForm extends FormBase {
     drupal_set_message('Cancelled email settings saved');
     $this->configFactory()->getEditable('koba_booking.settings')
       ->set('koba_email_admin.email_admin_cancelled_title', $form_state->getValue('cancelled_admin_email_title'))
-      ->set('koba_email_admin.email_admin_cancelled_body', $form_state->getValue('cancelled_admin_email_body'))
+      ->set('koba_email_admin.email_admin_cancelled_body', $form_state->getValue('cancelled_admin_email_body')['value'])
       ->save();
   }
 
