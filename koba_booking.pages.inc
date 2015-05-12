@@ -71,8 +71,8 @@ function template_preprocess_booking_receipt(&$variables) {
   );
 
   // Set date information.
-  $variables['day'] = format_date(array_pop($booking->booking_from_date->getValue())['value'], 'dokk_dato');
-  $variables['timeInterval'] = format_date(array_pop($booking->booking_from_date->getValue())['value'], 'dokk_tidspunkt') . ' - ' . format_date(array_pop($booking->booking_to_date->getValue())['value'], 'dokk_tidspunkt');
+  $variables['day'] = format_date(array_pop($booking->booking_from_date->getValue())['value'], 'dokk1_booking_dato');
+  $variables['timeInterval'] = format_date(array_pop($booking->booking_from_date->getValue())['value'], 'dokk1_booking_time') . ' - ' . format_date(array_pop($booking->booking_to_date->getValue())['value'], 'dokk1_booking_time');
 
   // Set user information.
   $variables['name'] = \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->booking_name->getValue())['value']);
@@ -101,8 +101,8 @@ function template_preprocess_booking_add_booking(&$variables) {
         'price' => array_pop($defaults['room']->field_price->getValue())['value'],
         'url' => $defaults['room']->url(),
       ),
-      'day' => format_date($defaults['from'], 'dokk_dato'),
-      'timeIntreval' => format_date($defaults['from'], 'dokk_tidspunkt') . ' - ' . format_date($defaults['to'], 'dokk_tidspunkt'),
+      'day' => format_date($defaults['from'], 'dokk1_booking_dato'),
+      'timeIntreval' => format_date($defaults['from'], 'dokk1_booking_time') . ' - ' . format_date($defaults['to'], 'dokk1_booking_time'),
       'raw' => $defaults,
     );
   }
