@@ -23,7 +23,7 @@ use Drupal\Core\StringTranslation\TranslationInterface;
 /**
  * Implements hook_theme().
  */
-function koba_booking_theme() {
+function koba_booking_theme($existing, $type, $theme, $path) {
   return array(
     'booking_calendar_page' => array(
       'variables' => array(),
@@ -39,7 +39,70 @@ function koba_booking_theme() {
       'render element' => 'form',
       'file' => 'koba_booking.pages.inc',
     ),
+    'booking_mail_request' => array(
+      'template' => 'booking-mail-request',
+      'variables' => array(
+
+      ),
+    ),
   );
+}
+
+/**
+ * Send HTML mails.
+ *
+ * @TODO: This is not the Drupal way to send mail, but rather a hack to send
+ *        HTML mails. Drupal MailManger service hardcode plain/text as content
+ *        type, so HTML is not supported.
+ *
+ *        When the SwiftMailer module have been ported to D8... USE IT.
+ *
+ * @param string $type
+ *   The type of mail to send (requst, accepted, etc).
+ * @param string $to
+ *   The to mail address.
+ * @param string $subject
+ *   The mails subject.
+ * @param \Drupal\koba_booking\BookingInterface $booking
+ *   The booking this mail is about.
+ */
+function koba_booking_send_mail($type, $to, $subject, \Drupal\koba_booking\BookingInterface $booking) {
+  // Get hold of the RAW mailer client.
+  $key = \Drupal\Component\Utility\Crypt::randomBytesBase64();
+  $mailer = \Drupal::service('plugin.manager.mail')->getInstance(array('module' => 'koba_bookinf', 'key' => $key));
+
+  // Try to get and from address from the site configuration.
+  $site_config =\Drupal::config('system.site');
+  $site_mail = $site_config->get('mail');
+  if (empty($site_mail)) {
+    $site_mail = ini_get('sendmail_from');
+  }
+
+  // Build render array for the mail body.
+  $theme = array(
+    '#theme' => 'booking_mail_' . $type,
+  );
+  $body = render($theme);
+
+  // Build mail configuration and set the type to HTML.
+  $params = array(
+    'headers' => array(
+      'MIME-Version' => '1.0',
+      'Content-Type' => 'text/html; charset=UTF-8; format=flowed; delsp=yes',
+      'Content-Transfer-Encoding' => '8Bit',
+      'X-Mailer' => 'Drupal',
+      'Return-Path' => $site_mail,
+      'Replay-to' => $site_mail,
+      'Sender' => $site_mail,
+      'From' => $site_config->get('name') . ' <' . $site_mail . '>',
+    ),
+    'to' => $to,
+    'body' => $body,
+    'subject' => $subject,
+  );
+
+  // Send the mail.
+  $mailer->mail($params);
 }
 
 /**

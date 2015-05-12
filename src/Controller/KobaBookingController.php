@@ -87,6 +87,25 @@ class KobaBookingController extends ControllerBase  {
   }
 
   /**
+   * Pending action for admin list.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request for this action.
+   * @param \Drupal\koba_booking\BookingInterface $koba_booking_booking
+   *   The booking to perform the action on.
+   */
+  public function actionPending(Request $request, BookingInterface $koba_booking_booking) {
+    // Change booking state.
+    $koba_booking_booking->set('booking_status', 'pending');
+    $koba_booking_booking->save();
+
+    // Set redirect. (Original path.)
+    $referer = $request->server->get('HTTP_REFERER');
+    $response = new RedirectResponse($referer);
+    $response->send();
+  }
+
+  /**
    * Accept action for admin list.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request

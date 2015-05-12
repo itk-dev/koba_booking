@@ -62,6 +62,8 @@ function template_preprocess_booking_receipt(&$variables) {
   $booking = $variables['booking'];
   $variables['id'] = array_pop($booking->id->getValue())['value'];
 
+  koba_booking_send_mail('request', array_pop($booking->booking_email->getValue())['value'], 'Request mail', $booking);
+
   // Load resource and set room information.
   $room = entity_load('node', array_pop($booking->booking_resource->getValue())['target_id']);
   $variables['room'] = array(
