@@ -20,6 +20,13 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
     $scope.modulePath = '/' + drupalSettings['koba_booking']['module_path'];
     $scope.themePath = '/' + drupalSettings['koba_booking']['theme_path'];
 
+    // Get booking information from drupalSettings.
+    var initBooking = {
+      "resource": drupalSettings['koba_booking']['resource'],
+      "from": drupalSettings['koba_booking']['from'],
+      "to": drupalSettings['koba_booking']['to']
+    };
+
     // Defaults: Start of today
     // For time we use a regular date to integrate with timepicker.
     $scope.selected = {
@@ -31,6 +38,30 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       "resource": null
     };
 
+    if (initBooking.from && initBooking.to) {
+      $scope.selected.date = moment(initBooking.from * 1000).startOf('day');
+
+      $scope.selected.time.start = new Date((initBooking.from - parseInt($scope.selected.date.format('X'))) * 1000);
+      $scope.selected.time.end = new Date((initBooking.to - parseInt($scope.selected.date.format('X'))) * 1000);
+    }
+
+    // Load available resources.
+    $scope.resources = [];
+    kobaFactory.getResources().then(
+      function success(data) {
+        $scope.resources = data;
+
+        for (var i = 0; i < $scope.resources.length; i++) {
+          if ($scope.resources[i].id === initBooking.resource) {
+            $scope.selected.resource = $scope.resources[i];
+          }
+        }
+      },
+      function error(error) {
+        // @TODO: Report error properly.
+        console.error(error);
+      }
+    );
 
     // Interest period to show.
     // @TODO: Make this configurable.
@@ -44,18 +75,6 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
     $scope.disabled = [
       [6,7], [23,24]
     ];
-
-    // Load available resources.
-    $scope.resources = [];
-    kobaFactory.getResources().then(
-      function success(data) {
-        $scope.resources = data;
-      },
-      function error(error) {
-        // @TODO: Report error properly.
-        console.error(error);
-      }
-    );
 
     /**
      * Return the link.
@@ -212,7 +231,6 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
     $scope.toggleDate = function() {
       $scope.pickDate = !$scope.pickDate;
       var browserSize =  document.body.clientWidth;
-      console.log(browserSize);
       if (browserSize < 1024) {
         jQuery('html').toggleClass('is-locked');
         jQuery('body').toggleClass('is-locked');
