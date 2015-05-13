@@ -43,7 +43,76 @@ function koba_booking_theme($existing, $type, $theme, $path) {
     'booking_mail_request' => array(
       'template' => 'booking-mail-request',
       'variables' => array(
-        'message' => 'No message',
+        'message' => 'Booking request',
+        'booking' => array(
+          'title' => '',
+          'dato' => '',
+          'time' => '',
+          'room' => array(
+            'title' => '',
+            'price' => 0,
+            'url' => '',
+          ),
+          'name' => '',
+          'mail' => '',
+          'phone' => '',
+          'type' => '',
+          'message' => '',
+          'url' => '',
+        ),
+      ),
+    ),
+    // Accepted mail.
+    'booking_mail_accepted' => array(
+      'template' => 'booking-mail-accepted',
+      'variables' => array(
+        'message' => 'Booking accepted',
+        'booking' => array(
+          'title' => '',
+          'dato' => '',
+          'time' => '',
+          'room' => array(
+            'title' => '',
+            'price' => 0,
+            'url' => '',
+          ),
+          'name' => '',
+          'mail' => '',
+          'phone' => '',
+          'type' => '',
+          'message' => '',
+          'url' => '',
+        ),
+      ),
+    ),
+    // Rejected mail.
+    'booking_mail_rejected' => array(
+      'template' => 'booking-mail-rejected',
+      'variables' => array(
+        'message' => 'Booking rejected',
+        'booking' => array(
+          'title' => '',
+          'dato' => '',
+          'time' => '',
+          'room' => array(
+            'title' => '',
+            'price' => 0,
+            'url' => '',
+          ),
+          'name' => '',
+          'mail' => '',
+          'phone' => '',
+          'type' => '',
+          'message' => '',
+          'url' => '',
+        ),
+      ),
+    ),
+    // Cancelled mail.
+    'booking_mail_cancelled' => array(
+      'template' => 'booking-mail-cancelled',
+      'variables' => array(
+        'message' => 'Booking cancelled',
         'booking' => array(
           'title' => '',
           'dato' => '',
@@ -73,7 +142,7 @@ function koba_booking_theme($existing, $type, $theme, $path) {
  * @param \Drupal\koba_booking\BookingInterface $booking
  *   Booking object that this mail is about.
  */
-function koba_booking_send_mail($type, \Drupal\koba_booking\BookingInterface $booking) {
+function koba_booking_send_mail($type, \Drupal\koba_booking\BookingInterface $booking = NULL) {
   // Get to mail address.
   $to = array_pop($booking->booking_email->getValue())['value'];
 
@@ -87,17 +156,52 @@ function koba_booking_send_mail($type, \Drupal\koba_booking\BookingInterface $bo
   // Build render array for the mail body.
   $subject = 'Unknown mail type';
   $content = array();
+  $config = \Drupal::config('koba_booking.settings');
   switch ($type) {
     case 'request':
-      $config = \Drupal::config('koba_booking.settings');
       $subject = $config->get('koba_email.email_pending_title');
 
       // Build render array.
       $content = array(
         '#theme' => 'booking_mail_request',
         '#message' => $config->get('koba_email.email_pending_body'),
-      ) + _koba_booking_generate_booking_array($booking);
+      );
       break;
+
+    case 'accepted':
+      $subject = $config->get('koba_email.accepted_email_title');
+
+      // Build render array.
+      $content = array(
+        '#theme' => 'booking_mail_accepted',
+        '#message' => $config->get('koba_email.accepted_email_body'),
+      );
+      break;
+
+    case 'rejected':
+      $subject = $config->get('koba_email.rejected_email_title');
+
+      // Build render array.
+      $content = array(
+        '#theme' => 'booking_mail_accepted',
+        '#message' => $config->get('koba_email.rejected_email_body'),
+      );
+      break;
+
+    case 'cancelled':
+      $subject = $config->get('koba_email.cancelled_email_title');
+
+      // Build render array.
+      $content = array(
+        '#theme' => 'booking_mail_accepted',
+        '#message' => $config->get('koba_email.cancelled_email_body'),
+      );
+      break;
+  }
+
+  // Extend content with booking information.
+  if (!is_null($booking)) {
+    $content += _koba_booking_generate_booking_array($booking);
   }
 
   // Render the body content for the mail.
