@@ -1,6 +1,6 @@
 # Define the menu links for this module
 koba_booking.booking:
-  title: Koba booking
+  title: Booking
   route_name: koba_booking.booking
   parent: system.admin
   description: 'List of booking requests'
