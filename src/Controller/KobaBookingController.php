@@ -43,9 +43,9 @@ class KobaBookingController extends ControllerBase  {
             'theme_path' => \Drupal::theme()->getActiveTheme()->getPath(),
             'resource' => $defaults['resource'],
             'from' => $defaults['from'],
-            'to' => $defaults['to']
-          )
-        )
+            'to' => $defaults['to'],
+          ),
+        ),
       ),
     );
     return $build;
