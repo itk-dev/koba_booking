@@ -45,8 +45,9 @@ function koba_booking_theme($existing, $type, $theme, $path) {
       'variables' => array(
         'message' => 'Booking request',
         'booking' => array(
+          'id' => '',
           'title' => '',
-          'dato' => '',
+          'date' => '',
           'time' => '',
           'room' => array(
             'title' => '',
@@ -68,8 +69,9 @@ function koba_booking_theme($existing, $type, $theme, $path) {
       'variables' => array(
         'message' => 'Booking accepted',
         'booking' => array(
+          'id' => '',
           'title' => '',
-          'dato' => '',
+          'date' => '',
           'time' => '',
           'room' => array(
             'title' => '',
@@ -91,8 +93,9 @@ function koba_booking_theme($existing, $type, $theme, $path) {
       'variables' => array(
         'message' => 'Booking rejected',
         'booking' => array(
+          'id' => '',
           'title' => '',
-          'dato' => '',
+          'date' => '',
           'time' => '',
           'room' => array(
             'title' => '',
@@ -114,8 +117,9 @@ function koba_booking_theme($existing, $type, $theme, $path) {
       'variables' => array(
         'message' => 'Booking cancelled',
         'booking' => array(
+          'id' => '',
           'title' => '',
-          'dato' => '',
+          'date' => '',
           'time' => '',
           'room' => array(
             'title' => '',
@@ -137,7 +141,7 @@ function koba_booking_theme($existing, $type, $theme, $path) {
 /**
  * Helper function to send mail based on a booking.
  *
- * @param $type
+ * @param string $type
  *   The type of the mail (request, accpeted, etc.)
  * @param \Drupal\koba_booking\BookingInterface $booking
  *   Booking object that this mail is about.
@@ -147,7 +151,7 @@ function koba_booking_send_mail($type, \Drupal\koba_booking\BookingInterface $bo
   $to = array_pop($booking->booking_email->getValue())['value'];
 
   // Try to get and from address from the site configuration.
-  $site_config =\Drupal::config('system.site');
+  $site_config = \Drupal::config('system.site');
   $from = $site_config->get('mail');
   if (empty($from)) {
     $from = ini_get('sendmail_from');
@@ -233,8 +237,9 @@ function _koba_booking_generate_booking_array(\Drupal\koba_booking\BookingInterf
 
   return array(
     '#booking' => array(
+      'id' => array_pop($booking->id->getValue())['value'],
       'title' => \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->name->getValue())['value']),
-      'dato' => format_date(array_pop($booking->booking_from_date->getValue())['value'], 'dokk1_booking_dato'),
+      'date' => format_date(array_pop($booking->booking_from_date->getValue())['value'], 'dokk1_booking_dato'),
       'time' => format_date(array_pop($booking->booking_from_date->getValue())['value'], 'dokk1_booking_time') . ' - ' . format_date(array_pop($booking->booking_to_date->getValue())['value'], 'dokk1_booking_time'),
       'room' => array(
         'title' => array_pop($room->title->getValue())['value'],
@@ -246,7 +251,7 @@ function _koba_booking_generate_booking_array(\Drupal\koba_booking\BookingInterf
       'phone' => \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->booking_phone->getValue())['value']),
       'type' => \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->booking_usage->getValue())['value']),
       'message' => \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->booking_message->getValue())['value']),
-      'url' => $url
+      'url' => $url,
     ),
   );
 }

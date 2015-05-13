@@ -86,10 +86,13 @@ class BookingForm extends ContentEntityForm {
     if ($entity->isNew()) {
       $entity->set('booking_status', 'request');
 
+    }
+    $entity->save();
+
+    if ($this->getOperation() == 'add') {
       // Send mail with request received information.
       koba_booking_send_mail('request', $entity);
     }
-    $entity->save();
 
     // Redirect after submit.
     $form_state->setRedirect('koba_booking.receipt', array('hash' => $hash));
