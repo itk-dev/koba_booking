@@ -6,6 +6,7 @@ core: 8.x
 version: '8.x-1.x-dev'
 # These modules are required by the tests, must be available at bootstrap time
 dependencies:
+  - system
   - options
   - entity_reference
   - datetime
