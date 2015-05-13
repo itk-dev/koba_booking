@@ -30,7 +30,7 @@ function template_preprocess_booking_calendar_page(&$variables) {
   // Set variables
   $variables['title'] = $config->get('koba_booking.create_booking_title');
   $variables['top_img'] = ($file) ? $file->url() : '';
-  $variables['manchet'] = $config->get('koba_booking.create_booking_description');
+  $variables['manchet'] = is_array($config->get('koba_booking.create_booking_description')) ? check_markup($config->get('koba_booking.create_booking_description')['value'], 'editor_format') : check_markup($config->get('koba_booking.create_booking_description')['value'], 'editor_format');
   $variables['submit_header'] = '/' . $config->get('koba_booking.add_booking_header');
   $variables['app_dir'] = '/' .  drupal_get_path('module', 'koba_booking') . '/app';
 }
@@ -78,9 +78,10 @@ function template_preprocess_booking_receipt(&$variables) {
   $variables['name'] = \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->booking_name->getValue())['value']);
   $variables['mail'] = \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->booking_email->getValue())['value']);
   $variables['phone'] = \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->booking_phone->getValue())['value']);
-  $variables['type'] = \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->booking_usage->getValue())['value']);
+  $variables['type'] = koba_booking_room_usage()[\Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->booking_usage->getValue())['value'])];
   $variables['message'] = \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->booking_message->getValue())['value']);
 }
+
 
 /**
  * Implements hook_preprocess_booking_add_booking().

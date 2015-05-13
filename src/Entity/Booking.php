@@ -390,15 +390,7 @@ class Booking extends ContentEntityBase implements BookingInterface {
       ->setLabel(t('Usage'))
       ->setDescription(t('The usage of the booked resource.'))
       ->setSettings(array(
-        'allowed_values' => array(
-          'lecture' => t('Lecture'),
-          'theater' => t('Theater'),
-          'debate' => t('Debate'),
-          'project_meeting' => t('Project meeting'),
-          'screening' => t('Screening'),
-          'it_intro' => t('IT-Introduction'),
-          'other' => t('Other (Use message field)'),
-        ),
+        'allowed_values' => koba_booking_room_usage(),
       ))
       ->setDisplayOptions('view', array(
         'label' => 'above',

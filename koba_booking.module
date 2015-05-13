@@ -65,6 +65,7 @@ function koba_booking_theme($existing, $type, $theme, $path) {
   );
 }
 
+
 /**
  * Helper function to send mail based on a booking.
  *
@@ -78,7 +79,7 @@ function koba_booking_send_mail($type, \Drupal\koba_booking\BookingInterface $bo
   $to = array_pop($booking->booking_email->getValue())['value'];
 
   // Try to get and from address from the site configuration.
-  $site_config =\Drupal::config('system.site');
+  $site_config = \Drupal::config('system.site');
   $from = $site_config->get('mail');
   if (empty($from)) {
     $from = ini_get('sendmail_from');
@@ -106,6 +107,7 @@ function koba_booking_send_mail($type, \Drupal\koba_booking\BookingInterface $bo
   // Send the mail.
   _koba_booking_mailer($to, $from, $subject, $body);
 }
+
 
 /**
  * Build render array with booking information.
@@ -146,6 +148,8 @@ function _koba_booking_generate_booking_array(\Drupal\koba_booking\BookingInterf
     ),
   );
 }
+
+
 /**
  * Send HTML mails.
  *
@@ -192,6 +196,7 @@ function _koba_booking_mailer($to, $from, $subject, $body, $name = 'Dokk1') {
   $mailer->mail($params);
 }
 
+
 /**
  * Implements hook_form_FORM_ID_alter().
  */
@@ -210,7 +215,6 @@ function koba_booking_form_koba_booking_booking_form_alter(&$form, FormStateInte
     // Set variables
     $form['variables']['title'] = $config->get('koba_booking.create_booking_title');
     $form['variables']['top_img'] = ($file) ? $file->url() : '';
-    $form['variables']['manchet'] = $config->get('koba_booking.create_booking_description');
     $form['variables']['search_phase'] = $config->get('koba_booking.search_phase');
 
     // Change field descriptions.
@@ -222,8 +226,8 @@ function koba_booking_form_koba_booking_booking_form_alter(&$form, FormStateInte
     $form['booking_email']['widget']['0']['value']['#attributes']['class'][] = 'booking--readonly';
 
     // Filter help texts if they have a filter.
-    $form['variables']['why_email'] = check_markup($config->get('koba_booking.why_email'), 'editor_format');
-    $form['variables']['why_title'] = check_markup($config->get('koba_booking.why_title'), 'editor_format');
+    $form['variables']['why_email'] = is_array($config->get('koba_booking.why_email')) ? check_markup($config->get('koba_booking.why_email')['value'], 'editor_format') : check_markup($config->get('koba_booking.why_email'), 'editor_format');
+    $form['variables']['why_title'] = is_array($config->get('koba_booking.why_title')) ? check_markup($config->get('koba_booking.why_title')['value'], 'editor_format') : check_markup($config->get('koba_booking.why_title'), 'editor_format');
 
     // Help texts are reused as headers.
     $form['variables']['why_email_header'] = t('Why do we need your email?');
@@ -233,6 +237,7 @@ function koba_booking_form_koba_booking_booking_form_alter(&$form, FormStateInte
     $form['#theme'] = array('booking_add_booking');
   }
 }
+
 
 /**
  * Implements hook_wayf_dk_login_create_user().
@@ -259,4 +264,27 @@ function koba_booking_wayf_dk_login_create_user($attributes) {
 
   // Store the data in the session.
   \Drupal::service('session')->set('koba_booking_request', $data);
+}
+
+
+/**
+ * Translate list item machine name for booking usage list field.
+ *
+ * Display the name rather than machine name.
+ *
+ * @todo get the list item title in a proper way.
+ *
+ * @return array
+ *   An array of list item titles.
+ */
+function koba_booking_room_usage() {
+  return array(
+    'lecture' => t('Lecture'),
+    'theater' => t('Theater'),
+    'debate' => t('Debate'),
+    'project_meeting' => t('Project meeting'),
+    'screening' => t('Screening'),
+    'it_intro' => t('IT-Introduction'),
+    'other' => t('Other (Use message field)'),
+  );
 }

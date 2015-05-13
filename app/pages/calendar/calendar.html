@@ -35,7 +35,7 @@
       </div>
       <div class="booking--selection-resource-picker">
         <div class="booking--selection-header-resource" data-ng-click="toggleResource()">{{ t('Resources') }}</div>
-        <div class="booking--selection-display-resource" >
+        <div class="booking--selection-display-resource">
           <span class="booking--arrow is-left" data-ng-include="themePath + '/templates/svgs/arrow.svg'" data-ng-click="prevResource()"></span>
           <span data-ng-click="toggleResource()">{{ (resourceName = getSelectedResource()) ? resourceName : t('Select resource') }}</span>
           <span class="booking--arrow is-right" data-ng-include="themePath + '/templates/svgs/arrow.svg'" data-ng-click="nextResource()"></span>
