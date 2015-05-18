@@ -68,7 +68,7 @@ class KobaBookingApiController extends ControllerBase {
 
     $url = $path . '/api/resources/' . $resource . '/group/default/freebusy/from/' . $from . '/to/' . $to . '?apikey=' . $apikey;
 
-    // Instantiates a new guzzle client.
+    // Instantiates a new drupal http client.
     $client = new Client();
 
     try {
@@ -83,6 +83,17 @@ class KobaBookingApiController extends ControllerBase {
         echo $e->getResponse() . "\n";
       }
     }
+  }
+
+  /**
+   * Handle callback from koba.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The HTTP post request.
+   */
+  public function callback(Request $request) {
+    $status = $request->get('status');
+    $entity_id = $request->get('client_booking_id');
   }
 
   /**

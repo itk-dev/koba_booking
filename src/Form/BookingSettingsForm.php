@@ -155,18 +155,6 @@ class BookingSettingsForm extends FormBase {
       '#open' => TRUE,
     );
 
-    $form['admin_settings']['api_key'] = array(
-      '#type' => 'textfield',
-      '#title' => $this->t('Set API Key'),
-      '#default_value' => $config->get('koba_booking.api_key'),
-    );
-
-    $form['admin_settings']['path'] = array(
-      '#type' => 'textfield',
-      '#title' => $this->t('Set the path to KOBA'),
-      '#default_value' => $config->get('koba_booking.path'),
-    );
-
     $form['admin_settings']['add_booking_header'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Set add booking header'),
@@ -174,10 +162,31 @@ class BookingSettingsForm extends FormBase {
       '#description' => t('The header to use after date/time has been selected in booking add form.</br>Can be used to enable wayf.'),
     );
 
+    // Admin settings tab.
+    $form['koba_settings'] = array(
+      '#title' => $this->t('Booking proxy settings'),
+      '#type' => 'details',
+      '#weight' => '5',
+      '#access' => $account->hasPermission('configure booking api settings'),
+      '#open' => TRUE,
+    );
+
+    $form['koba_settings']['api_key'] = array(
+      '#type' => 'textfield',
+      '#title' => $this->t('Set API Key'),
+      '#default_value' => $config->get('koba_booking.api_key'),
+    );
+
+    $form['koba_settings']['path'] = array(
+      '#type' => 'textfield',
+      '#title' => $this->t('Set the path to KOBA'),
+      '#default_value' => $config->get('koba_booking.path'),
+    );
+
     $form['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Save changes'),
-      '#weight' => '5',
+      '#weight' => '6',
     );
 
     return $form;
