@@ -74,6 +74,16 @@ interface BookingInterface extends ContentEntityInterface, EntityOwnerInterface 
    */
   public function isCancelled();
 
+  /**
+   * Get room entity base on resource field.
+   *
+   * @return mixed
+   *   Returns the node for the room or FALSE is non is set.
+   */
+  public function getRoomEntity();
 
+  /**
+   * @return bool
+   */
   public function isPublic();
 }

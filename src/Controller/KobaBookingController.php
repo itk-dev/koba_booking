@@ -91,13 +91,24 @@ class KobaBookingController extends ControllerBase  {
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request for this action.
-   * @param \Drupal\koba_booking\BookingInterface $koba_booking_booking
+   * @param \Drupal\koba_booking\BookingInterface $booking
    *   The booking to perform the action on.
    */
-  public function actionPending(Request $request, BookingInterface $koba_booking_booking) {
-    // Change booking state.
-    $koba_booking_booking->set('booking_status', 'pending');
-    $koba_booking_booking->save();
+  public function actionPending(Request $request, BookingInterface $booking) {
+    // Get proxy service.
+    $proxy =  \Drupal::service('koba_booking.api.proxy');
+
+    try {
+      if ($proxy->sendBooking($booking)) {
+        // For efficiency manually save the original booking before applying any
+        // changes.
+        $booking->original = clone $booking;
+        $booking->set('booking_status', 'pending');
+        $booking->save();
+      }
+    } catch (ProxyException $exception) {
+      drupal_set_message(t($exception->getMessage()), 'error');
+    }
 
     // Set redirect. (Original path.)
     $referer = $request->server->get('HTTP_REFERER');

@@ -94,6 +94,10 @@ class KobaBookingApiController extends ControllerBase {
   public function callback(Request $request) {
     $status = $request->get('status');
     $entity_id = $request->get('client_booking_id');
+
+    // Change booking state.
+
+    // Send mail to client.
   }
 
   /**
