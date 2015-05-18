@@ -38,7 +38,8 @@ class AcceptBooking extends ActionBase {
         $booking->set('booking_status', 'pending');
         $booking->save();
       }
-    } catch (ProxyException $exception) {
+    }
+    catch (ProxyException $exception) {
       drupal_set_message(t($exception->getMessage()), 'error');
     }
   }

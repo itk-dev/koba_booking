@@ -17,6 +17,11 @@ class Proxy {
   private $configuration = NULL;
   private $apikey = NULL;
 
+  /**
+   * Default construct.
+   *
+   * Load koba configuration.
+   */
   public function __construct() {
     // Load booking configuration.
     $this->configuration = \Drupal::config('koba_booking.settings');
@@ -24,6 +29,70 @@ class Proxy {
     $this->path = $this->configuration->get('koba_booking.path');
   }
 
+  /**
+   * Get bookings for a resource in a give time interval.
+   *
+   * @param $resource_id
+   *   The resource id (mail address) at the proxy.
+   * @param $from
+   *   The unix timestamp from.
+   * @param $to
+   *   The unix timestamp to.
+   *
+   * @return mixed
+   *   Returns the booking information for the resource or throws ProxyException
+   *   on error.
+   */
+  public function getResourceBookings($resource_id, $from, $to) {
+    // Build url to request booking at the proxy.
+    $url = $this->$path . '/api/resources/' . $resource_id . '/group/default/freebusy/from/' . $from . '/to/' . $to . '?apikey=' . $this->apikey;
+
+    // Instantiates a new drupal http client.
+    $client = new Client();
+
+    try {
+      $response = $client->get($url);
+      $json = json_decode($response->getBody());
+      return $json;
+    }
+    catch (RequestException $exception) {
+      throw new ProxyException($exception->getMessage());
+    }
+  }
+
+  /**
+   * Loads available resources from the proxy.
+   *
+   * @return mixed
+   *   Array with resource_id and name or throws an ProxyException on error.
+   */
+  public function getResources() {
+    // Build request url.
+    $url = $this->path . "/api/resources/group/default?apikey=" . $this->apikey;
+
+    // Instantiates a new drupal http client.
+    $client = new Client();
+
+    try {
+      $response = $client->get($url);
+      $resources = json_decode($response->getBody());
+
+      return $resources;
+    }
+    catch (RequestException $exception) {
+      throw new ProxyException($exception->getMessage());
+    }
+  }
+
+  /**
+   * Send booking request to the proxy.
+   *
+   * @param \Drupal\koba_booking\BookingInterface $booking
+   *  The booking to build request based on.
+   *
+   * @return bool
+   *   If booking was sent TRUE else ProxyException is thrown on error.
+   */
   public function sendBooking(BookingInterface $booking) {
     // Get the room/resource.
     $room = $booking->getRoomEntity();
@@ -54,6 +123,39 @@ class Proxy {
 
       // Check response to ensure the proxy got it.
       if ($response->getStatusCode() != 201) {
+        // Sent error message as response was not correct.
+        throw new ProxyException('Something happened at the booking service, that should not have happened. Please contact support.');
+      }
+    }
+    catch (RequestException $exception) {
+      throw new ProxyException($exception->getMessage());
+    }
+
+    return TRUE;
+  }
+
+  /**
+   * Send delete/cancel request.
+   *
+   * @param \Drupal\koba_booking\BookingInterface $booking
+   *   The booking to delete.
+   *
+   * @return bool
+   *   If booking was sent TRUE else ProxyException is thrown on error.
+   */
+  public function deleteBooking(BookingInterface $booking) {
+    // Get Drupal http client.
+    $client = new Client();
+
+    // Get unique id for the booking.
+    $id = array_pop($booking->uuid->getValue())['value'];
+
+    try {
+      // Send request to koba.
+      $response = $client->delete($this->path . '/api/delete/' . $id);
+
+      // Check response to ensure the proxy got it.
+      if ($response->getStatusCode() != 202) {
         // Sent error message as response was not correct.
         throw new ProxyException('Something happened at the booking service, that should not have happened. Please contact support.');
       }

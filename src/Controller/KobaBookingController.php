@@ -10,6 +10,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Render\Element\Link;
 use Drupal\Core\Url;
 use Drupal\koba_booking\BookingInterface;
+use Drupal\koba_booking\Exception\ProxyException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -106,7 +107,8 @@ class KobaBookingController extends ControllerBase  {
         $booking->set('booking_status', 'pending');
         $booking->save();
       }
-    } catch (ProxyException $exception) {
+    }
+    catch (ProxyException $exception) {
       drupal_set_message(t($exception->getMessage()), 'error');
     }
 

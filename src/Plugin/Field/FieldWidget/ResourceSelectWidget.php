@@ -84,31 +84,21 @@ class ResourceSelectWidget extends WidgetBase {
         $options = ['_none' => $empty_label] + $options;
       }
 
-      // Get resources from KOBA.
-      /**
-       * @TODO: This is the same as in the API controller.
-       */
-      $config = \Drupal::config('koba_booking.settings');
-      $apikey = $config->get('koba_booking.api_key');
-      $path = $config->get('koba_booking.path');
-      $url = $path . "/api/resources/group/default?apikey=" . $apikey;
-
-      // Instantiates a new guzzle client.
-      $client = new Client();
+      // Get proxy service.
+      $proxy =  \Drupal::service('koba_booking.api.proxy');
 
       try {
-        $response = $client->get($url);
-        $resources = json_decode($response->getBody());
+        // Get resources from the proxy.
+        $resources = $proxy->getResources();
         foreach ($resources as $resource) {
           $options[$resource->mail] = $resource->name;
         }
       }
-      catch (RequestException $e) {
-        /**
-         * @TODO: Handle error;
-         **/
+      catch (RequestException $exception) {
+        drupal_set_message(t($exception->getMessage()), 'error');
       }
 
+      // Ensure that the labels are HTML safe.
       array_walk_recursive($options, array($this, 'sanitizeLabel'));
 
       $this->options = $options;
