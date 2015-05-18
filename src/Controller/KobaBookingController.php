@@ -92,25 +92,13 @@ class KobaBookingController extends ControllerBase  {
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request for this action.
-   * @param \Drupal\koba_booking\BookingInterface $booking
+   * @param \Drupal\koba_booking\BookingInterface $koba_booking_booking
    *   The booking to perform the action on.
    */
-  public function actionPending(Request $request, BookingInterface $booking) {
-    // Get proxy service.
-    $proxy =  \Drupal::service('koba_booking.api.proxy');
-
-    try {
-      if ($proxy->sendBooking($booking)) {
-        // For efficiency manually save the original booking before applying any
-        // changes.
-        $booking->original = clone $booking;
-        $booking->set('booking_status', 'pending');
-        $booking->save();
-      }
-    }
-    catch (ProxyException $exception) {
-      drupal_set_message(t($exception->getMessage()), 'error');
-    }
+  public function actionPending(Request $request, BookingInterface $koba_booking_booking) {
+    // Change booking state.
+    $koba_booking_booking->set('booking_status', 'pending');
+    $koba_booking_booking->save();
 
     // Set redirect. (Original path.)
     $referer = $request->server->get('HTTP_REFERER');
@@ -127,9 +115,21 @@ class KobaBookingController extends ControllerBase  {
    *   The booking to perform the action on.
    */
   public function actionAccept(Request $request, BookingInterface $koba_booking_booking) {
-    // Change booking state.
-    $koba_booking_booking->set('booking_status', 'accepted');
-    $koba_booking_booking->save();
+    // Get proxy service.
+    $proxy =  \Drupal::service('koba_booking.api.proxy');
+
+    try {
+      if ($proxy->sendBooking($koba_booking_booking)) {
+        // For efficiency manually save the original booking before applying any
+        // changes.
+        $koba_booking_booking->original = clone $koba_booking_booking;
+        $koba_booking_booking->set('booking_status', 'pending');
+        $koba_booking_booking->save();
+      }
+    }
+    catch (ProxyException $exception) {
+      drupal_set_message(t($exception->getMessage()), 'error');
+    }
 
     // Set redirect. (Original path.)
     $referer = $request->server->get('HTTP_REFERER');
