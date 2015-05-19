@@ -149,7 +149,7 @@ function koba_booking_theme($existing, $type, $theme, $path) {
  */
 function koba_booking_send_mail($type, \Drupal\koba_booking\BookingInterface $booking = NULL) {
   // Get to mail address.
-  $to = $booking->booking_email->value();
+  $to = $booking->booking_email->value;
 
   // Try to get and from address from the site configuration.
   $site_config = \Drupal::config('system.site');
@@ -228,7 +228,7 @@ function koba_booking_send_mail($type, \Drupal\koba_booking\BookingInterface $bo
  */
 function _koba_booking_generate_booking_array(\Drupal\koba_booking\BookingInterface $booking) {
   // Load room for the booking.
-  $room = entity_load('node', array_pop($booking->booking_resource->getValue())['target_id']);
+  $room = $booking->getRoomEntity();
 
   $generator = \Drupal::urlGenerator();
   $url = $generator->generateFromRoute('koba_booking.receipt', array(
