@@ -41,9 +41,9 @@ class KobaBookingApiController extends ControllerBase {
     $nodes = entity_load_multiple('node', $nids);
     foreach ($nodes as $node) {
       $rooms[] = array(
-        'id' => array_pop($node->nid->getValue())['value'],
-        'name' => array_pop($node->title->getValue())['value'],
-        'mail' => array_pop($node->field_resource->getValue())['value'],
+        'id' => $node->nid->value(),
+        'name' => $node->title->value(),
+        'mail' => $node->field_resource->value(),
       );
     }
 

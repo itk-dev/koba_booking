@@ -103,15 +103,15 @@ class Proxy {
 
     // Build request.
     $requestBody = json_encode(array(
-      'subject' => SafeMarkup::checkPlain(array_pop($booking->name->getValue())['value']),
-      'description' => SafeMarkup::checkPlain(array_pop($booking->booking_message->getValue())['value']),
-      'name' => SafeMarkup::checkPlain(array_pop($booking->booking_name->getValue())['value']),
-      'mail' => SafeMarkup::checkPlain(array_pop($booking->booking_email->getValue())['value']),
-      'phone' => SafeMarkup::checkPlain(array_pop($booking->booking_phone->getValue())['value']),
-      'start_time' => array_pop($booking->booking_from_date->getValue())['value'],
-      'end_time' => array_pop($booking->booking_to_date->getValue())['value'],
-      'resource' => array_pop($room->field_resource->getValue())['value'],
-      'client_booking_id' => array_pop($booking->uuid->getValue())['value'],
+      'subject' => SafeMarkup::checkPlain($booking->name->value()),
+      'description' => SafeMarkup::checkPlain($booking->booking_message->value()),
+      'name' => SafeMarkup::checkPlain($booking->booking_name->value()),
+      'mail' => SafeMarkup::checkPlain($booking->booking_email->value()),
+      'phone' => SafeMarkup::checkPlain($booking->booking_phone->value()),
+      'start_time' => $booking->booking_from_date->value(),
+      'end_time' => $booking->booking_to_date->value(),
+      'resource' => $room->field_resource->value(),
+      'client_booking_id' => $booking->uuid->value(),
       'group_id' => 'default',
       'apikey' => $this->apikey,
     ));
@@ -149,7 +149,7 @@ class Proxy {
     $client = new Client();
 
     // Get unique id for the booking.
-    $id = array_pop($booking->uuid->getValue())['value'];
+    $id = $booking->uuid->value;
 
     try {
       // Send request to koba.

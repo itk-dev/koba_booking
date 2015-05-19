@@ -60,35 +60,31 @@ function template_preprocess_booking_receipt(&$variables) {
 
   // Extract information about the booking.
   $booking = $variables['booking'];
-  $variables['id'] = array_pop($booking->id->getValue())['value'];
+  $variables['id'] = $booking->id->value;
 
   // Load resource and set room information.
-  $room = entity_load('node', array_pop($booking->booking_resource->getValue())['target_id']);
+  $room = $booking->getRoomEntity();
   $variables['room'] = array(
-    'name' => array_pop($room->title->getValue())['value'],
-    'price' => array_pop($room->field_price->getValue())['value'],
+    'name' => $room->title->value,
+    'price' =>$room->field_price->value,
     'url' => $room->url(),
   );
 
   // Set date information.
-  $variables['day'] = format_date(array_pop($booking->booking_from_date->getValue())['value'], 'dokk1_booking_dato');
-  $variables['timeInterval'] = format_date(array_pop($booking->booking_from_date->getValue())['value'], 'dokk1_booking_time') . ' - ' . format_date(array_pop($booking->booking_to_date->getValue())['value'], 'dokk1_booking_time');
+  $variables['day'] = format_date($booking->booking_from_date->value, 'dokk1_booking_dato');
+  $variables['timeInterval'] = format_date($booking->booking_from_date->value, 'dokk1_booking_time') . ' - ' . format_date($booking->booking_to_date->value, 'dokk1_booking_time');
 
   // Set user information.
-  $variables['name'] = \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->booking_name->getValue())['value']);
-  $variables['mail'] = \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->booking_email->getValue())['value']);
-  $variables['phone'] = \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->booking_phone->getValue())['value']);
-  $variables['type'] = koba_booking_room_usage()[\Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->booking_usage->getValue())['value'])];
-  $variables['message'] = \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->booking_message->getValue())['value']);
+  $variables['name'] = \Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_name->value);
+  $variables['mail'] = \Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_email->value);
+  $variables['phone'] = \Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_phone->value);
+  $variables['type'] = koba_booking_room_usage()[\Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_usage->value)];
+  $variables['message'] = \Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_message->value);
 }
 
 
 /**
  * Implements hook_preprocess_booking_add_booking().
- *
- * @TODO: There must be a better way to get values out of a field.
- *
- * @param $variables
  */
 function template_preprocess_booking_add_booking(&$variables) {
   $defaults = \Drupal::service('session')->get('koba_booking_request');
@@ -98,8 +94,8 @@ function template_preprocess_booking_add_booking(&$variables) {
 
     $variables['booking'] = array(
       'room' => array(
-        'name' => array_pop($defaults['room']->title->getValue())['value'],
-        'price' => array_pop($defaults['room']->field_price->getValue())['value'],
+        'name' => $defaults['room']->title->value,
+        'price' => $defaults['room']->field_price->value,
         'url' => $defaults['room']->url(),
       ),
       'day' => format_date($defaults['from'], 'dokk1_booking_dato'),
