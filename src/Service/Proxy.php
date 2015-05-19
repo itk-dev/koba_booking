@@ -16,6 +16,7 @@ class Proxy {
 
   private $configuration = NULL;
   private $apikey = NULL;
+  private $path = NULL;
 
   /**
    * Default construct.
