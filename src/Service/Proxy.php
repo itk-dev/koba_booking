@@ -46,7 +46,7 @@ class Proxy {
    */
   public function getResourceBookings($resource_id, $from, $to) {
     // Build url to request booking at the proxy.
-    $url = $this->$path . '/api/resources/' . $resource_id . '/group/default/freebusy/from/' . $from . '/to/' . $to . '?apikey=' . $this->apikey;
+    $url = $this->path . '/api/resources/' . $resource_id . '/group/default/freebusy/from/' . $from . '/to/' . $to . '?apikey=' . $this->apikey;
 
     // Instantiates a new drupal http client.
     $client = new Client();
