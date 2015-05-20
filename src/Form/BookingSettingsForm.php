@@ -120,7 +120,7 @@ class BookingSettingsForm extends FormBase {
     $form['create_booking_wrapper']['create_booking_description'] = array(
       '#title' => $this->t('Pages description'),
       '#type' => 'text_format',
-      '#default_value' => is_array($config->get('koba_booking.create_booking_description')) ? $config->get('koba_booking.create_booking_description')['value'] : $config->get('koba_booking.create_booking_description'),
+      '#default_value' => $config->get('koba_booking.create_booking_description'),
       '#weight' => '2',
       '#open' => TRUE,
     );
