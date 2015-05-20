@@ -30,7 +30,7 @@ function template_preprocess_booking_calendar_page(&$variables) {
   // Set variables
   $variables['title'] = $config->get('koba_booking.create_booking_title');
   $variables['top_img'] = ($file) ? $file->url() : '';
-  $variables['manchet'] = is_array($config->get('koba_booking.create_booking_description')) ? check_markup($config->get('koba_booking.create_booking_description')['value'], 'editor_format') : check_markup($config->get('koba_booking.create_booking_description')['value'], 'editor_format');
+  $variables['manchet'] = check_markup($config->get('koba_booking.create_booking_description'), 'editor_format');
   $variables['submit_header'] = '/' . $config->get('koba_booking.add_booking_header');
   $variables['app_dir'] = '/' .  drupal_get_path('module', 'koba_booking') . '/app';
 }
@@ -56,7 +56,7 @@ function template_preprocess_booking_receipt(&$variables) {
   // Set variables
   $variables['title'] = $config->get('koba_booking.create_booking_title');
   $variables['top_img'] = ($file) ? $file->url() : '';
-  $variables['manchet'] = $config->get('koba_booking.create_booking_description');
+  $variables['manchet'] = check_markup($config->get('koba_booking.create_booking_description'), 'editor_format');
 
   // Extract information about the booking.
   $booking = $variables['booking'];
@@ -102,5 +102,27 @@ function template_preprocess_booking_add_booking(&$variables) {
       'timeIntreval' => format_date($defaults['from'], 'dokk1_booking_time') . ' - ' . format_date($defaults['to'], 'dokk1_booking_time'),
       'raw' => $defaults,
     );
+
+    // Fetch module config settings.
+    $config = \Drupal::config('koba_booking.settings');
+
+    // Fetch header top file.
+    $top_image_id = $config->get('koba_booking.create_booking_top_image');
+    $file = ($top_image_id) ? File::load($top_image_id) : FALSE;
+
+    // @todo caching af image.
+
+    // Set variables
+    $variables['title'] = $config->get('koba_booking.create_booking_title');
+    $variables['top_img'] = ($file) ? $file->url() : '';
+    $variables['search_phase'] = $config->get('koba_booking.search_phase');
+
+    // Filter help texts if they have a filter.
+    $variables['why_email'] = check_markup($config->get('koba_booking.why_email'), 'editor_format');
+    $variables['why_title'] = check_markup($config->get('koba_booking.why_title'), 'editor_format');
+
+    // Help texts are reused as headers.
+    $variables['why_email_header'] = t('Why do we need your email?');
+    $variables['why_title_header'] = t('Why do we need a title?');
   }
 }

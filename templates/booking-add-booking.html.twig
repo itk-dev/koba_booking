@@ -26,8 +26,8 @@
       <div class="fields">
         <div class="fields--items">
           <div class="fields--item">
-            {% if form.variables.top_img %}
-              <img src="{{ form.variables.top_img }}"/>
+            {% if top_img %}
+              <img src="{{ top_img }}"/>
             {% else %}
               <img src="/sites/all/themes/dokk/images/pngs/page-header-fallback.png" width="2000" height="400" alt="">
             {% endif %}
@@ -96,4 +96,3 @@
     {{ form.actions }}
   </div>
 </div>
-

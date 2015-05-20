@@ -1,11 +1,11 @@
 <div class="booking--popup">
   <div class="booking--popup-inner">
     <div class="booking--popup-header">
-      <h2 class="booking--popup-header-text">{{ form.variables.why_title_header }}</h2>
+      <h2 class="booking--popup-header-text">{{ why_title_header }}</h2>
       <div class="booking--popup-close-text" data-ng-click="showTitleDescription = !showTitleDescription"><span class="booking--close-icon">{% include '@dokk/svgs/close-icon.svg' %}</span> {{ 'Close'|t }}</div>
     </div>
     <div class="booking--popup-content">
-      {{ form.variables.why_title }}
+      {{ why_title }}
     </div>
     <div class="booking--popup-close" data-ng-click="showTitleDescription = !showTitleDescription">{{ 'Close'|t }}</div>
   </div>

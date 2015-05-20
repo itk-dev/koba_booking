@@ -120,7 +120,7 @@ class BookingSettingsForm extends FormBase {
     $form['create_booking_wrapper']['create_booking_description'] = array(
       '#title' => $this->t('Pages description'),
       '#type' => 'text_format',
-      '#default_value' => is_array($config->get('koba_booking.create_booking_description')) ? $config->get('koba_booking.create_booking_description')['value'] : $config->get('koba_booking.create_booking_description'),
+      '#default_value' => $config->get('koba_booking.create_booking_description'),
       '#weight' => '2',
       '#open' => TRUE,
     );
@@ -203,7 +203,8 @@ class BookingSettingsForm extends FormBase {
     $old_fid = $config->get('koba_booking.create_booking_top_image', '');
 
     // Load the file set in the form.
-    $form_fid = $form_state->getValue('create_booking_top_image')[0];
+    $value = $form_state->getValue('create_booking_top_image');
+    $form_fid = count($value) > 0 ? $value[0] : 0;
     $file = ($form_fid) ? File::load($form_fid) : FALSE;
 
     // If a file is set.
@@ -230,12 +231,11 @@ class BookingSettingsForm extends FormBase {
 
     // Set the last possible date for booking.
     $last_booking_date = setLastBookingDate($form_state);
-    $image_id = $form_state->getValue('create_booking_top_image')[0];
 
     $this->configFactory()->getEditable('koba_booking.settings')
       ->set('koba_booking.create_booking_title', $form_state->getValue('create_booking_title'))
-      ->set('koba_booking.create_booking_description', $form_state->getValue('create_booking_description'))
-      ->set('koba_booking.create_booking_top_image', $image_id)
+      ->set('koba_booking.create_booking_description', $form_state->getValue('create_booking_description')['value'])
+      ->set('koba_booking.create_booking_top_image', $file ? $file->id() : NULL)
       ->set('koba_booking.planning_state', $form_state->getValue('half_year'))
       ->set('koba_booking.search_phase', $form_state->getValue('search_period'))
       ->set('koba_booking.last_booking_date', $last_booking_date)
