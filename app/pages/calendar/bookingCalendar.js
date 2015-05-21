@@ -305,8 +305,14 @@ angular.module("kobaApp")
                   scope.loaded = true;
                 },
                 function error(reason) {
-                  // @TODO: Report error properly.
-                  console.error(reason);
+                  // Still allow the user to make a booking request.
+                  // @TODO: Report to the user that the it was not possible to get information from exchange about bookings.
+                  bookings = [];
+
+                  // Render timeIntervals for calendar view.
+                  renderCalendar();
+
+                  scope.loaded = true;
                 }
               );
             }
