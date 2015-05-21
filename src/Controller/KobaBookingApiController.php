@@ -105,7 +105,7 @@ class KobaBookingApiController extends ControllerBase {
         $booking->set('booking_status', 'accepted');
       }
       else {
-        $booking->set('booking_status', 'rejected');
+        $booking->set('booking_status', 'refused');
       }
 
       $booking->save();
