@@ -83,6 +83,7 @@ class KobaBookingApiController extends ControllerBase {
    *   The HTTP post request.
    */
   public function callback(Request $request) {
+    // Get JSON parameters.
     $params = array();
     $content = $request->getContent();
     if (!empty($content)) {
@@ -90,21 +91,17 @@ class KobaBookingApiController extends ControllerBase {
       $params = json_decode($content, TRUE);
     }
 
-    $status = $params['status'];
-    $entity_id = $params['client_booking_id'];
-
     // Load booking entity.
-    $booking = entity_load('koba_booking_booking', $entity_id);
+    $booking = \Drupal::entityManager()->loadEntityByUuid(koba_booking_booking, $params['client_booking_id']);
 
-    \Drupal::logger('booking')->debug($status . ' -> ' . $entity_id);
-
+    // Check if entity was loaded.
     if ($booking) {
       // For efficiency manually save the original booking before applying any
       // changes.
       $booking->original = clone $booking;
 
       // Change booking state.
-      if ($status == 'ACCEPTED') {
+      if ($params['status'] == 'ACCEPTED') {
         $booking->set('booking_status', 'accepted');
       }
       else {
@@ -112,6 +109,9 @@ class KobaBookingApiController extends ControllerBase {
       }
 
       $booking->save();
+    }
+    else {
+      \Drupal::logger('koba_booking')->error('No entity with uuid: ' . $params['client_booking_id']);
     }
   }
 
