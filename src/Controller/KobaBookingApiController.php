@@ -92,7 +92,7 @@ class KobaBookingApiController extends ControllerBase {
     }
 
     // Load booking entity.
-    $booking = \Drupal::entityManager()->loadEntityByUuid(koba_booking_booking, $params['client_booking_id']);
+    $booking = \Drupal::entityManager()->loadEntityByUuid('koba_booking_booking', $params['client_booking_id']);
 
     // Check if entity was loaded.
     if ($booking) {
@@ -101,13 +101,27 @@ class KobaBookingApiController extends ControllerBase {
       $booking->original = clone $booking;
 
       // Change booking state.
-      if ($params['status'] == 'ACCEPTED') {
-        $booking->set('booking_status', 'accepted');
-      }
-      else {
+      switch ($params['status']) {
+        case 'ACCEPTED':
+          $booking->set('booking_status', 'accepted');
+          /**
+           * @TODO: Send accept mail.
+           */
+          break;
+
+        case 'CANCELED':
+          $booking->set('booking_status', 'cancelled');
+          /**
+           * @TODO: Send cancelled mail.
+           */
+          break;
+
+        default:
+          /**
+           * @TODO: Send refused mail.
+           */
         $booking->set('booking_status', 'refused');
       }
-
       $booking->save();
     }
     else {
