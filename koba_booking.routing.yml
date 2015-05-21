@@ -98,7 +98,7 @@ entity.koba_booking_booking.delete_form:
 
 # --- Create booking routes --- #
 koba_booking.calendar_page:
-  path: '/booking/calendar'
+  path: '/booking'
   defaults:
     _controller: '\Drupal\koba_booking\Controller\KobaBookingController::calendarPage'
     _title: 'Booking'
