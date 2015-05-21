@@ -100,6 +100,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      */
     $scope.setResource = function setResource(resource) {
       $scope.selected.resource = resource;
+      $scope.pickResource = false;
     };
 
     /**
@@ -231,10 +232,6 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
     $scope.toggleDate = function() {
       $scope.pickDate = !$scope.pickDate;
       var browserSize =  document.body.clientWidth;
-      if (browserSize < 1024) {
-        jQuery('html').toggleClass('is-locked');
-        jQuery('body').toggleClass('is-locked');
-      }
     };
 
     /**
