@@ -89,6 +89,7 @@ class KobaBookingApiController extends ControllerBase {
     // Load booking entity.
     $booking = entity_load('koba_booking_booking', $entity_id);
 
+    \Drupal::logger('booking')->debug($status . ' -> ' . $entity_id);
 
     if ($booking) {
       // For efficiency manually save the original booking before applying any
