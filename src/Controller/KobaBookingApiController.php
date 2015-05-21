@@ -83,8 +83,15 @@ class KobaBookingApiController extends ControllerBase {
    *   The HTTP post request.
    */
   public function callback(Request $request) {
-    $status = $request->get('status');
-    $entity_id = $request->get('client_booking_id');
+    $params = array();
+    $content = $request->getContent();
+    if (!empty($content)) {
+      // 2nd param to get as array
+      $params = json_decode($content, TRUE);
+    }
+
+    $status = $params['status'];
+    $entity_id = $params['client_booking_id'];
 
     // Load booking entity.
     $booking = entity_load('koba_booking_booking', $entity_id);

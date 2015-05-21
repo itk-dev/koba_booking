@@ -46,7 +46,8 @@ koba_booking.api.callback:
     _controller: '\Drupal\koba_booking\Controller\KobaBookingApiController::callback'
   requirements:
     _permission: 'access content'
-    _content_type_format: text/html
+    _content_type_format: json
+    _format: json
 
 koba_booking.api.login:
   path: '/booking/wayf/login'
