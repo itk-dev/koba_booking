@@ -227,7 +227,9 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      */
     $scope.toggleDate = function() {
       $scope.pickDate = !$scope.pickDate;
-      var browserSize =  document.body.clientWidth;
+      $scope.dateOpen = true;
+      $scope.timeOpen = false;
+      $scope.resourceOpen = false;
     };
 
     /**
@@ -235,6 +237,9 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      */
     $scope.toggleResource = function() {
       $scope.pickResource = !$scope.pickResource;
+      $scope.dateOpen = false;
+      $scope.timeOpen = false;
+      $scope.resourceOpen = true;
     };
 
     /**

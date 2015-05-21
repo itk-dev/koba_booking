@@ -2,19 +2,16 @@
   <div class="booking--selection">
     <div class="booking--selection-date-time-wrapper">
       <div class="booking--selection-date-picker">
-        <div class="booking--selection-header-date" data-ng-click="toggleDate()">{{ t('Date') }}</div>
+        <div class="booking--selection-header-date" data-ng-class="{'is-active': pickDate, 'is-inactive' : pickResource || pickTime}" data-ng-click="toggleDate()">1. {{ t('Date') }}</div>
         <div class="booking--selection-display-date" data-ng-click="toggleDate()"><span class="icon--calendar is-gray" data-ng-include="themePath + '/templates/svgs/calendar-icon.svg'"></span><span class="booking--selection-text">{{ getSelectedDate() | date: 'd/M-yy' }}</span></div>
         <div class="booking--popup" data-ng-cloak data-ng-if="pickDate">
           <div class="booking--popup-inner">
-            <div class="booking--popup-header">
-              <div class="booking--popup-header-text">{{ t('Date') }}</div>
-            </div>
             <div data-ng-model="selected.date" date-picker="" close-function="toggleDate()" number-of-months="9" class="booking--popup-calendar-wrapper"></div>
           </div>
         </div>
       </div><!-- // Counter inline block
    --><div class="booking--selection-time-picker">
-        <div class="booking--selection-header-time" data-ng-click="toggleTime()">{{ t('Time') }}</div>
+        <div class="booking--selection-header-time" data-ng-class="{'is-active': pickTime, 'is-inactive' : pickResource || pickDate}"  data-ng-click="toggleTime()">2. {{ t('Time') }}</div>
         <div class="booking--selection-display-time" data-ng-click="toggleTime()"><span class="icon--clock is-gray" data-ng-include="themePath + '/templates/svgs/clock-icon.svg'"></span><span class="booking--selection-text">{{ getSelectedStartTime() }} - {{ getSelectedEndTime() }}</span></div>
         <div class="booking--popup" data-ng-if="pickTime">
           <div class="booking--popup-inner">
@@ -30,7 +27,7 @@
         </div>
       </div><!-- // Counter inline block
    --><div class="booking--selection-resource-picker">
-        <div class="booking--selection-header-resource" data-ng-click="toggleResource()">{{ t('Resources') }}</div>
+        <div class="booking--selection-header-resource" data-ng-class="{'is-active': pickResource, 'is-inactive' : pickTime || pickDate}" data-ng-click="toggleResource()">3. {{ t('Resources') }}</div>
         <div class="booking--selection-display-resource">
           <span class="booking--arrow-large is-left" data-ng-include="themePath + '/templates/svgs/arrow.svg'" data-ng-click="prevResource()"></span>
           <span class="booking--selection-text" data-ng-click="toggleResource()">{{ (resourceName = getSelectedResource()) ? resourceName : t('Select resource') }}</span>
