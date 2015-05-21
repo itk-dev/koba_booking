@@ -10,6 +10,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Render\Element\Link;
 use Drupal\Core\Url;
 use Drupal\koba_booking\BookingInterface;
+use Drupal\koba_booking\Exception\ProxyException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -114,9 +115,21 @@ class KobaBookingController extends ControllerBase  {
    *   The booking to perform the action on.
    */
   public function actionAccept(Request $request, BookingInterface $koba_booking_booking) {
-    // Change booking state.
-    $koba_booking_booking->set('booking_status', 'accepted');
-    $koba_booking_booking->save();
+    // Get proxy service.
+    $proxy =  \Drupal::service('koba_booking.api.proxy');
+
+    try {
+      if ($proxy->sendBooking($koba_booking_booking)) {
+        // For efficiency manually save the original booking before applying any
+        // changes.
+        $koba_booking_booking->original = clone $koba_booking_booking;
+        $koba_booking_booking->set('booking_status', 'pending');
+        $koba_booking_booking->save();
+      }
+    }
+    catch (ProxyException $exception) {
+      drupal_set_message(t($exception->getMessage()), 'error');
+    }
 
     // Set redirect. (Original path.)
     $referer = $request->server->get('HTTP_REFERER');

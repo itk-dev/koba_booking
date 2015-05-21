@@ -149,7 +149,7 @@ function koba_booking_theme($existing, $type, $theme, $path) {
  */
 function koba_booking_send_mail($type, \Drupal\koba_booking\BookingInterface $booking = NULL) {
   // Get to mail address.
-  $to = array_pop($booking->booking_email->getValue())['value'];
+  $to = $booking->booking_email->value;
 
   // Try to get and from address from the site configuration.
   $site_config = \Drupal::config('system.site');
@@ -228,31 +228,31 @@ function koba_booking_send_mail($type, \Drupal\koba_booking\BookingInterface $bo
  */
 function _koba_booking_generate_booking_array(\Drupal\koba_booking\BookingInterface $booking) {
   // Load room for the booking.
-  $room = entity_load('node', array_pop($booking->booking_resource->getValue())['target_id']);
+  $room = $booking->getRoomEntity();
 
   $generator = \Drupal::urlGenerator();
   $url = $generator->generateFromRoute('koba_booking.receipt', array(
-    'hash' => array_pop($booking->booking_hash->getValue())['value'],
+    'hash' => $booking->booking_hash->value,
   ), array(
     'absolute' => TRUE,
   ));
 
   return array(
     '#booking' => array(
-      'id' => array_pop($booking->id->getValue())['value'],
-      'title' => \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->name->getValue())['value']),
-      'date' => format_date(array_pop($booking->booking_from_date->getValue())['value'], 'dokk1_booking_dato'),
-      'time' => format_date(array_pop($booking->booking_from_date->getValue())['value'], 'dokk1_booking_time') . ' - ' . format_date(array_pop($booking->booking_to_date->getValue())['value'], 'dokk1_booking_time'),
+      'id' => $booking->id->value,
+      'title' => \Drupal\Component\Utility\SafeMarkup::checkPlain($booking->name->value),
+      'date' => format_date($booking->booking_from_date->value, 'dokk1_booking_dato'),
+      'time' => format_date($booking->booking_from_date->value, 'dokk1_booking_time') . ' - ' . format_date($booking->booking_to_date->value, 'dokk1_booking_time'),
       'room' => array(
-        'title' => array_pop($room->title->getValue())['value'],
-        'price' => array_pop($room->field_price->getValue())['value'],
+        'title' => $room->title->value,
+        'price' => $room->field_price->value,
         'url' => $room->url(),
       ),
-      'name' => \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->booking_name->getValue())['value']),
-      'mail' => \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->booking_email->getValue())['value']),
-      'phone' => \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->booking_phone->getValue())['value']),
-      'type' => \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->booking_usage->getValue())['value']),
-      'message' => \Drupal\Component\Utility\SafeMarkup::checkPlain(array_pop($booking->booking_message->getValue())['value']),
+      'name' => \Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_name->value),
+      'mail' => \Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_email->value),
+      'phone' => \Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_phone->value),
+      'type' => \Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_usage->value),
+      'message' => \Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_message->value),
       'url' => $url,
     ),
   );
@@ -312,20 +312,6 @@ function _koba_booking_mailer($to, $from, $subject, $body, $name = 'Dokk1') {
 function koba_booking_form_koba_booking_booking_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   // Switch between add or edit action.
   if ($form['#action'] == '/booking/add') {
-
-    // Fetch module config settings.
-    $config = \Drupal::config('koba_booking.settings');
-
-    // Fetch header top file.
-    $top_image_id = $config->get('koba_booking.create_booking_top_image');
-    $file = ($top_image_id) ? File::load($top_image_id) : FALSE;
-
-    // @todo caching af image.
-    // Set variables
-    $form['variables']['title'] = $config->get('koba_booking.create_booking_title');
-    $form['variables']['top_img'] = ($file) ? $file->url() : '';
-    $form['variables']['search_phase'] = $config->get('koba_booking.search_phase');
-
     // Change field descriptions.
     $form['booking_email']['widget']['0']['value']['#description'] = '<div class="booking--description-link" data-ng-click="showEmailDescription = !showEmailDescription">' . t('Why do we need your email?') . '</div>';
     $form['name']['widget']['0']['value']['#description'] = '<div class="booking--description-link" data-ng-click="showTitleDescription = !showTitleDescription">' . t('Why do we need a title?') . '</div>';
@@ -333,14 +319,6 @@ function koba_booking_form_koba_booking_booking_form_alter(&$form, FormStateInte
     $form['booking_name']['widget']['0']['value']['#attributes']['class'][] = 'booking--readonly';
     $form['booking_email']['widget']['0']['value']['#attributes']['readonly'] = 'readonly';
     $form['booking_email']['widget']['0']['value']['#attributes']['class'][] = 'booking--readonly';
-
-    // Filter help texts if they have a filter.
-    $form['variables']['why_email'] = is_array($config->get('koba_booking.why_email')) ? check_markup($config->get('koba_booking.why_email')['value'], 'editor_format') : check_markup($config->get('koba_booking.why_email'), 'editor_format');
-    $form['variables']['why_title'] = is_array($config->get('koba_booking.why_title')) ? check_markup($config->get('koba_booking.why_title')['value'], 'editor_format') : check_markup($config->get('koba_booking.why_title'), 'editor_format');
-
-    // Help texts are reused as headers.
-    $form['variables']['why_email_header'] = t('Why do we need your email?');
-    $form['variables']['why_title_header'] = t('Why do we need a title?');
 
     // Add template as prefix.
     $form['#theme'] = array('booking_add_booking');

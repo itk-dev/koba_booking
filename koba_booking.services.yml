@@ -1,0 +1,3 @@
+services:
+  koba_booking.api.proxy:
+      class: Drupal\koba_booking\Service\Proxy

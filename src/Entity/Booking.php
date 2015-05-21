@@ -159,6 +159,18 @@ class Booking extends ContentEntityBase implements BookingInterface {
   }
 
   /**
+   * @inheritdoc
+   */
+  public function getRoomEntity() {
+    $values = $this->get('booking_resource')->getValue();
+    if (!empty($values) && isset($values[0]['target_id'])) {
+      return entity_load('node', array_pop($values)['target_id']);
+    }
+
+    return FALSE;
+  }
+
+  /**
    * {@inheritdoc}
    *
    * Define the field properties here.

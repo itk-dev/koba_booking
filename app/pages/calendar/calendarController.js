@@ -1,10 +1,16 @@
 /**
  * @file
- * @TODO: missing description.
+ * Contains the CalendarController.
  */
 
+/**
+ * CalendarController
+ * belongs to "kobaApp" module
+ */
 angular.module('kobaApp').controller("CalendarController", ['$scope', '$window', 'kobaFactory',
   function ($scope, $window, kobaFactory) {
+    var selectedResourceIndex = 0;
+
     /**
      * Expose the Drupal.t() function to angularjs templates.
      *
@@ -20,13 +26,6 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
     $scope.modulePath = '/' + drupalSettings['koba_booking']['module_path'];
     $scope.themePath = '/' + drupalSettings['koba_booking']['theme_path'];
 
-    // Get booking information from drupalSettings.
-    var initBooking = {
-      "resource": drupalSettings['koba_booking']['resource'],
-      "from": drupalSettings['koba_booking']['from'],
-      "to": drupalSettings['koba_booking']['to']
-    };
-
     // Defaults: Start of today
     // For time we use a regular date to integrate with timepicker.
     $scope.selected = {
@@ -38,8 +37,22 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       "resource": null
     };
 
+    // Get booking information from drupalSettings.
+    var initBooking = {
+      "resource": drupalSettings['koba_booking']['resource'],
+      "from": drupalSettings['koba_booking']['from'],
+      "to": drupalSettings['koba_booking']['to']
+    };
+
+    // Initialise selected date and start/end time, if set in drupalSettings.
     if (initBooking.from && initBooking.to) {
       $scope.selected.date = moment(initBooking.from * 1000).startOf('day');
+
+      // Make sure the date from the cookie is not from before today.
+      var startToday = moment().startOf('day');
+      if ($scope.selected.date < startToday) {
+        $scope.selected.date = startToday;
+      }
 
       $scope.selected.time.start = new Date((initBooking.from - parseInt($scope.selected.date.format('X'))) * 1000);
       $scope.selected.time.end = new Date((initBooking.to - parseInt($scope.selected.date.format('X'))) * 1000);
@@ -49,11 +62,15 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
     $scope.resources = [];
     kobaFactory.getResources().then(
       function success(data) {
+        selectedResourceIndex = 0;
         $scope.resources = data;
 
+        // Find previously selected resource.
         for (var i = 0; i < $scope.resources.length; i++) {
           if ($scope.resources[i].id === initBooking.resource) {
             $scope.selected.resource = $scope.resources[i];
+            selectedResourceIndex = i;
+            break;
           }
         }
       },
@@ -191,39 +208,18 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      * Go to the previous resource.
      */
     $scope.prevResource = function() {
-      if (!$scope.selected.resource) {
-        $scope.selected.resource = $scope.resources[0];
-      } else {
-        for (var i = 0; i < $scope.resources.length; i++) {
-          var res = $scope.resources[i];
-          if (res.mail === $scope.selected.resource.mail) {
-            if (i === 0) {
-              $scope.selected.resource = $scope.resources[$scope.resources.length - 1];
-            }
-            else {
-              $scope.selected.resource = $scope.resources[i - 1];
-            }
-            return;
-          }
-        }
-      }
+      var length = $scope.resources.length;
+      selectedResourceIndex = (((selectedResourceIndex - 1) % length) + length) % length;
+      $scope.selected.resource = $scope.resources[selectedResourceIndex];
     };
 
     /**
      * Go to the next resource.
      */
     $scope.nextResource = function() {
-      if (!$scope.selected.resource) {
-        $scope.selected.resource = $scope.resources[0];
-      } else {
-        for (var i = 0; i < $scope.resources.length; i++) {
-          var res = $scope.resources[i];
-          if (res.mail === $scope.selected.resource.mail) {
-            $scope.selected.resource = $scope.resources[(i + 1) % $scope.resources.length];
-            return;
-          }
-        }
-      }
+      var length = $scope.resources.length;
+      selectedResourceIndex = (((selectedResourceIndex + 1) % length) + length) % length;
+      $scope.selected.resource = $scope.resources[selectedResourceIndex];
     };
 
     /**

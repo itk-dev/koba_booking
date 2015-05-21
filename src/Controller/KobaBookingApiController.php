@@ -10,6 +10,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Http\Client;
 use Drupal\Core\Url;
 use Drupal\koba_booking\BookingInterface;
+use Drupal\koba_booking\Exception\ProxyException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -40,13 +41,13 @@ class KobaBookingApiController extends ControllerBase {
     $nodes = entity_load_multiple('node', $nids);
     foreach ($nodes as $node) {
       $rooms[] = array(
-        'id' => array_pop($node->nid->getValue())['value'],
-        'name' => array_pop($node->title->getValue())['value'],
-        'mail' => array_pop($node->field_resource->getValue())['value'],
+        'id' => $node->nid->value,
+        'name' => $node->title->value,
+        'mail' => $node->field_resource->value,
       );
     }
 
-    return new JsonResponse($rooms, '200');
+    return new JsonResponse($rooms, 200);
   }
 
   /**
@@ -57,31 +58,52 @@ class KobaBookingApiController extends ControllerBase {
    * @return JsonResponse
    */
   public function bookings(Request $request) {
-    $resource = $request->query->get('res');
+    $resource_id = $request->query->get('res');
     $from = $request->query->get('from');
     $to = $request->query->get('to');
 
-    // Fetch module config settings.
-    $config = \Drupal::config('koba_booking.settings');
-    $apikey = $config->get('koba_booking.api_key', '');
-    $path = $config->get('koba_booking.path', '');
-
-    $url = $path . '/api/resources/' . $resource . '/group/default/freebusy/from/' . $from . '/to/' . $to . '?apikey=' . $apikey;
-
-    // Instantiates a new guzzle client.
-    $client = new Client();
+    // Get proxy service.
+    $proxy =  \Drupal::service('koba_booking.api.proxy');
 
     try {
-      $response = $client->get($url);
-      $body = json_decode($response->getBody());
-
-      return new JsonResponse($body, $response->getStatusCode());
+      $data = $proxy->getResourceBookings($resource_id, $from, $to);
+      return new JsonResponse($data, 200);
     }
-    catch (RequestException $e) {
-      echo $e->getRequest() . "\n";
-      if ($e->hasResponse()) {
-        echo $e->getResponse() . "\n";
+    catch (ProxyException $exception) {
+      return new JsonResponse(array('message' => $exception->getMessage(), 500));
+    }
+  }
+
+  /**
+   * Handle callback from koba.
+   *
+   * @TODO: Send mail to client.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The HTTP post request.
+   */
+  public function callback(Request $request) {
+    $status = $request->get('status');
+    $entity_id = $request->get('client_booking_id');
+
+    // Load booking entity.
+    $booking = entity_load('koba_booking_booking', $entity_id);
+
+
+    if ($booking) {
+      // For efficiency manually save the original booking before applying any
+      // changes.
+      $booking->original = clone $booking;
+
+      // Change booking state.
+      if ($status == 'ACCEPTED') {
+        $booking->set('booking_status', 'accepted');
       }
+      else {
+        $booking->set('booking_status', 'rejected');
+      }
+
+      $booking->save();
     }
   }
 
@@ -134,9 +156,10 @@ class KobaBookingApiController extends ControllerBase {
   }
 
   /**
+   * Logout of WAYF using an redirection.
+   *
    * @TODO: This is really not the right place for this function, as it has
    *        about wayf.
-   *
    */
   public function logout() {
     // Set destination (booking/add) and redirect til wayf logout.

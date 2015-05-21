@@ -40,6 +40,14 @@ koba_booking.api.resources:
     _permission: 'access content'
     _content_type_format: text/html
 
+koba_booking.api.callback:
+  path: '/booking/api/callback'
+  defaults:
+    _controller: '\Drupal\koba_booking\Controller\KobaBookingApiController::callback'
+  requirements:
+    _permission: 'access content'
+    _content_type_format: text/html
+
 koba_booking.api.login:
   path: '/booking/wayf/login'
   defaults:
