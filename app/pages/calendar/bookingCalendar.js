@@ -64,6 +64,7 @@ angular.module("kobaApp")
           url: '/booking/api/bookings?res=' + resource + '&from=' + from + '&to=' + to,
           method: 'GET',
           headers: {
+            "Cache-Control": 'no-cache, no-store, must-revalidate',
             "Content-Type": 'text/html',
             "Accept": 'text/html'
           }
