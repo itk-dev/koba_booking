@@ -96,6 +96,8 @@ class KobaBookingApiController extends ControllerBase {
 
     // Check if entity was loaded.
     if ($booking) {
+      $mailer =  \Drupal::service('koba_booking.mailer');
+
       // For efficiency manually save the original booking before applying any
       // changes.
       $booking->original = clone $booking;
@@ -104,23 +106,17 @@ class KobaBookingApiController extends ControllerBase {
       switch ($params['status']) {
         case 'ACCEPTED':
           $booking->set('booking_status', 'accepted');
-          /**
-           * @TODO: Send accept mail.
-           */
+          $mailer->send('accepted', $booking);
           break;
 
         case 'CANCELED':
           $booking->set('booking_status', 'cancelled');
-          /**
-           * @TODO: Send cancelled mail.
-           */
+          $mailer->send('cancelled', $booking);
           break;
 
         default:
-          /**
-           * @TODO: Send refused mail.
-           */
-        $booking->set('booking_status', 'refused');
+          $booking->set('booking_status', 'refused');
+          $mailer->send('rejected', $booking);
       }
       $booking->save();
     }

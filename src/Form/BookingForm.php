@@ -108,7 +108,8 @@ class BookingForm extends ContentEntityForm {
 
     if ($this->getOperation() == 'add') {
       // Send mail with request received information.
-      koba_booking_send_mail('request', $entity);
+      $mailer =  \Drupal::service('koba_booking.mailer');
+      $mailer->send('request', $entity);
     }
 
     // Redirect after submit.
