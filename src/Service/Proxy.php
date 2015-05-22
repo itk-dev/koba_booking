@@ -153,7 +153,7 @@ class Proxy {
 
     try {
       // Send request to koba.
-      $response = $client->delete($this->path . '/api/delete/' . $id);
+      $response = $client->delete($this->path . '/api/bookings/group/default/apikey/'. $this->apikey . '/booking/' . $id);
 
       // Check response to ensure the proxy got it.
       if ($response->getStatusCode() != 202) {

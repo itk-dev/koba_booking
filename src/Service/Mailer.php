@@ -29,24 +29,129 @@ class Mailer {
    * Helper function to send mail based on a booking.
    *
    * @param string $type
-   *   The type of the mail (request, accpeted, etc.)
+   *   The type of the mail (request, accepted, etc.)
    * @param \Drupal\koba_booking\BookingInterface $booking
    *   Booking object that this mail is about.
+   * @param bool $notifyAdmin
+   *   Send notification mail to administrator. Defaults to TRUE.
    */
-  public function send($type, BookingInterface $booking = NULL) {
+  public function send($type, BookingInterface $booking = NULL, $notifyAdmin = TRUE) {
     // Get to mail address.
     $to = $booking->booking_email->value;
 
-    // Try to get and from address from the site configuration.
-    $site_config = \Drupal::config('system.site');
-    $from = $site_config->get('mail');
-    if (empty($from)) {
-      $from = ini_get('sendmail_from');
+    // Generate content.
+    $content = (object) $this->generateUserMailContent($type, $booking);
+
+    // Send the mail.
+    $this->mailer($to, $content->subject, $content->body);
+
+    // Send notification to administrator.
+    if ($notifyAdmin) {
+      // Generate content.
+      $content = (object) $this->generateAdminNotificationMailContent($type, $booking);
+
+      // Try to get to address from the site configuration.
+      $site_config = \Drupal::config('system.site');
+      $to = $site_config->get('mail');
+      if (empty($to)) {
+        $to = ini_get('sendmail_from');
+      }
+
+      // Send the mail.
+      $this->mailer($to, $content->subject, $content->body);
+    }
+  }
+
+  /**
+   * Generate mail content for administrator notification mails.
+   *
+   * @param $type
+   *   The type of mail message to build.
+   * @param BookingInterface $booking
+   *   The booking to use.
+   * @return array
+   *   Array indexed with "body" and "subject" as keys.
+   */
+  protected function generateAdminNotificationMailContent($type, BookingInterface $booking) {
+    // Build render array for the mail body.
+    $config = \Drupal::config('koba_booking.settings');
+    switch ($type) {
+      case 'request':
+        $subject = $config->get('koba_email_admin.email_admin_pending_title');
+
+        // Build render array.
+        $content = array(
+          '#theme' => 'booking_mail_request',
+          '#message' => $config->get('koba_email_admin.email_admin_pending_body'),
+        );
+        break;
+
+      case 'accepted':
+        $subject = $config->get('koba_email_admin.email_admin_accepted_title');
+
+        // Build render array.
+        $content = array(
+          '#theme' => 'booking_mail_accepted',
+          '#message' => $config->get('koba_email_admin.email_admin_accepted_body'),
+        );
+        break;
+
+      case 'rejected':
+        $subject = $config->get('koba_email_admin.email_admin_rejected_title');
+
+        // Build render array.
+        $content = array(
+          '#theme' => 'booking_mail_rejected',
+          '#message' => $config->get('koba_email_admin.email_admin_rejected_body'),
+        );
+        break;
+
+      case 'cancelled':
+        $subject = $config->get('koba_email_admin.email_admin_cancelled_title');
+
+        // Build render array.
+        $content = array(
+          '#theme' => 'booking_mail_cancelled',
+          '#message' => $config->get('koba_email_admin.email_admin_cancelled_body'),
+        );
+        break;
+
+      default:
+        $subject = 'Unknown mail type';
+        $content = array(
+          '#type' => 'markup',
+          '#message' => 'Error unknown mail type',
+        );
+        break;
     }
 
+    // Add logo.
+    $content += $this->generateLogo();
+
+    // Extend content with booking information.
+    if (!is_null($booking)) {
+      $content += $this->generateBookingArray($booking);
+    }
+
+    // Render the body content for the mail.
+    return array(
+      'subject' => $subject,
+      'body' => render($content),
+    );
+  }
+
+  /**
+   * Generate mail content for user mails.
+   *
+   * @param $type
+   *   The type of mail message to build.
+   * @param BookingInterface $booking
+   *   The booking to use.
+   * @return array
+   *   Array indexed with "body" and "subject" as keys.
+   */
+  protected function generateUserMailContent($type, BookingInterface $booking) {
     // Build render array for the mail body.
-    $subject = 'Unknown mail type';
-    $content = array();
     $config = \Drupal::config('koba_booking.settings');
     switch ($type) {
       case 'request':
@@ -88,8 +193,39 @@ class Mailer {
           '#message' => $config->get('koba_email.cancelled_email_body'),
         );
         break;
+
+      default:
+        $subject = 'Unknown mail type';
+        $content = array(
+          '#type' => 'markup',
+          '#message' => 'Error unknown mail type',
+        );
+        break;
     }
 
+    // Add logo.
+    $content += $this->generateLogo();
+
+    // Extend content with booking information.
+    if (!is_null($booking)) {
+      $content += $this->generateBookingArray($booking);
+    }
+
+    // Render the body content for the mail.
+    return array(
+      'subject' => $subject,
+      'body' => render($content),
+    );
+  }
+
+  /**
+   * Generate logo as base64 encode content field.
+   *
+   * @return array
+   *   Array with logo data.
+   */
+  protected function generateLogo() {
+    $content = array();
     $logoPath = \Drupal::service('file_system')->realpath(trim(file_url_transform_relative(theme_get_setting('logo.url')), '/'));
     if ($logoPath) {
       $logo = @file_get_contents($logoPath);
@@ -99,18 +235,8 @@ class Mailer {
       }
     }
 
-    // Extend content with booking information.
-    if (!is_null($booking)) {
-      $content += $this->generate_booking_array($booking);
-    }
-
-    // Render the body content for the mail.
-    $body = render($content);
-
-    // Send the mail.
-    $this->mailer($to, $from, $subject, $body);
+    return $content;
   }
-
 
   /**
    * Build render array with booking information.
@@ -121,7 +247,7 @@ class Mailer {
    * @return array
    *   Array with booking information.
    */
-  protected function generate_booking_array(BookingInterface $booking) {
+  protected function generateBookingArray(BookingInterface $booking) {
     // Load room for the booking.
     $room = $booking->getRoomEntity();
 
@@ -164,8 +290,6 @@ class Mailer {
    *
    * @param $to
    *   Mail address to send mail to.
-   * @param $from
-   *   The sender of the mail.
    * @param $subject
    *   The mails subject.
    * @param $body
@@ -173,7 +297,14 @@ class Mailer {
    * @param string $name
    *   The name of the sender. Defaults to 'Dokk1'.
    */
-  protected function mailer($to, $from, $subject, $body, $name = 'Dokk1') {
+  protected function mailer($to, $subject, $body, $name = 'Dokk1') {
+    // Try to get from address from the site configuration.
+    $site_config = \Drupal::config('system.site');
+    $from = $site_config->get('mail');
+    if (empty($from)) {
+      $from = ini_get('sendmail_from');
+    }
+
     // Get hold of the RAW mailer client.
     $key = Crypt::randomBytesBase64();
     $mailer = $this->mailManager->getInstance(array('module' => 'koba_booking', 'key' => $key));

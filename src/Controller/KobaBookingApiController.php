@@ -103,14 +103,19 @@ class KobaBookingApiController extends ControllerBase {
       $booking->original = clone $booking;
 
       // Change booking state.
-      switch ($params['status']) {
+      switch (strtoupper($params['status'])) {
         case 'ACCEPTED':
           $booking->set('booking_status', 'accepted');
           $mailer->send('accepted', $booking);
           break;
 
-        case 'CANCELED':
+        case 'CANCELLED':
           $booking->set('booking_status', 'cancelled');
+          $mailer->send('cancelled', $booking);
+          break;
+
+        case 'NOT CANCELLED':
+          $booking->set('booking_status', 'accepted');
           $mailer->send('cancelled', $booking);
           break;
 

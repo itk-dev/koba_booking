@@ -34,7 +34,7 @@ class CancelBooking extends ActionBase {
         // For efficiency manually save the original booking before applying any
         // changes.
         $booking->original = clone $booking;
-        $booking->set('booking_status', 'cancelled');
+        $booking->set('booking_status', 'pending');
         $booking->save();
       }
     }
