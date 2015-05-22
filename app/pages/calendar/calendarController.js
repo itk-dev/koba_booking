@@ -11,6 +11,13 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
   function ($scope, $window, kobaFactory) {
     var selectedResourceIndex = 0;
 
+    $scope.bookings = [];
+    $scope.loadingBookings = false;
+    $scope.showCalendar = false;
+    $scope.errorGettingBookings = false;
+    $scope.validBooking = false;
+    $scope.validating = false;
+
     /**
      * Expose the Drupal.t() function to angularjs templates.
      *
@@ -31,8 +38,8 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
     $scope.selected = {
       "date": moment().startOf('day'),
       "time": {
-        "start": (new Date(7 * 60 * 60 * 1000)),
-        "end": (new Date(8 * 60 * 60 * 1000))
+        "start": (new Date(9 * 60 * 60 * 1000)),
+        "end": (new Date(10 * 60 * 60 * 1000))
       },
       "resource": null
     };
@@ -269,5 +276,81 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
         $scope.selected.time.start = new Date($scope.selected.time.end.getTime() - 30 * 60 * 1000);
       }
     });
+
+    function validateBooking() {
+      if (!$scope.selected.resource || !$scope.selected.date) {
+        $scope.validating = false;
+        return;
+      }
+
+      var from = parseInt(moment($scope.selected.date).add($scope.selected.time.start.getTime(), 'milliseconds').format('X'));
+      var to = parseInt(moment($scope.selected.date).add($scope.selected.time.end.getTime(), 'milliseconds').format('X'));
+
+      var validBooking = true;
+
+      for (var i = 0; i < $scope.bookings.length; i++) {
+        var booking = $scope.bookings[i];
+        if (booking.start >= from && booking.start < to ||
+          booking.end <= to && booking.end > from) {
+          validBooking = false;
+          break;
+        }
+      }
+
+      $scope.validBooking = validBooking;
+
+      if (!validBooking) {
+        $scope.showCalendar = true;
+      }
+
+      $scope.validating = false;
+    }
+
+    $scope.$watchGroup(['selected.time.start', 'selected.time.end'],
+      function(val) {
+        if (!val) return;
+
+        $scope.validating = true;
+
+        validateBooking();
+      }
+    );
+
+    // Watch for changes to selectedDate and selectedResource.
+    // Update the calendar view accordingly.
+    $scope.$watchGroup(['selected.date', 'selected.resource'],
+      function (val) {
+        if (!val) return;
+        if (!$scope.selected.resource || !$scope.selected.date) return;
+
+        $scope.validating = true;
+        $scope.loadingBookings = true;
+        $scope.errorGettingBookings = false;
+
+        // Get bookings for the resource and date.
+        kobaFactory.getBookings(
+          $scope.selected.resource.mail,
+          moment($scope.selected.date).startOf('day').format('X'),
+          moment($scope.selected.date).endOf('day').format('X')
+        ).then(
+          function success(data) {
+            $scope.bookings = data;
+
+            $scope.loadingBookings = false;
+
+            validateBooking();
+          },
+          function error(reason) {
+            // Still allow the user to make a booking request.
+            // @TODO: Report to the user that it was not possible to get information from exchange about bookings.
+            $scope.bookings = [];
+
+            $scope.loadingBookings = false;
+            $scope.errorGettingBookings = true;
+            $scope.validating = false;
+          }
+        );
+      }
+    );
   }
 ]);

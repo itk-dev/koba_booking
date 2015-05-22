@@ -46,7 +46,20 @@
       </div>
     </div>
   </div>
-  <div class="booking--display">
+
+  <div data-ng-if="loadingBookings">{{ t('Loading bookings.')}}</div>
+  <div data-ng-if="!validating && validBooking === false && selected.date && selected.resource">
+    {{t('Invalid booking')}}
+  </div>
+  <div data-ng-if="!selected.date">{{t('Pick a date.')}}</div>
+  <div data-ng-if="!selected.resource">{{t('Pick a resource.')}}</div>
+  <div data-ng-if="!validating && validBooking">
+    <a data-ng-href="{{ getLink() }}" class="booking--add-submit-date">
+      {{ t('Continue') }}
+    </a>
+  </div>
+
+  <div class="booking--display" data-ng-if="showCalendar">
     <div class="booking--display-date">
       <span class="booking--display-date-arrow-left" data-ng-click="prevDate()">
         <span class="booking--arrow-large is-left" data-ng-include="themePath + '/templates/svgs/arrow.svg'"></span>
@@ -56,10 +69,6 @@
         <span class="booking--arrow-large is-right" data-ng-include="themePath + '/templates/svgs/arrow.svg'"></span>
       </span>
     </div>
-    <booking-calendar class="booking--display-content-wrapper" selected-date="selected.date" selected-resource="selected.resource" selected-start="selected.time.start" selected-end="selected.time.end" interest-period="interestPeriod" disabled="disabled"></booking-calendar>
-  </div>
-
-  <div class="booking--submit-wrapper" data-ng-class="{'is-active': selected.time.start && selected.time.end && selected.date && selected.resource}">
-    <a data-ng-href="{{ getLink() }}" class="booking--add-submit-date">{{ t('Continue') }}</a>
+    <booking-calendar bookings="bookings" class="booking--display-content-wrapper" selected-date="selected.date" selected-resource="selected.resource" selected-start="selected.time.start" selected-end="selected.time.end" interest-period="interestPeriod" disabled="disabled"></booking-calendar>
   </div>
 </div>
