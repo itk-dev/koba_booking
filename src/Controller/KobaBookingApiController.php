@@ -83,27 +83,45 @@ class KobaBookingApiController extends ControllerBase {
    *   The HTTP post request.
    */
   public function callback(Request $request) {
-    $status = $request->get('status');
-    $entity_id = $request->get('client_booking_id');
+    // Get JSON parameters.
+    $params = array();
+    $content = $request->getContent();
+    if (!empty($content)) {
+      // 2nd param to get as array
+      $params = json_decode($content, TRUE);
+    }
 
     // Load booking entity.
-    $booking = entity_load('koba_booking_booking', $entity_id);
+    $booking = \Drupal::entityManager()->loadEntityByUuid('koba_booking_booking', $params['client_booking_id']);
 
-
+    // Check if entity was loaded.
     if ($booking) {
+      $mailer =  \Drupal::service('koba_booking.mailer');
+
       // For efficiency manually save the original booking before applying any
       // changes.
       $booking->original = clone $booking;
 
       // Change booking state.
-      if ($status == 'ACCEPTED') {
-        $booking->set('booking_status', 'accepted');
-      }
-      else {
-        $booking->set('booking_status', 'rejected');
-      }
+      switch ($params['status']) {
+        case 'ACCEPTED':
+          $booking->set('booking_status', 'accepted');
+          $mailer->send('accepted', $booking);
+          break;
 
+        case 'CANCELED':
+          $booking->set('booking_status', 'cancelled');
+          $mailer->send('cancelled', $booking);
+          break;
+
+        default:
+          $booking->set('booking_status', 'refused');
+          $mailer->send('rejected', $booking);
+      }
       $booking->save();
+    }
+    else {
+      \Drupal::logger('koba_booking')->error('No entity with uuid: ' . $params['client_booking_id']);
     }
   }
 

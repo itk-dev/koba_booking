@@ -87,7 +87,9 @@ function template_preprocess_booking_receipt(&$variables) {
  * Implements hook_preprocess_booking_add_booking().
  */
 function template_preprocess_booking_add_booking(&$variables) {
+  // Load information form the current session (selection from step 1 and WAYF info).
   $defaults = \Drupal::service('session')->get('koba_booking_request');
+
   if (!empty($defaults)) {
     // Load "lokale" entity information.
     $defaults['room'] = entity_load('node', $defaults['resource']);
@@ -110,9 +112,7 @@ function template_preprocess_booking_add_booking(&$variables) {
     $top_image_id = $config->get('koba_booking.create_booking_top_image');
     $file = ($top_image_id) ? File::load($top_image_id) : FALSE;
 
-    // @todo caching af image.
-
-    // Set variables
+      // Set variables
     $variables['title'] = $config->get('koba_booking.create_booking_title');
     $variables['top_img'] = ($file) ? $file->url() : '';
     $variables['search_phase'] = $config->get('koba_booking.search_phase');

@@ -150,6 +150,9 @@ class KobaBookingController extends ControllerBase  {
     $koba_booking_booking->set('booking_status', 'refused');
     $koba_booking_booking->save();
 
+    // Send mail.
+    \Drupal::service('koba_booking.mailer')->send('rejected', $koba_booking_booking);
+
     // Set redirect. (Original path.)
     $referer = $request->server->get('HTTP_REFERER');
     $response = new RedirectResponse($referer);
@@ -165,9 +168,21 @@ class KobaBookingController extends ControllerBase  {
    *   The booking to perform the action on.
    */
   public function actionCancel(Request $request, BookingInterface $koba_booking_booking = NULL) {
-    // Change booking state.
-    $koba_booking_booking->set('booking_status', 'cancelled');
-    $koba_booking_booking->save();
+    // Get proxy service.
+    $proxy =  \Drupal::service('koba_booking.api.proxy');
+
+    try {
+      if ($proxy->deleteBooking($koba_booking_booking)) {
+        // For efficiency manually save the original booking before applying any
+        // changes.
+        $koba_booking_booking->original = clone $koba_booking_booking;
+        $koba_booking_booking->set('booking_status', 'cancelled');
+        $koba_booking_booking->save();
+      }
+    }
+    catch (ProxyException $exception) {
+      drupal_set_message(t($exception->getMessage()), 'error');
+    }
 
     // Set redirect. (Original path.)
     $referer = $request->server->get('HTTP_REFERER');

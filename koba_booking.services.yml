@@ -1,3 +1,7 @@
 services:
   koba_booking.api.proxy:
       class: Drupal\koba_booking\Service\Proxy
+
+  koba_booking.mailer:
+      class: Drupal\koba_booking\Service\Mailer
+      arguments: ['@plugin.manager.mail']
