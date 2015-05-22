@@ -30,6 +30,9 @@ class RefuseBooking extends ActionBase {
     $booking->original = clone $booking;
     $booking->set('booking_status', 'refused');
     $booking->save();
+
+    // Send mail.
+    \Drupal::service('koba_booking.mailer')->send('rejected', $booking);
   }
 
   /**

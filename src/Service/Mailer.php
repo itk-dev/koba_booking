@@ -74,7 +74,7 @@ class Mailer {
 
         // Build render array.
         $content = array(
-          '#theme' => 'booking_mail_accepted',
+          '#theme' => 'booking_mail_rejected',
           '#message' => $config->get('koba_email.rejected_email_body'),
         );
         break;
@@ -84,7 +84,7 @@ class Mailer {
 
         // Build render array.
         $content = array(
-          '#theme' => 'booking_mail_accepted',
+          '#theme' => 'booking_mail_cancelled',
           '#message' => $config->get('koba_email.cancelled_email_body'),
         );
         break;
