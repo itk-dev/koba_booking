@@ -60,6 +60,14 @@ class BookingViewsData extends EntityViewsData {
       ),
     );
 
+    $data['booking']['operations'] = array(
+      'field' => array(
+        'title' => $this->t('Booking operations links'),
+        'help' => $this->t('Provides links to perform booking operations.'),
+        'id' => 'koba_booking_operations',
+      ),
+    );
+
     return $data;
   }
 
