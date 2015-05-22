@@ -54,25 +54,39 @@
   </div>
 
   <div data-ng-if="loadingBookings">
-    <div class="booking--description">{{ t('Checking if the room is free on the selected date, please wait ....')}}</div>
+    <div class="booking--description">{{ t('Checking if the room is available on the selected date, please wait ...')}}</div>
+  </div>
+  <div data-ng-if="errorGettingBookings">
+    <div class="booking--message-wrapper">
+      <div class="itk-message">
+        <div class="itk-message--inner is-error">{{ t('Error loading availability on the selected date. You can still attempt bookings...')}}</div>
+      </div>
+    </div>
+  </div>
+  <div data-ng-if="errorGettingResources">
+    <div class="booking--message-wrapper">
+      <div class="itk-message">
+        <div class="itk-message--inner is-error">{{ t('Error loading resources. Please reload...')}}</div>
+      </div>
+    </div>
   </div>
   <div data-ng-if="!validating && validBooking === false && selected.date && selected.resource">
     <div class="booking--message-wrapper">
       <div class="itk-message">
-        <div class="itk-message--inner is-error">{{t('The room is not avauilable at the selected time')}}</div>
+        <div class="itk-message--inner is-error">{{t('The room is not available at the selected time')}}</div>
       </div>
     </div>
     <div class="booking--description">
       {{ t('Below here you can see when the room is already booked. If you cannot find an available time slot, you can try another date or a different room.') }}
     </div>
     <div class="booking--description">
-      {{ t('Select a different time or click directly on an available timeslot below to change your selection.') }}
+      {{ t('Select a different time or click directly on an available time slot below to change your selection.') }}
     </div>
   </div>
   <div data-ng-if="!validating && validBooking">
     <div class="booking--message-wrapper">
       <div class="itk-message">
-        <div class="itk-message--inner is-info">{{ t('The room is free') }}</div>
+        <div class="itk-message--inner is-info">{{ t('The room is available') }}</div>
       </div>
     </div>
     <div class="booking--description">
@@ -82,8 +96,7 @@
       {{ t('Continue to login') }}
     </a>
   </div>
-<!--  data-ng-if="showCalendar" -->
-  <div class="booking--display">
+  <div class="booking--display" data-ng-if="showCalendar">
     <booking-calendar bookings="bookings" class="booking--display-content-wrapper" selected-date="selected.date" selected-resource="selected.resource" selected-start="selected.time.start" selected-end="selected.time.end" interest-period="interestPeriod" disabled="disabled"></booking-calendar>
   </div>
 </div>

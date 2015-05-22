@@ -15,6 +15,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
     $scope.loadingBookings = false;
     $scope.showCalendar = false;
     $scope.errorGettingBookings = false;
+    $scope.errorGettingResources = false;
     $scope.validBooking = false;
     $scope.validating = false;
 
@@ -81,24 +82,21 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
           }
         }
       },
-      function error(error) {
-        // @TODO: Report error properly.
-        console.error(error);
+      function error() {
+        $scope.errorGettingResources = true;
       }
     );
 
     // Interest period to show.
     // @TODO: Make this configurable.
     $scope.interestPeriod = {
-      "start": 6,
-      "end": 24
+      "start": 7,
+      "end": 23
     };
 
     // Disabled intervals.
     // @TODO: Make this configurable.
-    $scope.disabled = [
-      [6,7], [23,24]
-    ];
+    $scope.disabled = [];
 
     /**
      * Return the link.
@@ -252,8 +250,6 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
     /**
      * Impose constraints on start time.
      * - Never more than end, push end time forward.
-     *
-     * @TODO: Should this use moment to do calculations?
      */
     $scope.$watch('selected.time.start', function(val) {
       if (!val) return;
@@ -266,8 +262,6 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
     /**
      * Impose constraints on end time.
      * - Never less than start time, push start time back.
-     *
-     * @TODO: Should this use moment to do calculations?
      */
     $scope.$watch('selected.time.end', function(val) {
       if (!val) return;
@@ -340,9 +334,8 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
 
             validateBooking();
           },
-          function error(reason) {
+          function error() {
             // Still allow the user to make a booking request.
-            // @TODO: Report to the user that it was not possible to get information from exchange about bookings.
             $scope.bookings = [];
 
             $scope.loadingBookings = false;

@@ -65,13 +65,8 @@ class KobaBookingApiController extends ControllerBase {
     // Get proxy service.
     $proxy =  \Drupal::service('koba_booking.api.proxy');
 
-    try {
-      $data = $proxy->getResourceBookings($resource_id, $from, $to);
-      return new JsonResponse($data, 200);
-    }
-    catch (ProxyException $exception) {
-      return new JsonResponse(array('message' => $exception->getMessage(), 500));
-    }
+    $data = $proxy->getResourceBookings($resource_id, $from, $to);
+    return new JsonResponse($data, 200);
   }
 
   /**
