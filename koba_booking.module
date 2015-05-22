@@ -43,6 +43,7 @@ function koba_booking_theme($existing, $type, $theme, $path) {
     'booking_mail_request' => array(
       'template' => 'booking-mail-request',
       'variables' => array(
+        'logo_url' => '',
         'message' => 'Booking request',
         'booking' => array(
           'id' => '',
@@ -67,6 +68,7 @@ function koba_booking_theme($existing, $type, $theme, $path) {
     'booking_mail_accepted' => array(
       'template' => 'booking-mail-accepted',
       'variables' => array(
+        'logo_url' => '',
         'message' => 'Booking accepted',
         'booking' => array(
           'id' => '',
@@ -91,6 +93,7 @@ function koba_booking_theme($existing, $type, $theme, $path) {
     'booking_mail_rejected' => array(
       'template' => 'booking-mail-rejected',
       'variables' => array(
+        'logo_url' => '',
         'message' => 'Booking rejected',
         'booking' => array(
           'id' => '',
@@ -115,6 +118,7 @@ function koba_booking_theme($existing, $type, $theme, $path) {
     'booking_mail_cancelled' => array(
       'template' => 'booking-mail-cancelled',
       'variables' => array(
+        'logo_url' => '',
         'message' => 'Booking cancelled',
         'booking' => array(
           'id' => '',

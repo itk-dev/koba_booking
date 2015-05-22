@@ -200,6 +200,15 @@ class Mailer {
         break;
     }
 
+    $logoPath = \Drupal::service('file_system')->realpath(trim(file_url_transform_relative(theme_get_setting('logo.url')), '/'));
+    if ($logoPath) {
+      $logo = @file_get_contents($logoPath);
+      if ($logo) {
+        $mimetype = \Drupal::service('file.mime_type.guesser')->guess($logoPath);
+        $content['#logo_url'] = 'data:' . $mimetype . ';base64,' . base64_encode($logo);
+      }
+    }
+
     // Extend content with booking information.
     if (!is_null($booking)) {
       $content += $this->generateBookingArray($booking);
