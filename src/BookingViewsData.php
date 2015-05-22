@@ -50,6 +50,8 @@ class BookingViewsData extends EntityViewsData {
     $data['booking']['booking_message']['field']['id'] = 'standard';
     $data['booking']['booking_usage']['field']['id'] = 'standard';
 
+    $data['booking']['booking_hash']['field']['id'] = 'standard';
+
     $data['booking']['name']['field']['id'] = 'standard';
 
     $data['booking']['booking_bulk_form'] = array(
