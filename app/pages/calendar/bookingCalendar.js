@@ -44,8 +44,6 @@ angular.module("kobaApp")
       /**
        * Get bookings from Koba, for a given resource, and time interval.
        *
-       * @TODO: Missing parameter documentation?
-       *
        * @param resource
        *   The resource to get free/busy time for.
        * @param from
@@ -132,8 +130,6 @@ angular.module("kobaApp")
            *     corresponding to whether it is the first, middle, last, first-last (both first and last) of a booking.
            *     used for which class to attach to the time interval.
            *
-           * @TODO: Refactor so this method is called so much.
-           *
            * @param timeInterval
            *   The time interval to evaluate.
            * @returns boolean|string
@@ -144,18 +140,10 @@ angular.module("kobaApp")
 
             if (startTimestamp <= t && endTimestamp > t) {
               if (startTimestamp == t) {
-                if (endTimestamp == t + 30 * 60 * 1000) {
-                  return 'first-last';
-                }
-                else {
-                  return 'first';
-                }
-              }
-              else if (endTimestamp == t + 30 * 60 * 1000) {
-                return 'last';
+                return 'first';
               }
               else {
-                return 'middle';
+                return true;
               }
             } else {
               return false;
@@ -202,9 +190,6 @@ angular.module("kobaApp")
             // Interest period is in hours, so just multiply difference between start and end by two.
             var numberOfIntervals = (scope.interestPeriod.end - scope.interestPeriod.start) * 2;
 
-            // The last time interval's type.
-            var lastType = null;
-
             // Render calendar.
             for (var i = 0; i < numberOfIntervals; i++) {
               var time = moment(scope.selectedDate).add(i * 30, 'minutes').add(scope.interestPeriod.start, 'hours');
@@ -234,25 +219,6 @@ angular.module("kobaApp")
                 }
               }
 
-              // Set text.
-              var text = '';
-              if (!disabled) {
-                if (free) {
-                  // Make sure the text is not repeated.
-                  if (lastType !== 'Free') {
-                    text = 'Free';
-                    lastType = 'Free';
-                  }
-                }
-                else {
-                  // Make sure the text is not repeated.
-                  if (lastType !== 'Booked') {
-                    text = 'Booked';
-                    lastType = 'Booked';
-                  }
-                }
-              }
-
               // Add the time interval.
               scope.timeIntervals.push({
                 'timeFromZero': {
@@ -263,8 +229,7 @@ angular.module("kobaApp")
                 'timeMoment': time,
                 'halfhour': (time.minutes() > 0),
                 'disabled': disabled,
-                'booked': !free,
-                'text': text
+                'booked': !free
               });
             }
           }

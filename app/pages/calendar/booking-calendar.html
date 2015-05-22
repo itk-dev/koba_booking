@@ -11,24 +11,16 @@
        data-ng-repeat="timeInterval in timeIntervals"
        data-ng-if="loaded"
        data-ng-click="select(timeInterval)">
-    <div class="booking--display-row-disable"
-         data-ng-class="{'is-active': timeInterval.disabled }"
-         data-ng-if="timeInterval.disabled">
-    </div>
-    <div class="booking--display-row"
-         data-ng-class="{'is-disabled': timeInterval.disabled, 'is-selected': !timeInterval.disabled && selected(timeInterval)}">
+    <div class="booking--display-row">
       <div class="booking--display-row-inner" data-ng-class="{
-          'is-selected': !timeInterval.disabled && selected(timeInterval),
-          'is-selected-first': !timeInterval.disabled && selected(timeInterval) === 'first',
-          'is-selected-first-last': !timeInterval.disabled && selected(timeInterval) === 'first-last',
-          'is-selected-last': !timeInterval.disabled && selected(timeInterval) === 'last',
-          'is-selected-middle': !timeInterval.disabled && selected(timeInterval) === 'middle',
-          'is-free': !timeInterval.disabled && !timeInterval.booked && !selected(timeInterval),
           'is-booked': !timeInterval.disabled && timeInterval.booked
          }">
-        <div class="booking--display-description" data-ng-if="!timeInterval.disabled">
-          <span class="booking--display-text">{{ selected(timeInterval) === 'first' || selected(timeInterval) === 'first-last' ? t('Your selection') : t(timeInterval.text) }}</span>
+        <div class="booking--display-description">
+          <span class="booking--display-text">{{ t(timeInterval.text) }}</span>
         </div>
+      </div>
+      <div data-ng-if="selected(timeInterval)" class="booking--display-row-your-selection is-selected">
+        {{ (selected(timeInterval) === 'first' || selected(timeInterval) === 'first-last') ? t("Your selection") : '' }}
       </div>
     </div>
   </div>
