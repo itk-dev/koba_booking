@@ -7,9 +7,16 @@
 </div>
 
 <div class="booking--display-content-column">
-  <div class="booking--display-row-wrapper" data-ng-repeat="timeInterval in timeIntervals" data-ng-if="loaded">
-    <div class="booking--display-row-disable" data-ng-class="{'is-active': timeInterval.disabled || timeInterval.booked }" data-ng-if="timeInterval.disabled || timeInterval.booked"></div>
-    <div class="booking--display-row" data-ng-click="!selected(timeInterval) ? select(timeInterval) : noop()" data-ng-class="{'is-disabled': timeInterval.disabled, 'is-selected': !timeInterval.disabled && selected(timeInterval)}">
+  <div class="booking--display-row-wrapper"
+       data-ng-repeat="timeInterval in timeIntervals"
+       data-ng-if="loaded"
+       data-ng-click="select(timeInterval)">
+    <div class="booking--display-row-disable"
+         data-ng-class="{'is-active': timeInterval.disabled }"
+         data-ng-if="timeInterval.disabled">
+    </div>
+    <div class="booking--display-row"
+         data-ng-class="{'is-disabled': timeInterval.disabled, 'is-selected': !timeInterval.disabled && selected(timeInterval)}">
       <div class="booking--display-row-inner" data-ng-class="{
           'is-selected': !timeInterval.disabled && selected(timeInterval),
           'is-selected-first': !timeInterval.disabled && selected(timeInterval) === 'first',
