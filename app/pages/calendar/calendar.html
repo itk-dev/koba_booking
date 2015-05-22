@@ -5,11 +5,11 @@
         <div class="booking--selection-header-date" data-ng-class="{'is-active': pickDate, 'is-inactive' : pickResource || pickTime}" data-ng-click="toggleDate()">1. {{ t('Date') }}</div>
         <div class="booking--selection-display-date">
           <span class="booking--display-date-arrow-left" data-ng-click="prevDate()">
-            <span class="booking--arrow-large is-left" data-ng-include="themePath + '/templates/svgs/arrow.svg'"></span>
+            <span class="booking--arrow is-left" data-ng-include="themePath + '/templates/svgs/arrow.svg'"></span>
           </span>
           <span class="booking--selection-text" data-ng-click="toggleDate()">{{ getSelectedDate() | date: 'd/M-yy' }}</span>
           <span class="booking--display-date-arrow-right" data-ng-click="nextDate()">
-            <span class="booking--arrow-large is-right" data-ng-include="themePath + '/templates/svgs/arrow.svg'"></span>
+            <span class="booking--arrow is-right" data-ng-include="themePath + '/templates/svgs/arrow.svg'"></span>
           </span>
         </div>
         <div class="booking--popup-calendar" data-ng-cloak data-ng-if="pickDate">
@@ -20,7 +20,7 @@
       </div>
       <div class="booking--selection-time-picker">
         <div class="booking--selection-header-time" data-ng-class="{'is-active': pickTime, 'is-inactive' : pickResource || pickDate}"  data-ng-click="toggleTime()">2. {{ t('Time') }}</div>
-        <div class="booking--selection-display-time"><span class="icon--clock is-gray" data-ng-include="themePath + '/templates/svgs/clock-icon.svg'"></span><span data-ng-click="toggleTime()" class="booking--selection-text">{{ getSelectedStartTime() }} - {{ getSelectedEndTime() }}</span></div>
+        <div class="booking--selection-display-time"><span data-ng-click="toggleTime()" class="booking--selection-text">{{ getSelectedStartTime() }} - {{ getSelectedEndTime() }}</span></div>
         <div class="booking--popup-time" data-ng-if="pickTime">
           <div class="booking--popup-inner">
             <div class="booking--popup-content">
@@ -53,22 +53,37 @@
     </div>
   </div>
 
-  <div data-ng-if="loadingBookings">{{ t('Loading bookings.')}}</div>
-  <div data-ng-if="!validating && validBooking === false && selected.date && selected.resource">
-    {{t('Invalid booking')}}
+  <div data-ng-if="loadingBookings">
+    <div class="booking--description">{{ t('Checking if the room is free on the selected date, please wait ....')}}</div>
   </div>
-  <div data-ng-if="!selected.date">{{t('Pick a date.')}}</div>
-  <div data-ng-if="!selected.resource">{{t('Pick a resource.')}}</div>
+  <div data-ng-if="!validating && validBooking === false && selected.date && selected.resource">
+    <div class="booking--message-wrapper">
+      <div class="itk-message">
+        <div class="itk-message--inner is-error">{{t('The room is not avauilable at the selected time')}}</div>
+      </div>
+    </div>
+    <div class="booking--description">
+      {{ t('Below here you can see when the room is already booked. If you cannot find an available time slot, you can try another date or a different room.') }}
+    </div>
+    <div class="booking--description">
+      {{ t('Select a different time or click directly on an available timeslot below to change your selection.') }}
+    </div>
+  </div>
   <div data-ng-if="!validating && validBooking">
+    <div class="booking--message-wrapper">
+      <div class="itk-message">
+        <div class="itk-message--inner is-info">{{ t('The room is free') }}</div>
+      </div>
+    </div>
+    <div class="booking--description">
+      {{ t('To send your booking request you must login with Nemid. When you click on the button you will be redirected to another page where you have login, then you will be directed to a new page where you can complete your booking request.') }}
+    </div>
     <a data-ng-href="{{ getLink() }}" class="booking--add-submit-date">
-      {{ t('Continue') }}
+      {{ t('Continue to login') }}
     </a>
   </div>
-
-  <div class="booking--display" data-ng-if="showCalendar">
-    <div class="booking--display-date">
-      <span class="booking--display-header">{{ getSelectedDate() | date: 'EEEE d/M-yyyy' }}</span>
-    </div>
+<!--  data-ng-if="showCalendar" -->
+  <div class="booking--display">
     <booking-calendar bookings="bookings" class="booking--display-content-wrapper" selected-date="selected.date" selected-resource="selected.resource" selected-start="selected.time.start" selected-end="selected.time.end" interest-period="interestPeriod" disabled="disabled"></booking-calendar>
   </div>
 </div>
