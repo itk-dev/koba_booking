@@ -100,16 +100,16 @@ angular.module("kobaApp")
 
           // Initialize start and end moment objects.
           // Used for comparisons, updated when scope.selectedStart and scope.selectedEnd are updated.
-          var startMoment = parseInt(scope.selectedDate.format('x')) + scope.selectedStart.getTime();
-          var endMoment = parseInt(scope.selectedDate.format('x')) + scope.selectedEnd.getTime();
+          var startTimestamp = parseInt(scope.selectedDate.format('x')) + scope.selectedStart.getTime();
+          var endTimestamp = parseInt(scope.selectedDate.format('x')) + scope.selectedEnd.getTime();
 
           // Watch for changes to selectedStart and selectedEnd.
-          // Update startMoment and endMoment.
+          // Update startTimestamp and endTimestamp.
           scope.$watchGroup(['selectedStart', 'selectedEnd', 'selectedDate'],
             function (val) {
               if (!val) return;
-              startMoment = parseInt(scope.selectedDate.format('x')) + scope.selectedStart.getTime();
-              endMoment = parseInt(scope.selectedDate.format('x')) + scope.selectedEnd.getTime();
+              startTimestamp = parseInt(scope.selectedDate.format('x')) + scope.selectedStart.getTime();
+              endTimestamp = parseInt(scope.selectedDate.format('x')) + scope.selectedEnd.getTime();
             }
           );
 
@@ -141,16 +141,16 @@ angular.module("kobaApp")
           scope.selected = function(timeInterval) {
             var t = parseInt(timeInterval.timeMoment.format('x'));
 
-            if (startMoment <= t && endMoment > t) {
-              if (startMoment == t) {
-                if (endMoment == t + 30 * 60 * 1000) {
+            if (startTimestamp <= t && endTimestamp > t) {
+              if (startTimestamp == t) {
+                if (endTimestamp == t + 30 * 60 * 1000) {
                   return 'first-last';
                 }
                 else {
                   return 'first';
                 }
               }
-              else if (endMoment == t + 30 * 60 * 1000) {
+              else if (endTimestamp == t + 30 * 60 * 1000) {
                 return 'last';
               }
               else {
@@ -169,28 +169,17 @@ angular.module("kobaApp")
            *   The clicked time interval.
            */
           scope.select = function (timeInterval) {
-            if (timeInterval.booked) return;
-            if (startMoment === timeInterval.timeMoment) return;
-            if (endMoment === timeInterval.timeMoment) return;
+            if (timeInterval.disabled) return;
+            if (startTimestamp === timeInterval.timeMoment) return;
 
-            // If not an extension of the current period, select new interval.
-            if (timeInterval.timeMoment < startMoment || timeInterval.timeMoment > endMoment) {
-              scope.selectedStart = new Date(
-                timeInterval.timeFromZero.hours * 60 * 60 * 1000 +
-                timeInterval.timeFromZero.minutes * 60 * 1000
-              );
-              scope.selectedEnd = new Date(
-                timeInterval.timeFromZero.hours * 60 * 60 * 1000 +
-                (timeInterval.timeFromZero.minutes + 30) * 60 * 1000
-              );
-            }
-            // Extend the current period with one more hour.
-            else {
-              scope.selectedEnd = new Date(
-                timeInterval.timeFromZero.hours * 60 * 60 * 1000 +
-                (timeInterval.timeFromZero.minutes + 30) * 60 * 1000
-              );
-            }
+            var difference = endTimestamp - startTimestamp;
+
+            scope.selectedStart = new Date(
+              timeInterval.timeFromZero.hours * 60 * 60 * 1000 +
+              timeInterval.timeFromZero.minutes * 60 * 1000
+            );
+
+            scope.selectedEnd = (new Date(scope.selectedStart.getTime() + difference));
           };
 
           /**
@@ -236,9 +225,9 @@ angular.module("kobaApp")
 
               // See if the time interval is free.
               var free = true;
-              for (j = 0; j < bookings.length; j++) {
-                if (timeDate.getTime() >= bookings[j].start * 1000 &&
-                  timeDate.getTime() < bookings[j].end * 1000) {
+              for (j = 0; j < scope.bookings.length; j++) {
+                if (timeDate.getTime() >= scope.bookings[j].start * 1000 &&
+                  timeDate.getTime() < scope.bookings[j].end * 1000) {
                   free = false;
                   break;
                 }
@@ -279,42 +268,19 @@ angular.module("kobaApp")
             }
           }
 
-          // Watch for changes to selectedDate and selectedResource.
-          // Update the calendar view accordingly.
-          scope.$watchGroup(['selectedDate', 'selectedResource'],
+          // Watch for changes to bookings
+          scope.$watch('bookings',
             function (val) {
               if (!val) return;
-              if (!scope.selectedResource || !scope.selectedDate) return;
 
               // Indicate the the calendar has not been loaded.
               scope.loaded = false;
 
-              // Get bookings for the resource and date.
-              kobaFactory.getBookings(
-                scope.selectedResource.mail,
-                moment(scope.selectedDate).startOf('day').format('X'),
-                moment(scope.selectedDate).endOf('day').format('X')
-              ).then(
-                function success(data) {
-                  bookings = data;
+              // Render timeIntervals for calendar view.
+              renderCalendar();
 
-                  // Render timeIntervals for calendar view.
-                  renderCalendar();
-
-                  // Calendar done loading.
-                  scope.loaded = true;
-                },
-                function error(reason) {
-                  // Still allow the user to make a booking request.
-                  // @TODO: Report to the user that the it was not possible to get information from exchange about bookings.
-                  bookings = [];
-
-                  // Render timeIntervals for calendar view.
-                  renderCalendar();
-
-                  scope.loaded = true;
-                }
-              );
+              // Calendar done loading.
+              scope.loaded = true;
             }
           );
         },
