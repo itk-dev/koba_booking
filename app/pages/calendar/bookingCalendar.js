@@ -169,6 +169,7 @@ angular.module("kobaApp")
            *   The clicked time interval.
            */
           scope.select = function (timeInterval) {
+            if (timeInterval.disabled) return;
             if (startTimestamp === timeInterval.timeMoment) return;
 
             var difference = endTimestamp - startTimestamp;
