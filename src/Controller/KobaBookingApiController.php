@@ -34,8 +34,8 @@ class KobaBookingApiController extends ControllerBase {
     // Get all rooms that is connected to a koba resource.
     $query = \Drupal::entityQuery('node')
       ->condition('type', 'room')
-      ->condition('status', 1);
-//      ->condition('field_resource', '_none', '<>');
+      ->condition('status', 1)
+      ->condition('field_resource', '_none', '<>');
     $nids = $query->execute();
 
     // Load nodes and build response.
@@ -64,10 +64,10 @@ class KobaBookingApiController extends ControllerBase {
     $to = $request->query->get('to');
 
     // Get proxy service.
-    //$proxy =  \Drupal::service('koba_booking.api.proxy');
+    $proxy =  \Drupal::service('koba_booking.api.proxy');
 
-    //$data = $proxy->getResourceBookings($resource_id, $from, $to);
-    return new JsonResponse(array(), 200);
+    $data = $proxy->getResourceBookings($resource_id, $from, $to);
+    return new JsonResponse($data, 200);
   }
 
   /**
