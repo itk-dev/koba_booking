@@ -31,6 +31,9 @@ class KobaBookingController extends ControllerBase  {
   public function calendarPage() {
     $defaults = \Drupal::service('session')->get('koba_booking_request');
 
+    $generator = \Drupal::urlGenerator();
+    $url = $generator->generateFromRoute('koba_booking.api.login');
+
     $build = array(
       '#type' => 'markup',
       '#theme' => 'booking_calendar_page',
@@ -40,7 +43,7 @@ class KobaBookingController extends ControllerBase  {
         ),
         'drupalSettings' => array(
           'koba_booking' => array(
-            'login_path' => Url::fromRoute('koba_booking.api.login'),
+            'login_path' => $url = $generator->generateFromRoute('koba_booking.api.login'),
             'module_path' => \Drupal::moduleHandler()->getModule('koba_booking')->getPath(),
             'theme_path' => \Drupal::theme()->getActiveTheme()->getPath(),
             'app_dir' => drupal_get_path('module', 'koba_booking') . '/js/app',
