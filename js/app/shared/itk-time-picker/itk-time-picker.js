@@ -20,18 +20,23 @@ angular.module('itkTimePicker', [])
       },
       link: function (scope) {
         /**
-         * @TODO: Missing function description
+         * Select the next time based on step and prevent overflow into next day.
          */
         scope.inc = function inc() {
           var newTime = scope.time.getTime() + scope.step * 60 * 1000;
-          if (newTime > 24 * 60 * 60 * 1000) {
-            newTime = 24 * 60 * 60 * 1000;
+
+          // Get end of day to ensure that time don't goes into the next day.
+          var endOfDay = new Date();
+          endOfDay.setHours(23,59,59,999);
+
+          // Only set new selection, if not into next day.
+          if (newTime < endOfDay.getTime()) {
+            scope.time = new Date(newTime);
           }
-          scope.time = new Date(newTime);
         };
 
         /**
-         * @TODO: Missing function description
+         * Go one step down on the selected time.
          */
         scope.dec = function dec() {
           var newTime = scope.time.getTime() - scope.step * 60 * 1000;
@@ -42,24 +47,26 @@ angular.module('itkTimePicker', [])
         };
 
         /**
-         * @TODO: Missing function description
+         * Get current selected hours.
          */
         scope.getHours = function getHours() {
-          var hours = "" + scope.time.getUTCHours();
+          var hours = "" + scope.time.getHours();
           if (hours.length === 1) {
             hours = "0" + hours;
           }
+
           return hours;
         };
 
         /**
-         * @TODO: Missing function description
+         * Get currently selected minutes.
          */
         scope.getMinutes = function getMinutes() {
-          var minutes = "" + scope.time.getUTCMinutes();
+          var minutes = "" + scope.time.getMinutes();
           if (minutes.length === 1) {
             minutes = "0" + minutes;
           }
+
           return minutes;
         };
 
@@ -68,10 +75,10 @@ angular.module('itkTimePicker', [])
           var date = new Date();
 
           // Set current time plus one hour into the feature.
-          date.setUTCHours(date.getHours() + Math.round(date.getMinutes()/60) + 1);
+          date.setHours(date.getHours() + Math.round(date.getMinutes()/60) + 1);
 
           // If offset is set, set the minutes to it.
-          date.setMinutes(scope.offset ? scope.offset : 0);
+          date.setMinutes(scope.offset ? scope.offset : 0, 0, 0);
           scope.time = date;
         }
 

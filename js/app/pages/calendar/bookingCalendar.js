@@ -106,7 +106,10 @@ angular.module("kobaApp")
           // Update startTimestamp and endTimestamp.
           scope.$watchGroup(['selectedStart', 'selectedEnd', 'selectedDate'],
             function (val) {
-              if (!val) return;
+              if (!val) {
+                return;
+              }
+
               startTimestamp = parseInt(scope.selectedDate.format('x')) + scope.selectedStart.getTime();
               endTimestamp = parseInt(scope.selectedDate.format('x')) + scope.selectedEnd.getTime();
             }
