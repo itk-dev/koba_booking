@@ -6,9 +6,13 @@
 /**
  * CalendarController
  * belongs to "kobaApp" module
+ *
+ * @TODO: Move all the init scope code into init function to bette structure the code.
  */
 angular.module('kobaApp').controller("CalendarController", ['$scope', '$window', 'kobaFactory',
   function ($scope, $window, kobaFactory) {
+    "use strict";
+
     var selectedResourceIndex = 0;
 
     $scope.bookings = [];
@@ -20,7 +24,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
     $scope.validating = false;
 
     /**
-     * Expose the Drupal.t() function to angularjs templates.
+     * Expose the Drupal.t() function to angular templates.
      *
      * @param str
      *   The string to translate.
@@ -35,7 +39,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
     $scope.themePath = '/' + drupalSettings['koba_booking']['theme_path'];
 
     // Defaults: Start of today
-    // For time we use a regular date to integrate with timepicker.
+    // For time we use a regular date to integrate with time picker.
     $scope.selected = {
       "date": moment().startOf('day'),
       "time": {
@@ -100,8 +104,6 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
 
     /**
      * Return the link.
-     *
-     * @TODO: Avoid hardcoded link
      */
     $scope.getLink = function getLink() {
       if (!$scope.selected.resource) {
@@ -111,6 +113,9 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       var from = moment($scope.selected.date).add($scope.selected.time.start.getTime(), 'milliseconds');
       var to = moment($scope.selected.date).add($scope.selected.time.end.getTime(), 'milliseconds');
 
+      /**
+       * @TODO: Avoid hardcoded link
+       */
       return encodeURI('/booking/wayf/login?res=' + $scope.selected.resource.id + '&from=' + from.format('X') + '&to=' + to.format('X'));
     };
 
@@ -249,7 +254,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
 
     /**
      * Impose constraints on start time.
-     * - Never more than end, push end time forward.
+     *  - Never more than end, push end time forward.
      */
     $scope.$watch('selected.time.start', function(val) {
       if (!val) return;
@@ -261,7 +266,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
 
     /**
      * Impose constraints on end time.
-     * - Never less than start time, push start time back.
+     *  - Never less than start time, push start time back.
      */
     $scope.$watch('selected.time.end', function(val) {
       if (!val) return;
@@ -271,6 +276,9 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       }
     });
 
+    /**
+     * @TODO: Missing function description.
+     */
     function validateBooking() {
       if (!$scope.selected.resource || !$scope.selected.date) {
         $scope.validating = false;
@@ -300,6 +308,9 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       $scope.validating = false;
     }
 
+    /**
+     * @TODO: Put the watch statements together and explain what they do (what module change they react to and why).
+     */
     $scope.$watchGroup(['selected.time.start', 'selected.time.end'],
       function(val) {
         if (!val) return;

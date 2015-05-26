@@ -1,13 +1,15 @@
 /**
  * @file
- * Contains an angular wrapper for the datepicker jquery plugin.
+ * Contains an angular wrapper for the date picker jquery plugin.
  */
 
 /**
- * Angular timepicker
+ * Angular time picker.
  */
 angular.module('itkTimePicker', [])
   .directive('itkTimePicker', function () {
+    "use strict";
+
     return {
       restrict: 'E',
       require: '',
@@ -16,14 +18,21 @@ angular.module('itkTimePicker', [])
         "step": "="
       },
       link: function (scope) {
-        scope.inc = function() {
+        /**
+         * @TODO: Missing function description
+         */
+        scope.inc = function inc() {
           var newTime = scope.time.getTime() + scope.step * 60 * 1000;
           if (newTime > 24 * 60 * 60 * 1000) {
             newTime = 24 * 60 * 60 * 1000;
           }
           scope.time = new Date(newTime);
         };
-        scope.dec = function() {
+
+        /**
+         * @TODO: Missing function description
+         */
+        scope.dec = function dec() {
           var newTime = scope.time.getTime() - scope.step * 60 * 1000;
           if (newTime < 0) {
             newTime = 0;
@@ -31,7 +40,10 @@ angular.module('itkTimePicker', [])
           scope.time = new Date(newTime);
         };
 
-        scope.getHours = function() {
+        /**
+         * @TODO: Missing function description
+         */
+        scope.getHours = function getHours() {
           var hours = "" + scope.time.getUTCHours();
           if (hours.length === 1) {
             hours = "0" + hours;
@@ -39,16 +51,21 @@ angular.module('itkTimePicker', [])
           return hours;
         };
 
-        scope.getMinutes = function() {
+        /**
+         * @TODO: Missing function description
+         */
+        scope.getMinutes = function getMinutes() {
           var minutes = "" + scope.time.getUTCMinutes();
           if (minutes.length === 1) {
             minutes = "0" + minutes;
           }
           return minutes;
-        }
+        };
+
         scope.modulePath = '/' + drupalSettings['koba_booking']['module_path'];
         scope.themePath = '/' + drupalSettings['koba_booking']['theme_path'];
+        scope.app_dir = '/' + drupalSettings['koba_booking']['app_dir'];
       },
-      templateUrl: '/modules/koba_booking/app/shared/itk-time-picker/template/itk-time-picker.html'
-    }
+      templateUrl: drupalSettings['koba_booking']['app_dir'] + '/shared/itk-time-picker/template/itk-time-picker.html'
+    };
   });

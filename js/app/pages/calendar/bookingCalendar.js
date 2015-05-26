@@ -113,7 +113,7 @@ angular.module("kobaApp")
           );
 
           /**
-           * Expose the Drupal.t() function to angularjs templates.
+           * Expose the Drupal.t() function to angular templates.
            *
            * @param str
            *   The string to translate.
@@ -130,45 +130,53 @@ angular.module("kobaApp")
            *     corresponding to whether it is the first, middle, last, first-last (both first and last) of a booking.
            *     used for which class to attach to the time interval.
            *
+           *     @TODO: It dose only return 'first' and TRUE/FALSE?
+           *
            * @param timeInterval
            *   The time interval to evaluate.
            * @returns boolean|string
-           *   The result of the evaluation.
+           *   The result of the evaluation (@TODO: WHICH CAN BE??).
            */
           scope.selected = function(timeInterval) {
-            var t = parseInt(timeInterval.timeMoment.format('x'));
+            var selectedTime = parseInt(timeInterval.timeMoment.format('x'));
 
-            if (startTimestamp <= t && endTimestamp > t) {
-              if (startTimestamp == t) {
+            if (startTimestamp <= selectedTime && endTimestamp > selectedTime) {
+              if (startTimestamp === selectedTime) {
                 return 'first';
               }
               else {
                 return true;
               }
-            } else {
+            }
+            else {
               return false;
             }
           };
 
           /**
            * Extend the current time interval or move to another time interval.
+           *
            * Select a time interval and 1 hour forward.
            *
            * @param timeInterval
            *   The clicked time interval.
            */
           scope.select = function (timeInterval) {
-            if (timeInterval.disabled) return;
-            if (startTimestamp === timeInterval.timeMoment) return;
+            /**
+             * Why ?
+             */
+            if (timeInterval.disabled || startTimestamp === timeInterval.timeMoment) {
+              return;
+            }
 
-            var difference = endTimestamp - startTimestamp;
-
+            /**
+             * @TODO: Explain the math behind this ?
+             */
             scope.selectedStart = new Date(
-              timeInterval.timeFromZero.hours * 60 * 60 * 1000 +
-              timeInterval.timeFromZero.minutes * 60 * 1000
+              timeInterval.timeFromZero.hours * 60 * 60 * 1000 + timeInterval.timeFromZero.minutes * 60 * 1000
             );
 
-            scope.selectedEnd = (new Date(scope.selectedStart.getTime() + difference));
+            scope.selectedEnd = (new Date(scope.selectedStart.getTime() + (endTimestamp - startTimestamp)));
           };
 
           /**
@@ -234,7 +242,7 @@ angular.module("kobaApp")
             }
           }
 
-          // Watch for changes to bookings
+          // Watch for changes to bookings.
           scope.$watch('bookings',
             function (val) {
               if (!val) return;
@@ -250,7 +258,7 @@ angular.module("kobaApp")
             }
           );
         },
-        templateUrl: '/modules/koba_booking/app/pages/calendar/booking-calendar.html'
+        templateUrl: '/modules/koba_booking/js/app/pages/calendar/booking-calendar.html'
       };
     }
   ]);
