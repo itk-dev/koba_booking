@@ -249,14 +249,16 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      *   String representation of the selected start time.
      */
     $scope.getSelectedStartTime = function() {
-      var hours = "" + $scope.selected.time.start.getUTCHours();
+      var hours = "" + $scope.selected.time.start.getHours();
       if (hours.length === 1) {
         hours = "0" + hours;
       }
-      var minutes = "" + $scope.selected.time.start.getUTCMinutes();
+
+      var minutes = "" + $scope.selected.time.start.getMinutes();
       if (minutes.length === 1) {
         minutes = "0" + minutes;
       }
+
       return hours + ":" + minutes;
     };
 
@@ -267,14 +269,16 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      *   String representation of the selected end time.
      */
     $scope.getSelectedEndTime = function getSelectedEndTime() {
-      var hours = "" + $scope.selected.time.end.getUTCHours();
+      var hours = "" + $scope.selected.time.end.getHours();
       if (hours.length === 1) {
         hours = "0" + hours;
       }
-      var minutes = "" + $scope.selected.time.end.getUTCMinutes();
+
+      var minutes = "" + $scope.selected.time.end.getMinutes();
       if (minutes.length === 1) {
         minutes = "0" + minutes;
       }
+
       return hours + ":" + minutes;
     };
 
