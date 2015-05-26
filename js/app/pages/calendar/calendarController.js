@@ -29,24 +29,12 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       $scope.validBooking = false;
       $scope.validating = false;
 
-      /**
-       * Expose the Drupal.t() function to angular templates.
-       *
-       * @param str
-       *   The string to translate.
-       * @returns string
-       *   The translated string.
-       */
-      $scope.t = function(str) {
-        return $window.Drupal.t(str);
-      };
-
+      // Set paths from the backend.
       $scope.modulePath = '/' + drupalSettings['koba_booking']['module_path'];
       $scope.themePath = '/' + drupalSettings['koba_booking']['theme_path'];
       $scope.loginPath = drupalSettings['koba_booking']['login_path'];
 
-      // Defaults: Start of today
-      // For time we use a regular date to integrate with time picker.
+      // Set default start values (non-selected).
       $scope.selected = {
         "date": null,
         "time": {
@@ -150,6 +138,18 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
           validateBooking();
         }
       );
+
+      /**
+       * Expose the Drupal.t() function to angular templates.
+       *
+       * @param str
+       *   The string to translate.
+       * @returns string
+       *   The translated string.
+       */
+      $scope.t = function(str) {
+        return $window.Drupal.t(str);
+      };
 
       // Watch for changes to selectedDate and selectedResource.
       // Update the calendar view accordingly.
@@ -291,14 +291,6 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       return null;
     };
 
-
-    /**
-     * Show/hide time picker.
-     */
-    $scope.toggleTime = function toggleTime() {
-      $scope.pickTime = !$scope.pickTime;
-    };
-
     /**
      * Go to previous date.
      *   Not before today.
@@ -341,9 +333,17 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      */
     $scope.toggleDate = function toggleDate() {
       $scope.pickDate = !$scope.pickDate;
-      $scope.dateOpen = true;
-      $scope.timeOpen = false;
-      $scope.resourceOpen = false;
+      $scope.pickResource = false;
+      $scope.pickTime = false;
+    };
+
+    /**
+     * Show/hide time picker.
+     */
+    $scope.toggleTime = function toggleTime() {
+      $scope.pickTime = !$scope.pickTime;
+      $scope.pickDate = false;
+      $scope.pickResource = false;
     };
 
     /**
@@ -351,9 +351,8 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      */
     $scope.toggleResource = function toggleResource() {
       $scope.pickResource = !$scope.pickResource;
-      $scope.dateOpen = false;
-      $scope.timeOpen = false;
-      $scope.resourceOpen = true;
+      $scope.pickDate = false;
+      $scope.pickTime = false;
     };
 
     /**
