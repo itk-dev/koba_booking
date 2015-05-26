@@ -29,10 +29,14 @@ class KobaBookingController extends ControllerBase  {
    *   Render array for calendar page.
    */
   public function calendarPage() {
+    // Get session values from previous step.
     $defaults = \Drupal::service('session')->get('koba_booking_request');
 
-    $generator = \Drupal::urlGenerator();
-    $url = $generator->generateFromRoute('koba_booking.api.login');
+    // Check that the session data is not expired.
+    if ($defaults['expire'] < REQUEST_TIME) {
+      $defaults = array();
+      \Drupal::service('session')->remove('koba_booking_request');
+    }
 
     $build = array(
       '#type' => 'markup',
@@ -43,7 +47,7 @@ class KobaBookingController extends ControllerBase  {
         ),
         'drupalSettings' => array(
           'koba_booking' => array(
-            'login_path' => $url = $generator->generateFromRoute('koba_booking.api.login'),
+            'login_path' => \Drupal::urlGenerator()->generateFromRoute('koba_booking.api.login'),
             'module_path' => \Drupal::moduleHandler()->getModule('koba_booking')->getPath(),
             'theme_path' => \Drupal::theme()->getActiveTheme()->getPath(),
             'app_dir' => drupal_get_path('module', 'koba_booking') . '/js/app',

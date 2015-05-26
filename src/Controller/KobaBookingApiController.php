@@ -148,17 +148,21 @@ class KobaBookingApiController extends ControllerBase {
      * @TODO: Validate the request.
      */
 
-    $data = $defaults = \Drupal::service('session')->get('koba_booking_request');
+    $data = \Drupal::service('session')->get('koba_booking_request');
     if (empty($data)) {
       // Create new data array, as nothing was store in current session.
       $data = array();
     }
+
+    // Get configuration (session expire).
+    $config = \Drupal::config('koba_booking.settings');
 
     // Set newest booking information.
     $data = array(
       'resource' => $resource_id,
       'from' => $from,
       'to' => $to,
+      'expire' => REQUEST_TIME + $config->get('koba_booking.session.expire'),
     ) + $data;
 
     // Store information in session.

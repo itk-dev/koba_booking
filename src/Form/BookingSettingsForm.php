@@ -175,12 +175,21 @@ class BookingSettingsForm extends FormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Set API Key'),
       '#default_value' => $config->get('koba_booking.api_key'),
+      '#required' => TRUE,
     );
 
     $form['koba_settings']['path'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Set the path to KOBA'),
       '#default_value' => $config->get('koba_booking.path'),
+      '#required' => TRUE,
+    );
+
+    $form['koba_settings']['expire'] = array(
+      '#type' => 'textfield',
+      '#title' => $this->t('Expire session data.'),
+      '#default_value' => $config->get('koba_booking.session.expire'),
+      '#required' => TRUE,
     );
 
     $form['submit'] = array(
@@ -241,6 +250,7 @@ class BookingSettingsForm extends FormBase {
       ->set('koba_booking.last_booking_date', $last_booking_date)
       ->set('koba_booking.api_key', $form_state->getValue('api_key'))
       ->set('koba_booking.path', $form_state->getValue('path'))
+      ->set('koba_booking.session.expire', $form_state->getValue('expire'))
       ->set('koba_booking.add_booking_header', $form_state->getValue('add_booking_header'))
       ->save();
   }
