@@ -198,18 +198,10 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
         return null;
       }
 
-      // Build timestamps to send to the server based on the date picker and time picker selector. The first issue is
-      // that the time picker returns date information for the time selected today, while we want to combine the date
-      // select and only get the time selected (without the date from the time picker).
-      var from = $scope.selected.date;
-      var fromTime = $scope.selected.time.start;
-      from.setHours(fromTime.getHours(), fromTime.getMinutes(), 0, 0);
+      var times = getSelecteDateTimesAsUnixTimestamp();
+      console.log(times);
 
-      var to = $scope.selected.date;
-      var toTime = $scope.selected.time.end;
-      to.setHours(toTime.getHours(), toTime.getMinutes(), 0, 0);
-
-      return encodeURI($scope.loginPath + '?res=' + $scope.selected.resource.id + '&from=' + Math.floor(from.getTime() / 1000) + '&to=' + Math.floor(to.getTime() / 1000));
+      return encodeURI($scope.loginPath + '?res=' + $scope.selected.resource.id + '&from=' + times.from + '&to=' + times.to);
     };
 
     /**
@@ -365,23 +357,50 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
     };
 
     /**
-     * @TODO: Missing function description.
+     * Get current date/time selections as unix timestamps.
+     *
+     * Build timestamps to send to the server based on the date picker and time picker selector. The first issue is
+     * that the time picker returns date information for the time selected today, while we want to combine the date
+     * select and only get the time selected (without the date from the time picker).
+     *
+     * @returns {{from: number, to: number}}
+     */
+    function getSelecteDateTimesAsUnixTimestamp() {
+      var from = new Date($scope.selected.date.toDate().getTime());
+      var fromTime = $scope.selected.time.start;
+      from.setHours(fromTime.getHours(), fromTime.getMinutes(), 0, 0);
+
+      console.log(from);
+
+      var to = new Date($scope.selected.date.toDate().getTime());
+      var toTime = $scope.selected.time.end;
+      to.setHours(toTime.getHours(), toTime.getMinutes(), 0, 0);
+
+      console.log(to);
+
+      return {
+        "from": Math.floor(from.getTime() / 1000),
+        "to": Math.floor(to.getTime() / 1000)
+      };
+    }
+
+    /**
+     * Validate the current selection.
      */
     function validateBooking() {
-      if (!$scope.selected.resource || !$scope.selected.date) {
+      if (!$scope.selected.resource || !$scope.selected.date || !$scope.selected.time.start) {
         $scope.validating = false;
         return;
       }
 
-      var from = parseInt(moment($scope.selected.date).add($scope.selected.time.start.getTime(), 'milliseconds').format('X'));
-      var to = parseInt(moment($scope.selected.date).add($scope.selected.time.end.getTime(), 'milliseconds').format('X'));
+      var times = getSelecteDateTimesAsUnixTimestamp();
 
       var validBooking = true;
 
       for (var i = 0; i < $scope.bookings.length; i++) {
         var booking = $scope.bookings[i];
-        if (booking.start >= from && booking.start < to ||
-          booking.end <= to && booking.end > from) {
+        if (booking.start >= times.from && booking.start < times.to ||
+          booking.end <= times.to && booking.end > times.from) {
           validBooking = false;
           break;
         }
@@ -396,7 +415,9 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       $scope.validating = false;
     }
 
-    // Get the show on the road.
+    /**
+     * Get the show on the road.
+     */
     init();
   }
 ]);
