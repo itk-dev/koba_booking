@@ -12,6 +12,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\koba_booking\Exception\ProxyException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
@@ -85,7 +86,7 @@ class ResourceSelectWidget extends WidgetBase {
       }
 
       // Get proxy service.
-      $proxy =  \Drupal::service('koba_booking.api.proxy');
+      $proxy = \Drupal::service('koba_booking.api.proxy');
 
       try {
         // Get resources from the proxy.
@@ -94,7 +95,7 @@ class ResourceSelectWidget extends WidgetBase {
           $options[$resource->mail] = $resource->name;
         }
       }
-      catch (RequestException $exception) {
+      catch (ProxyException $exception) {
         drupal_set_message(t($exception->getMessage()), 'error');
       }
 
