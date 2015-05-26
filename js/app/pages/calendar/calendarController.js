@@ -43,6 +43,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
 
       $scope.modulePath = '/' + drupalSettings['koba_booking']['module_path'];
       $scope.themePath = '/' + drupalSettings['koba_booking']['theme_path'];
+      $scope.loginPath = '/' + drupalSettings['koba_booking']['login_path'];
 
       // Defaults: Start of today
       // For time we use a regular date to integrate with time picker.
@@ -197,13 +198,18 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
         return null;
       }
 
-      var from = moment($scope.selected.date).add($scope.selected.time.start.getTime(), 'milliseconds');
-      var to = moment($scope.selected.date).add($scope.selected.time.end.getTime(), 'milliseconds');
+      // Build timestamps to send to the server based on the date picker and time picker selector. The first issue is
+      // that the time picker returns date information for the time selected today, while we want to combine the date
+      // select and only get the time selected (without the date from the time picker).
+      var from = $scope.selected.date;
+      var fromTime = $scope.selected.time.start;
+      from.setHours(fromTime.getHours(), fromTime.getMinutes(), 0, 0);
 
-      /**
-       * @TODO: Avoid hardcoded link
-       */
-      return encodeURI('/booking/wayf/login?res=' + $scope.selected.resource.id + '&from=' + from.format('X') + '&to=' + to.format('X'));
+      var to = $scope.selected.date;
+      var toTime = $scope.selected.time.end;
+      to.setHours(toTime.getHours(), toTime.getMinutes(), 0, 0);
+
+      return encodeURI($scope.loginPath + '?res=' + $scope.selected.resource.id + '&from=' + Math.floor(from.getTime() / 1000) + '&to=' + Math.floor(to.getTime() / 1000));
     };
 
     /**

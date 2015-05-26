@@ -40,6 +40,7 @@ class KobaBookingController extends ControllerBase  {
         ),
         'drupalSettings' => array(
           'koba_booking' => array(
+            'login_path' => Url::fromRoute('koba_booking.api.login'),
             'module_path' => \Drupal::moduleHandler()->getModule('koba_booking')->getPath(),
             'theme_path' => \Drupal::theme()->getActiveTheme()->getPath(),
             'app_dir' => drupal_get_path('module', 'koba_booking') . '/js/app',
