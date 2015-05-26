@@ -43,13 +43,14 @@ class KobaBookingController extends ControllerBase  {
             'module_path' => \Drupal::moduleHandler()->getModule('koba_booking')->getPath(),
             'theme_path' => \Drupal::theme()->getActiveTheme()->getPath(),
             'app_dir' => drupal_get_path('module', 'koba_booking') . '/js/app',
-            'resource' => $defaults['resource'],
-            'from' => $defaults['from'],
-            'to' => $defaults['to'],
+            'resource' => isset($defaults['resource']) ? $defaults['resource'] : NULL,
+            'from' => isset($defaults['from']) ? $defaults['from'] : NULL,
+            'to' => isset($defaults['to']) ? $defaults['to'] : NULL,
           ),
         ),
       ),
     );
+
     return $build;
   }
 

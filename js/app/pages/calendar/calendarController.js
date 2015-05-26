@@ -15,98 +15,185 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
 
     var selectedResourceIndex = 0;
 
-    $scope.bookings = [];
-    $scope.loadingBookings = false;
-    $scope.showCalendar = false;
-    $scope.errorGettingBookings = false;
-    $scope.errorGettingResources = false;
-    $scope.validBooking = false;
-    $scope.validating = false;
-
     /**
-     * Expose the Drupal.t() function to angular templates.
+     * Initialize the scope.
      *
-     * @param str
-     *   The string to translate.
-     * @returns string
-     *   The translated string.
+     * It's called at the bottom of this scope/file.
      */
-    $scope.t = function(str) {
-      return $window.Drupal.t(str);
-    };
+    function init() {
+      $scope.bookings = [];
+      $scope.loadingBookings = false;
+      $scope.showCalendar = false;
+      $scope.errorGettingBookings = false;
+      $scope.errorGettingResources = false;
+      $scope.validBooking = false;
+      $scope.validating = false;
 
-    $scope.modulePath = '/' + drupalSettings['koba_booking']['module_path'];
-    $scope.themePath = '/' + drupalSettings['koba_booking']['theme_path'];
+      /**
+       * Expose the Drupal.t() function to angular templates.
+       *
+       * @param str
+       *   The string to translate.
+       * @returns string
+       *   The translated string.
+       */
+      $scope.t = function(str) {
+        return $window.Drupal.t(str);
+      };
 
-    // Defaults: Start of today
-    // For time we use a regular date to integrate with time picker.
-    $scope.selected = {
-      "date": moment().startOf('day'),
-      "time": {
-        "start": (new Date(9 * 60 * 60 * 1000)),
-        "end": (new Date(10 * 60 * 60 * 1000))
-      },
-      "resource": null
-    };
+      $scope.modulePath = '/' + drupalSettings['koba_booking']['module_path'];
+      $scope.themePath = '/' + drupalSettings['koba_booking']['theme_path'];
 
-    // Get booking information from drupalSettings.
-    var initBooking = {
-      "resource": drupalSettings['koba_booking']['resource'],
-      "from": drupalSettings['koba_booking']['from'],
-      "to": drupalSettings['koba_booking']['to']
-    };
+      // Defaults: Start of today
+      // For time we use a regular date to integrate with time picker.
+      $scope.selected = {
+        "date": null,
+        "time": {
+          "start": null,
+          "end": null
+        },
+        "resource": null
+      };
 
-    // Initialise selected date and start/end time, if set in drupalSettings.
-    if (initBooking.from && initBooking.to) {
-      $scope.selected.date = moment(initBooking.from * 1000).startOf('day');
+      // Get booking information from drupalSettings.
+      var initBooking = {
+        "resource": drupalSettings['koba_booking']['resource'],
+        "from": drupalSettings['koba_booking']['from'],
+        "to": drupalSettings['koba_booking']['to']
+      };
 
-      // Make sure the date from the cookie is not from before today.
-      var startToday = moment().startOf('day');
-      if ($scope.selected.date < startToday) {
-        $scope.selected.date = startToday;
-      }
+      // Initialise selected date and start/end time, if set in drupalSettings.
+      if (initBooking.from && initBooking.to) {
+        $scope.selected.date = moment(initBooking.from * 1000).startOf('day');
 
-      $scope.selected.time.start = new Date((initBooking.from - parseInt($scope.selected.date.format('X'))) * 1000);
-      $scope.selected.time.end = new Date((initBooking.to - parseInt($scope.selected.date.format('X'))) * 1000);
-    }
-
-    // Load available resources.
-    $scope.resources = [];
-    kobaFactory.getResources().then(
-      function success(data) {
-        selectedResourceIndex = 0;
-        $scope.resources = data;
-
-        // Find previously selected resource.
-        for (var i = 0; i < $scope.resources.length; i++) {
-          if ($scope.resources[i].id === initBooking.resource) {
-            $scope.selected.resource = $scope.resources[i];
-            selectedResourceIndex = i;
-            break;
-          }
+        // Make sure the date from the cookie is not from before today.
+        var startToday = moment().startOf('day');
+        if ($scope.selected.date < startToday) {
+          $scope.selected.date = startToday;
         }
-      },
-      function error() {
-        $scope.errorGettingResources = true;
+
+        $scope.selected.time.start = new Date((initBooking.from - parseInt($scope.selected.date.format('X'))) * 1000);
+        $scope.selected.time.end = new Date((initBooking.to - parseInt($scope.selected.date.format('X'))) * 1000);
       }
-    );
 
-    // Interest period to show.
-    // @TODO: Make this configurable.
-    $scope.interestPeriod = {
-      "start": 7,
-      "end": 23
-    };
+      // Load available resources.
+      $scope.resources = [];
+      kobaFactory.getResources().then(
+        function success(data) {
+          $scope.resources = data;
 
-    // Disabled intervals.
-    // @TODO: Make this configurable.
-    $scope.disabled = [];
+          // Find previously selected resource.
+          for (var i = 0; i < $scope.resources.length; i++) {
+            if ($scope.resources[i].id === initBooking.resource) {
+              $scope.selected.resource = $scope.resources[i];
+              selectedResourceIndex = i;
+              break;
+            }
+          }
+        },
+        function error() {
+          $scope.errorGettingResources = true;
+        }
+      );
+
+      // Interest period to show.
+      // @TODO: Make this configurable.
+      $scope.interestPeriod = {
+        "start": 7,
+        "end": 23
+      };
+
+      // Disabled intervals.
+      // @TODO: Make this configurable.
+      $scope.disabled = [];
+
+      /**
+       * Impose constraints on start time.
+       *  - Never more than end, push end time forward.
+       */
+      $scope.$watch('selected.time.start', function(val) {
+        if (!val) {
+          return;
+        }
+
+        if ($scope.selected.time.end <= $scope.selected.time.start) {
+          $scope.selected.time.end = new Date($scope.selected.time.start.getTime() + 30 * 60 * 1000);
+        }
+      });
+
+      /**
+       * Impose constraints on end time.
+       *  - Never less than start time, push start time back.
+       */
+      $scope.$watch('selected.time.end', function(val) {
+        if (!val) {
+          return;
+        }
+
+        if ($scope.selected.time.end <= $scope.selected.time.start) {
+          $scope.selected.time.start = new Date($scope.selected.time.end.getTime() - 30 * 60 * 1000);
+        }
+      });
+
+      /**
+       * @TODO: Put the watch statements together and explain what they do (what module change they react to and why).
+       */
+      $scope.$watchGroup(['selected.time.start', 'selected.time.end'],
+        function(val) {
+          if (!val) {
+            return;
+          }
+
+          $scope.validating = true;
+
+          validateBooking();
+        }
+      );
+
+      // Watch for changes to selectedDate and selectedResource.
+      // Update the calendar view accordingly.
+      $scope.$watchGroup(['selected.date', 'selected.resource'],
+        function (val) {
+          // Return if no resource is selected.
+          if (!val || !$scope.selected.resource || !$scope.selected.date) {
+            return;
+          }
+
+          $scope.validating = true;
+          $scope.loadingBookings = true;
+          $scope.errorGettingBookings = false;
+
+          // Get bookings for the resource and date.
+          kobaFactory.getBookings(
+            $scope.selected.resource.mail,
+            moment($scope.selected.date).startOf('day').format('X'),
+            moment($scope.selected.date).endOf('day').format('X')
+          ).then(
+            function success(data) {
+              $scope.bookings = data;
+
+              $scope.loadingBookings = false;
+
+              validateBooking();
+            },
+            function error() {
+              // Still allow the user to make a booking request.
+              $scope.bookings = [];
+
+              $scope.loadingBookings = false;
+              $scope.errorGettingBookings = true;
+              $scope.validating = false;
+            }
+          );
+        }
+      );
+    }
 
     /**
      * Return the link.
      */
     $scope.getLink = function getLink() {
-      if (!$scope.selected.resource) {
+      if (!$scope.selected.resource || !$scope.selected.date || !$scope.selected.time.start) {
         return null;
       }
 
@@ -133,11 +220,26 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
     /**
      * Get selected date.
      *
-     * @returns Date
-     *   The Date representation of scope.selected.date
+     * @returns bool|Date
+     *   The Date representation of scope.selected.date, if set else false.
      */
-    $scope.getSelectedDate = function() {
-      return $scope.selected.date.toDate();
+    $scope.getSelectedDate = function getSelectedDate() {
+      var date = false;
+      if ($scope.selected.date !== null) {
+        date = $scope.selected.date.toDate();
+      }
+
+      return date;
+    };
+
+    /**
+     * Check if time is selected.
+     *
+     * @returns {boolean}
+     *   True if selected else false.
+     */
+    $scope.isTimeSelected = function isTimeSelected() {
+      return $scope.selected.time.start !== null;
     };
 
     /**
@@ -164,7 +266,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      * @returns string
      *   String representation of the selected end time.
      */
-    $scope.getSelectedEndTime = function() {
+    $scope.getSelectedEndTime = function getSelectedEndTime() {
       var hours = "" + $scope.selected.time.end.getUTCHours();
       if (hours.length === 1) {
         hours = "0" + hours;
@@ -180,7 +282,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      * Get selected resource.
      * @returns Date
      */
-    $scope.getSelectedResource = function() {
+    $scope.getSelectedResource = function getSelectedResource() {
       if ($scope.selected.resource) {
         return $scope.selected.resource.name;
       }
@@ -191,7 +293,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
     /**
      * Show/hide time picker.
      */
-    $scope.toggleTime = function() {
+    $scope.toggleTime = function toggleTime() {
       $scope.pickTime = !$scope.pickTime;
     };
 
@@ -199,7 +301,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      * Go to previous date.
      *   Not before today.
      */
-    $scope.prevDate = function() {
+    $scope.prevDate = function prevDate() {
       var now = moment();
 
       if ($scope.selected.date.dayOfYear() + $scope.selected.date.year() * 365 > now.dayOfYear() + now.year() * 365) {
@@ -210,14 +312,14 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
     /**
      * Go to next date.
      */
-    $scope.nextDate = function() {
+    $scope.nextDate = function nextDate() {
       $scope.selected.date = moment($scope.selected.date.add(1, 'day'));
     };
 
     /**
      * Go to the previous resource.
      */
-    $scope.prevResource = function() {
+    $scope.prevResource = function prevResource() {
       var length = $scope.resources.length;
       selectedResourceIndex = (((selectedResourceIndex - 1) % length) + length) % length;
       $scope.selected.resource = $scope.resources[selectedResourceIndex];
@@ -226,7 +328,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
     /**
      * Go to the next resource.
      */
-    $scope.nextResource = function() {
+    $scope.nextResource = function nextResource() {
       var length = $scope.resources.length;
       selectedResourceIndex = (((selectedResourceIndex + 1) % length) + length) % length;
       $scope.selected.resource = $scope.resources[selectedResourceIndex];
@@ -235,7 +337,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
     /**
      * Show/hide date picker.
      */
-    $scope.toggleDate = function() {
+    $scope.toggleDate = function toggleDate() {
       $scope.pickDate = !$scope.pickDate;
       $scope.dateOpen = true;
       $scope.timeOpen = false;
@@ -245,36 +347,12 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
     /**
      * Show/hide resource picker.
      */
-    $scope.toggleResource = function() {
+    $scope.toggleResource = function toggleResource() {
       $scope.pickResource = !$scope.pickResource;
       $scope.dateOpen = false;
       $scope.timeOpen = false;
       $scope.resourceOpen = true;
     };
-
-    /**
-     * Impose constraints on start time.
-     *  - Never more than end, push end time forward.
-     */
-    $scope.$watch('selected.time.start', function(val) {
-      if (!val) return;
-
-      if ($scope.selected.time.end <= $scope.selected.time.start) {
-        $scope.selected.time.end = new Date($scope.selected.time.start.getTime() + 30 * 60 * 1000);
-      }
-    });
-
-    /**
-     * Impose constraints on end time.
-     *  - Never less than start time, push start time back.
-     */
-    $scope.$watch('selected.time.end', function(val) {
-      if (!val) return;
-
-      if ($scope.selected.time.end <= $scope.selected.time.start) {
-        $scope.selected.time.start = new Date($scope.selected.time.end.getTime() - 30 * 60 * 1000);
-      }
-    });
 
     /**
      * @TODO: Missing function description.
@@ -308,53 +386,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       $scope.validating = false;
     }
 
-    /**
-     * @TODO: Put the watch statements together and explain what they do (what module change they react to and why).
-     */
-    $scope.$watchGroup(['selected.time.start', 'selected.time.end'],
-      function(val) {
-        if (!val) return;
-
-        $scope.validating = true;
-
-        validateBooking();
-      }
-    );
-
-    // Watch for changes to selectedDate and selectedResource.
-    // Update the calendar view accordingly.
-    $scope.$watchGroup(['selected.date', 'selected.resource'],
-      function (val) {
-        if (!val) return;
-        if (!$scope.selected.resource || !$scope.selected.date) return;
-
-        $scope.validating = true;
-        $scope.loadingBookings = true;
-        $scope.errorGettingBookings = false;
-
-        // Get bookings for the resource and date.
-        kobaFactory.getBookings(
-          $scope.selected.resource.mail,
-          moment($scope.selected.date).startOf('day').format('X'),
-          moment($scope.selected.date).endOf('day').format('X')
-        ).then(
-          function success(data) {
-            $scope.bookings = data;
-
-            $scope.loadingBookings = false;
-
-            validateBooking();
-          },
-          function error() {
-            // Still allow the user to make a booking request.
-            $scope.bookings = [];
-
-            $scope.loadingBookings = false;
-            $scope.errorGettingBookings = true;
-            $scope.validating = false;
-          }
-        );
-      }
-    );
+    // Get the show on the road.
+    init();
   }
 ]);

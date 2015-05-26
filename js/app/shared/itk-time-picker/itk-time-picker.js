@@ -15,7 +15,8 @@ angular.module('itkTimePicker', [])
       require: '',
       scope: {
         "time": "=",
-        "step": "="
+        "step": "=",
+        "offset": "="
       },
       link: function (scope) {
         /**
@@ -62,6 +63,19 @@ angular.module('itkTimePicker', [])
           return minutes;
         };
 
+        // Set default time, if not given.
+        if (!scope.time) {
+          var date = new Date();
+
+          // Set current time plus one hour into the feature.
+          date.setUTCHours(date.getHours() + Math.round(date.getMinutes()/60) + 1);
+
+          // If offset is set, set the minutes to it.
+          date.setMinutes(scope.offset ? scope.offset : 0);
+          scope.time = date;
+        }
+
+        // Set configuration.
         scope.modulePath = '/' + drupalSettings['koba_booking']['module_path'];
         scope.themePath = '/' + drupalSettings['koba_booking']['theme_path'];
         scope.app_dir = '/' + drupalSettings['koba_booking']['app_dir'];

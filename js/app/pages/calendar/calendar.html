@@ -7,7 +7,7 @@
           <span class="booking--display-date-arrow-left" data-ng-click="prevDate()">
             <span class="booking--arrow is-left" data-ng-include="themePath + '/templates/svgs/arrow.svg'"></span>
           </span>
-          <span class="booking--selection-text" data-ng-click="toggleDate()">{{ getSelectedDate() | date: 'd/M-yy' }}</span>
+          <span class="booking--selection-text" data-ng-click="toggleDate()">{{ getSelectedDate() ? (getSelectedDate() | date: 'd/M-yy') : t('Select date') }}</span>
           <span class="booking--display-date-arrow-right" data-ng-click="nextDate()">
             <span class="booking--arrow is-right" data-ng-include="themePath + '/templates/svgs/arrow.svg'"></span>
           </span>
@@ -20,14 +20,23 @@
       </div>
       <div class="booking--selection-time-picker">
         <div class="booking--selection-header-time" data-ng-class="{'is-active': pickTime, 'is-inactive' : pickResource || pickDate}"  data-ng-click="toggleTime()">2. {{ t('Time') }}</div>
-        <div class="booking--selection-display-time"><span data-ng-click="toggleTime()" class="booking--selection-text">{{ getSelectedStartTime() }} - {{ getSelectedEndTime() }}</span></div>
+        <div class="booking--selection-display-time">
+            <span data-ng-click="toggleTime()" class="booking--selection-text">
+                <span data-ng-if="isTimeSelected()">
+                  {{ getSelectedStartTime() }} - {{ getSelectedEndTime() }}
+                </span>
+                <span data-ng-if="!isTimeSelected()">
+                    {{ t('Select time') }}
+                </span>
+            </span>
+        </div>
         <div class="booking--popup-time" data-ng-if="pickTime">
           <div class="booking--popup-inner">
             <div class="booking--popup-content">
               <div class="booking--popup-timepicker-wrapper">
                 <itk-time-picker class="booking--popup-timepicker" time="selected.time.start" step="30"></itk-time-picker>
                 <div class="booking--popup-timepicker-text">til</div>
-                <itk-time-picker class="booking--popup-timepicker" time="selected.time.end" step="30"></itk-time-picker>
+                <itk-time-picker class="booking--popup-timepicker" time="selected.time.end" step="30" offset="30"></itk-time-picker>
               </div>
               <div class="booking--popup-close" data-ng-click="toggleTime()">{{ t('Select') }}</div>
             </div>
