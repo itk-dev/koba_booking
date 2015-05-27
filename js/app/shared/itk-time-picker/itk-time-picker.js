@@ -16,7 +16,8 @@ angular.module('itkTimePicker', [])
       scope: {
         "time": "=",
         "step": "=",
-        "offset": "="
+        "offset": "=",
+        "interestPeriod": "="
       },
       link: function (scope) {
         /**
@@ -25,9 +26,9 @@ angular.module('itkTimePicker', [])
         scope.inc = function inc() {
           var newTime = scope.time.getTime() + scope.step * 60 * 1000;
 
-          // Get end of day to ensure that time don't goes into the next day.
+          // Get end of day to ensure that time stays within interest period.
           var endOfDay = new Date();
-          endOfDay.setHours(23,59,59,999);
+          endOfDay.setHours(scope.interestPeriod.end, 0, 0, 0);
 
           // Only set new selection, if not into next day.
           if (newTime < endOfDay.getTime()) {
@@ -40,10 +41,14 @@ angular.module('itkTimePicker', [])
          */
         scope.dec = function dec() {
           var newTime = scope.time.getTime() - scope.step * 60 * 1000;
-          if (newTime < 0) {
-            newTime = 0;
+
+          // Get end of day to ensure that time stays within interest period.
+          var startOfDay = new Date();
+          startOfDay.setHours(scope.interestPeriod.start, 0, 0, 0);
+
+          if (newTime >= startOfDay) {
+            scope.time = new Date(newTime);
           }
-          scope.time = new Date(newTime);
         };
 
         /**

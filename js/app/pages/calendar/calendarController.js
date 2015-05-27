@@ -28,6 +28,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       $scope.errorGettingResources = false;
       $scope.validBooking = false;
       $scope.validating = false;
+      $scope.timeIntervalLength = 30;
 
       // Set paths from the backend.
       $scope.modulePath = '/' + drupalSettings.koba_booking.module_path;
@@ -98,7 +99,12 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
         }
 
         if ($scope.selected.time.end <= $scope.selected.time.start) {
-          $scope.selected.time.end = new Date($scope.selected.time.start.getTime() + 30 * 60 * 1000);
+          // Ensure that the interest period is used.
+          var endOfDay = new Date();
+          endOfDay.setHours($scope.interestPeriod.end, 0, 0, 0);
+          if (endOfDay > $scope.selected.time.end) {
+            $scope.selected.time.end = new Date($scope.selected.time.start.getTime() + $scope.timeIntervalLength * 60 * 1000);
+          }
         }
       });
 
@@ -112,7 +118,16 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
         }
 
         if ($scope.selected.time.end <= $scope.selected.time.start) {
-          $scope.selected.time.start = new Date($scope.selected.time.end.getTime() - 30 * 60 * 1000);
+          // Ensure that the interest period is used.
+          var startOfDay = new Date();
+          startOfDay.setHours($scope.interestPeriod.start, 0, 0, 0);
+          if (startOfDay < $scope.selected.time.start) {
+            $scope.selected.time.start = new Date($scope.selected.time.end.getTime() - $scope.timeIntervalLength * 60 * 1000);
+          }
+          else {
+            // End sure that the booking is a least the interval wide
+            $scope.selected.time.end = new Date($scope.selected.time.end.getTime() + $scope.timeIntervalLength * 60 * 1000);
+          }
         }
       });
 

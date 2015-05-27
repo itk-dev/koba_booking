@@ -34,9 +34,9 @@
           <div class="booking--popup-inner">
             <div class="booking--popup-content">
               <div class="booking--popup-timepicker-wrapper">
-                <itk-time-picker class="booking--popup-timepicker" time="selected.time.start" step="30"></itk-time-picker>
+                <itk-time-picker class="booking--popup-timepicker" time="selected.time.start" step="timeIntervalLength" interest-period="interestPeriod"></itk-time-picker>
                 <div class="booking--popup-timepicker-text">til</div>
-                <itk-time-picker class="booking--popup-timepicker" time="selected.time.end" step="30" offset="30"></itk-time-picker>
+                <itk-time-picker class="booking--popup-timepicker" time="selected.time.end" step="timeIntervalLength" offset="timeIntervalLength" interest-period="interestPeriod"></itk-time-picker>
               </div>
               <div class="booking--popup-close" data-ng-click="toggleTime()">{{ Drupal.t('Select') }}</div>
             </div>
