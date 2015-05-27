@@ -187,7 +187,7 @@ function koba_booking_room_usage() {
     'theater' => t('Theater'),
     'debate' => t('Debate'),
     'project_meeting' => t('Project meeting'),
-    'screening' => t('Screening'),
+    'screening' => t('Film screening'),
     'it_intro' => t('IT-Introduction'),
     'other' => t('Other (Use message field)'),
   );

@@ -506,7 +506,7 @@ class Booking extends ContentEntityBase implements BookingInterface {
     // Users with correct privileges can change the view and edit configuration.
 
     $fields['name'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Title'))
+      ->setLabel(t('Subject'))
       ->setDescription(t('A title for the booking.'))
       ->setSettings(array(
         'default_value' => '',
