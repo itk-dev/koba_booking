@@ -225,15 +225,7 @@ class Mailer {
    *   Array with logo data.
    */
   protected function generateLogo() {
-    $content = array();
-    $logoPath = \Drupal::service('file_system')->realpath(trim(file_url_transform_relative(theme_get_setting('logo.url')), '/'));
-    if ($logoPath) {
-      $logo = @file_get_contents($logoPath);
-      if ($logo) {
-        $mimetype = \Drupal::service('file.mime_type.guesser')->guess($logoPath);
-        $content['#logo_url'] = 'data:' . $mimetype . ';base64,' . base64_encode($logo);
-      }
-    }
+    $content['#logo_url'] = theme_get_setting('logo.url');
 
     return $content;
   }
