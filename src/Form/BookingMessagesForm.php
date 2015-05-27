@@ -70,7 +70,7 @@ class BookingMessagesForm extends FormBase {
     );
 
     $form['message_settings']['messages']['booking_created'] = array(
-      '#type' => 'text_format',
+      '#type' => 'textarea',
       '#title' => t('Created booking'),
       '#description' => t('The message displayed to the user when the booking is created.') . '</br>' . $tokens_description,
       '#default_value' => $config->get('koba_booking.created_booking_message'),
@@ -371,7 +371,7 @@ class BookingMessagesForm extends FormBase {
   public function booking_created_submit(array $form, FormStateInterface $form_state) {
     drupal_set_message('Booking message settings saved');
     $this->configFactory()->getEditable('koba_booking.settings')
-      ->set('koba_booking.created_booking_message', $form_state->getValue('booking_created')['value'])
+      ->set('koba_booking.created_booking_message', $form_state->getValue('booking_created'))
       ->save();
   }
 
