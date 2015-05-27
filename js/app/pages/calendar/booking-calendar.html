@@ -1,5 +1,5 @@
 <div class="booking--display-time-column">
-  <div class="booking--display-time-row" data-ng-repeat="timeInterval in timeIntervals" data-ng-if="!timeInterval.halfhour" data-ng-class="{'is-disabled': timeInterval.disabled}">
+  <div class="booking--display-time-row" data-ng-repeat="timeInterval in timeIntervals" data-ng-if="!timeInterval.halfhour">
     <div class="booking--display-row-inner">
       <div class="booking--display-time"><span>{{ timeInterval.time | date:'HH:mm' }}</span></div>
     </div>
@@ -12,15 +12,13 @@
        data-ng-if="loaded"
        data-ng-click="select(timeInterval)">
     <div class="booking--display-row">
-      <div class="booking--display-row-inner" data-ng-class="{
-          'is-booked': !timeInterval.disabled && timeInterval.booked
-         }">
+      <div class="booking--display-row-inner" data-ng-class="{ 'is-booked': timeInterval.booked }">
         <div class="booking--display-description">
           <span class="booking--display-text">{{ t(timeInterval.text) }}</span>
         </div>
       </div>
       <div data-ng-if="selected(timeInterval)" class="booking--display-row-your-selection is-selected">
-        {{ (selected(timeInterval) === 'first' || selected(timeInterval) === 'first-last') ? t("Your selection") : '' }}
+        {{ (selected(timeInterval) === 'first') ? Drupal.t("Your selection") : '' }}
       </div>
     </div>
   </div>

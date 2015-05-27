@@ -140,7 +140,7 @@ angular.module("kobaApp")
            *   The result of the evaluation (@TODO: WHICH CAN BE??).
            */
           scope.selected = function selected(timeInterval) {
-            var selectedTime = parseInt(timeInterval.timeMoment.format('x'));
+            var selectedTime = timeInterval.time.getTime();
 
             if (selectedTimestamp.from <= selectedTime && selectedTimestamp.to > selectedTime) {
               if (selectedTimestamp.from === selectedTime) {
@@ -164,21 +164,30 @@ angular.module("kobaApp")
            *   The clicked time interval.
            */
           scope.select = function select(timeInterval) {
-            /**
-             * Why ?
-             */
-            if (selectedTimestamp.from === timeInterval.timeMoment) {
+
+            var timestamp = timeInterval.time.getTime();
+            if (selectedTimestamp.from === timestamp) {
               return;
             }
 
-            /**
-             * @TODO: Explain the math behind this ?
-             */
-            scope.selectedStart = new Date(
-              timeInterval.timeFromZero.hours * 60 * 60 * 1000 + timeInterval.timeFromZero.minutes * 60 * 1000
-            );
+            // Set the new start and end times based on the interval selected. The end time is the start plus the
+            // selected interval in the time picker.
+            scope.selectedStart = new Date(timestamp);
+            scope.selectedEnd = new Date(timestamp + (selectedTimestamp.to - selectedTimestamp.from));
+          };
 
-            scope.selectedEnd = new Date(scope.selectedStart.getTime() + (selectedTimestamp.to - selectedTimestamp.from));
+          /**
+           * Expose the Drupal.t() function to angular templates.
+           *
+           * @param str
+           *   The string to translate.
+           * @returns string
+           *   The translated string.
+           */
+          scope.Drupal = {
+            "t": function(str) {
+              return $window.Drupal.t(str);
+            }
           };
 
           /**
@@ -223,7 +232,6 @@ angular.module("kobaApp")
                   'minutes': (i % 2) * 30
                 },
                 'time': timeDate,
-                'timeMoment': time,
                 'halfhour': (time.minutes() > 0),
                 'booked': !free
               });
@@ -240,17 +248,24 @@ angular.module("kobaApp")
            * @returns {{from: number, to: number}}
            */
           function getSelecteDateTimesAsTimestamp() {
-            var from = new Date(scope.selectedDate.toDate().getTime());
-            var fromTime = scope.selectedStart;
-            from.setHours(fromTime.getHours(), fromTime.getMinutes(), 0, 0);
+            if (scope.selectedDate !== null && scope.selectedStart !== null) {
+              var from = new Date(scope.selectedDate.toDate().getTime());
+              var fromTime = scope.selectedStart;
+              from.setHours(fromTime.getHours(), fromTime.getMinutes(), 0, 0);
 
-            var to = new Date(scope.selectedDate.toDate().getTime());
-            var toTime = scope.selectedEnd;
-            to.setHours(toTime.getHours(), toTime.getMinutes(), 0, 0);
+              var to = new Date(scope.selectedDate.toDate().getTime());
+              var toTime = scope.selectedEnd;
+              to.setHours(toTime.getHours(), toTime.getMinutes(), 0, 0);
+
+              return {
+                "from": from.getTime(),
+                "to": to.getTime()
+              };
+            }
 
             return {
-              "from": from.getTime(),
-              "to": to.getTime()
+              "from": 0,
+              "to": 0
             };
           }
         },
