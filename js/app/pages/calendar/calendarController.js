@@ -193,7 +193,6 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       }
 
       var times = getSelecteDateTimesAsUnixTimestamp();
-      console.log(times);
 
       return encodeURI($scope.loginPath + '?res=' + $scope.selected.resource.id + '&from=' + times.from + '&to=' + times.to);
     };
