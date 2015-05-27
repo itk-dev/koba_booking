@@ -18,6 +18,7 @@ use Drupal\file\Entity\File;
 use Drupal\Core\Config;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\Core\Asset\AttachedAssetsInterface;
 
 
 /**
@@ -190,4 +191,29 @@ function koba_booking_room_usage() {
     'it_intro' => t('IT-Introduction'),
     'other' => t('Other (Use message field)'),
   );
+}
+
+/**
+ * Implements hook_js_alter().
+ *
+ * Search the angular application for drupal translations.
+ */
+function koba_booking_js_alter(&$javascript, AttachedAssetsInterface $assets) {
+  $files = array();
+  $path = \Drupal::moduleHandler()->getModule('koba_booking')->getPath();
+
+  // Files to scan for translations (js and templates).
+  $extensions = Array ( 'js', 'html' );
+
+  // Find the files.
+  $it = new RecursiveDirectoryIterator(__DIR__ . '/js/app');
+  foreach(new RecursiveIteratorIterator($it) as $file)  {
+    $ext = pathinfo($file, PATHINFO_EXTENSION);
+    if (in_array($ext, $extensions)) {
+      $files[] = $path . str_replace(__DIR__, '', $file);
+    }
+  }
+
+  // Scan the files to get translations into the database.
+  locale_js_translate($files);
 }

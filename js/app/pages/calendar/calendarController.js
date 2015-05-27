@@ -147,8 +147,10 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
        * @returns string
        *   The translated string.
        */
-      $scope.t = function(str) {
-        return $window.Drupal.t(str);
+      $scope.Drupal = {
+        "t": function(str) {
+          return $window.Drupal.t(str);
+        }
       };
 
       // Watch for changes to selectedDate and selectedResource.
