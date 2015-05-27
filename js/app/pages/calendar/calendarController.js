@@ -371,13 +371,9 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       var fromTime = $scope.selected.time.start;
       from.setHours(fromTime.getHours(), fromTime.getMinutes(), 0, 0);
 
-      console.log(from);
-
       var to = new Date($scope.selected.date.toDate().getTime());
       var toTime = $scope.selected.time.end;
       to.setHours(toTime.getHours(), toTime.getMinutes(), 0, 0);
-
-      console.log(to);
 
       return {
         "from": Math.floor(from.getTime() / 1000),

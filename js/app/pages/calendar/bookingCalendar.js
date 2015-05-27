@@ -80,6 +80,8 @@ angular.module("kobaApp")
   ])
   .directive("bookingCalendar", ['kobaFactory', '$window',
     function (kobaFactory, $window) {
+      'use strict';
+
       return {
         restrict: 'E',
         scope: {
@@ -97,35 +99,20 @@ angular.module("kobaApp")
           // Used for
           scope.loaded = false;
 
-          // Initialize start and end moment objects.
-          // Used for comparisons, updated when scope.selectedStart and scope.selectedEnd are updated.
-          var startTimestamp = parseInt(scope.selectedDate.format('x')) + scope.selectedStart.getTime();
-          var endTimestamp = parseInt(scope.selectedDate.format('x')) + scope.selectedEnd.getTime();
+          // Get selected booking timestamps.
+          var bookingTime = getSelecteDateTimesAsUnixTimestamp();
 
-          // Watch for changes to selectedStart and selectedEnd.
-          // Update startTimestamp and endTimestamp.
+          // Watch for changes to date and time selections.
           scope.$watchGroup(['selectedStart', 'selectedEnd', 'selectedDate'],
             function (val) {
               if (!val) {
                 return;
               }
 
-              startTimestamp = parseInt(scope.selectedDate.format('x')) + scope.selectedStart.getTime();
-              endTimestamp = parseInt(scope.selectedDate.format('x')) + scope.selectedEnd.getTime();
+              // Update selected booking time.
+              bookingTime = getSelecteDateTimesAsUnixTimestamp();
             }
           );
-
-          /**
-           * Expose the Drupal.t() function to angular templates.
-           *
-           * @param str
-           *   The string to translate.
-           * @returns string
-           *   The translated string.
-           */
-          scope.t = function(str) {
-            return $window.Drupal.t(str);
-          };
 
           /**
            * Is the time interval selected?
@@ -143,8 +130,8 @@ angular.module("kobaApp")
           scope.selected = function(timeInterval) {
             var selectedTime = parseInt(timeInterval.timeMoment.format('x'));
 
-            if (startTimestamp <= selectedTime && endTimestamp > selectedTime) {
-              if (startTimestamp === selectedTime) {
+            if (bookingTime['from'] <= selectedTime && bookingTime['to'] > selectedTime) {
+              if (bookingTime['from'] === selectedTime) {
                 return 'first';
               }
               else {
@@ -168,7 +155,7 @@ angular.module("kobaApp")
             /**
              * Why ?
              */
-            if (timeInterval.disabled || startTimestamp === timeInterval.timeMoment) {
+            if (timeInterval.disabled || bookingTime['from'] === timeInterval.timeMoment) {
               return;
             }
 
@@ -179,7 +166,7 @@ angular.module("kobaApp")
               timeInterval.timeFromZero.hours * 60 * 60 * 1000 + timeInterval.timeFromZero.minutes * 60 * 1000
             );
 
-            scope.selectedEnd = (new Date(scope.selectedStart.getTime() + (endTimestamp - startTimestamp)));
+            scope.selectedEnd = new Date(scope.selectedStart.getTime() + (bookingTime['to'] - bookingTime['from']));
           };
 
           /**
@@ -243,6 +230,30 @@ angular.module("kobaApp")
                 'booked': !free
               });
             }
+          }
+
+          /**
+           * Get current date/time selections as unix timestamps.
+           *
+           * Build timestamps to send to the server based on the date picker and time picker selector. The first issue is
+           * that the time picker returns date information for the time selected today, while we want to combine the date
+           * select and only get the time selected (without the date from the time picker).
+           *
+           * @returns {{from: number, to: number}}
+           */
+          function getSelecteDateTimesAsUnixTimestamp() {
+            var from = new Date(scope.selectedDate.toDate().getTime());
+            var fromTime = scope.selectedStart;
+            from.setHours(fromTime.getHours(), fromTime.getMinutes(), 0, 0);
+
+            var to = new Date(scope.selectedDate.toDate().getTime());
+            var toTime = scope.selectedEnd;
+            to.setHours(toTime.getHours(), toTime.getMinutes(), 0, 0);
+
+            return {
+              "from": Math.floor(from.getTime() / 1000),
+              "to": Math.floor(to.getTime() / 1000)
+            };
           }
 
           // Watch for changes to bookings.
