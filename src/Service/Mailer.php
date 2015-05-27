@@ -309,7 +309,7 @@ class Mailer {
         'Content-Transfer-Encoding' => '8Bit',
         'X-Mailer' => 'Drupal',
         'Return-Path' => $from,
-        'Replay-to' => $from,
+        'Reply-to' => $from,
         'Sender' => $from,
         'From' => $name . ' <' . $from . '>',
       ),
