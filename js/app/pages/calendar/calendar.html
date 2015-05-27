@@ -4,11 +4,11 @@
       <div class="booking--selection-date-picker">
         <div class="booking--selection-header-date" data-ng-class="{'is-active': pickDate, 'is-inactive' : pickResource || pickTime}" data-ng-click="toggleDate()">1. {{ Drupal.t('Date') }}</div>
         <div class="booking--selection-display-date">
-          <span class="booking--display-date-arrow-left" data-ng-click="prevDate()">
+          <span class="booking--display-date-arrow-left" data-ng-if="getSelectedDate()" data-ng-click="prevDate()">
             <span class="booking--arrow is-left" data-ng-include="themePath + '/templates/svgs/arrow.svg'"></span>
           </span>
           <span class="booking--selection-text" data-ng-click="toggleDate()">{{ getSelectedDate() ? (getSelectedDate() | date: 'd/M-yy') : Drupal.t('Select date') }}</span>
-          <span class="booking--display-date-arrow-right" data-ng-click="nextDate()">
+          <span class="booking--display-date-arrow-right" data-ng-if="getSelectedDate()" data-ng-click="nextDate()">
             <span class="booking--arrow is-right" data-ng-include="themePath + '/templates/svgs/arrow.svg'"></span>
           </span>
         </div>
