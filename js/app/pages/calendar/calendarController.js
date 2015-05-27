@@ -30,9 +30,9 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       $scope.validating = false;
 
       // Set paths from the backend.
-      $scope.modulePath = '/' + drupalSettings['koba_booking']['module_path'];
-      $scope.themePath = '/' + drupalSettings['koba_booking']['theme_path'];
-      $scope.loginPath = drupalSettings['koba_booking']['login_path'];
+      $scope.modulePath = '/' + drupalSettings.koba_booking.module_path;
+      $scope.themePath = '/' + drupalSettings.koba_booking.theme_path;
+      $scope.loginPath = drupalSettings.koba_booking.login_path;
 
       // Set default start values (non-selected).
       $scope.selected = {
@@ -44,11 +44,14 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
         "resource": null
       };
 
+      // Interest period to show (in calendar directive).
+      $scope.interestPeriod = drupalSettings.koba_booking.interestPeriod;
+
       // Get booking information from drupalSettings.
       var initBooking = {
-        "resource": drupalSettings['koba_booking']['resource'],
-        "from": drupalSettings['koba_booking']['from'],
-        "to": drupalSettings['koba_booking']['to']
+        "resource": drupalSettings.koba_booking.resource,
+        "from": drupalSettings.koba_booking.from,
+        "to": drupalSettings.koba_booking.to
       };
 
       // Initialise selected date and start/end time, if set in drupalSettings.
@@ -84,17 +87,6 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
           $scope.errorGettingResources = true;
         }
       );
-
-      // Interest period to show.
-      // @TODO: Make this configurable.
-      $scope.interestPeriod = {
-        "start": 7,
-        "end": 23
-      };
-
-      // Disabled intervals.
-      // @TODO: Make this configurable.
-      $scope.disabled = [];
 
       /**
        * Impose constraints on start time.

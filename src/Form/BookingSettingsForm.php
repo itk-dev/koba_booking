@@ -192,6 +192,20 @@ class BookingSettingsForm extends FormBase {
       '#required' => TRUE,
     );
 
+    $form['koba_settings']['interest_from'] = array(
+      '#type' => 'textfield',
+      '#title' => $this->t('Which time of the day should booking be possible from.'),
+      '#default_value' => $config->get('koba_booking.interest.from'),
+      '#required' => TRUE,
+    );
+
+    $form['koba_settings']['interest_to'] = array(
+      '#type' => 'textfield',
+      '#title' => $this->t('Which time of the day should booking be possible to.'),
+      '#default_value' => $config->get('koba_booking.interest.to'),
+      '#required' => TRUE,
+    );
+
     $form['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Save changes'),
@@ -251,6 +265,8 @@ class BookingSettingsForm extends FormBase {
       ->set('koba_booking.api_key', $form_state->getValue('api_key'))
       ->set('koba_booking.path', $form_state->getValue('path'))
       ->set('koba_booking.session.expire', $form_state->getValue('expire'))
+      ->set('koba_booking.interest.from', $form_state->getValue('interest_from'))
+      ->set('koba_booking.interest.to', $form_state->getValue('interest_to'))
       ->set('koba_booking.add_booking_header', $form_state->getValue('add_booking_header'))
       ->save();
   }
