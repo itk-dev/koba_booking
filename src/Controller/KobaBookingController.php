@@ -38,6 +38,9 @@ class KobaBookingController extends ControllerBase  {
       \Drupal::service('session')->remove('koba_booking_request');
     }
 
+    // Load configuration.
+    $config = $this->config('koba_booking.settings');
+
     $build = array(
       '#type' => 'markup',
       '#theme' => 'booking_calendar_page',
@@ -54,6 +57,10 @@ class KobaBookingController extends ControllerBase  {
             'resource' => isset($defaults['resource']) ? $defaults['resource'] : NULL,
             'from' => isset($defaults['from']) ? $defaults['from'] : NULL,
             'to' => isset($defaults['to']) ? $defaults['to'] : NULL,
+            'interestPeriod' => array(
+              "start" => $config->get('koba_booking.interest.from'),
+              "end" => $config->get('koba_booking.interest.to'),
+            ),
           ),
         ),
       ),

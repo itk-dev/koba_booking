@@ -28,11 +28,12 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       $scope.errorGettingResources = false;
       $scope.validBooking = false;
       $scope.validating = false;
+      $scope.timeIntervalLength = 30;
 
       // Set paths from the backend.
-      $scope.modulePath = '/' + drupalSettings['koba_booking']['module_path'];
-      $scope.themePath = '/' + drupalSettings['koba_booking']['theme_path'];
-      $scope.loginPath = drupalSettings['koba_booking']['login_path'];
+      $scope.modulePath = '/' + drupalSettings.koba_booking.module_path;
+      $scope.themePath = '/' + drupalSettings.koba_booking.theme_path;
+      $scope.loginPath = drupalSettings.koba_booking.login_path;
 
       // Set default start values (non-selected).
       $scope.selected = {
@@ -44,11 +45,14 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
         "resource": null
       };
 
+      // Interest period to show (in calendar directive).
+      $scope.interestPeriod = drupalSettings.koba_booking.interestPeriod;
+
       // Get booking information from drupalSettings.
       var initBooking = {
-        "resource": drupalSettings['koba_booking']['resource'],
-        "from": drupalSettings['koba_booking']['from'],
-        "to": drupalSettings['koba_booking']['to']
+        "resource": drupalSettings.koba_booking.resource,
+        "from": drupalSettings.koba_booking.from,
+        "to": drupalSettings.koba_booking.to
       };
 
       // Initialise selected date and start/end time, if set in drupalSettings.
@@ -85,17 +89,6 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
         }
       );
 
-      // Interest period to show.
-      // @TODO: Make this configurable.
-      $scope.interestPeriod = {
-        "start": 7,
-        "end": 23
-      };
-
-      // Disabled intervals.
-      // @TODO: Make this configurable.
-      $scope.disabled = [];
-
       /**
        * Impose constraints on start time.
        *  - Never more than end, push end time forward.
@@ -106,7 +99,12 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
         }
 
         if ($scope.selected.time.end <= $scope.selected.time.start) {
-          $scope.selected.time.end = new Date($scope.selected.time.start.getTime() + 30 * 60 * 1000);
+          // Ensure that the interest period is used.
+          var endOfDay = new Date();
+          endOfDay.setHours($scope.interestPeriod.end, 0, 0, 0);
+          if (endOfDay > $scope.selected.time.end) {
+            $scope.selected.time.end = new Date($scope.selected.time.start.getTime() + $scope.timeIntervalLength * 60 * 1000);
+          }
         }
       });
 
@@ -120,7 +118,16 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
         }
 
         if ($scope.selected.time.end <= $scope.selected.time.start) {
-          $scope.selected.time.start = new Date($scope.selected.time.end.getTime() - 30 * 60 * 1000);
+          // Ensure that the interest period is used.
+          var startOfDay = new Date();
+          startOfDay.setHours($scope.interestPeriod.start, 0, 0, 0);
+          if (startOfDay < $scope.selected.time.start) {
+            $scope.selected.time.start = new Date($scope.selected.time.end.getTime() - $scope.timeIntervalLength * 60 * 1000);
+          }
+          else {
+            // End sure that the booking is a least the interval wide
+            $scope.selected.time.end = new Date($scope.selected.time.end.getTime() + $scope.timeIntervalLength * 60 * 1000);
+          }
         }
       });
 
@@ -147,8 +154,10 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
        * @returns string
        *   The translated string.
        */
-      $scope.t = function(str) {
-        return $window.Drupal.t(str);
+      $scope.Drupal = {
+        "t": function(str) {
+          return $window.Drupal.t(str);
+        }
       };
 
       // Watch for changes to selectedDate and selectedResource.
@@ -199,7 +208,6 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       }
 
       var times = getSelecteDateTimesAsUnixTimestamp();
-      console.log(times);
 
       return encodeURI($scope.loginPath + '?res=' + $scope.selected.resource.id + '&from=' + times.from + '&to=' + times.to);
     };
@@ -369,13 +377,9 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       var fromTime = $scope.selected.time.start;
       from.setHours(fromTime.getHours(), fromTime.getMinutes(), 0, 0);
 
-      console.log(from);
-
       var to = new Date($scope.selected.date.toDate().getTime());
       var toTime = $scope.selected.time.end;
       to.setHours(toTime.getHours(), toTime.getMinutes(), 0, 0);
-
-      console.log(to);
 
       return {
         "from": Math.floor(from.getTime() / 1000),

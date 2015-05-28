@@ -165,32 +165,32 @@ class Mailer {
         break;
 
       case 'accepted':
-        $subject = $config->get('koba_email.accepted_email_title');
+        $subject = $config->get('koba_email.email_accepted_title');
 
         // Build render array.
         $content = array(
           '#theme' => 'booking_mail_accepted',
-          '#message' => $config->get('koba_email.accepted_email_body'),
+          '#message' => $config->get('koba_email.email_accepted_body'),
         );
         break;
 
       case 'rejected':
-        $subject = $config->get('koba_email.rejected_email_title');
+        $subject = $config->get('koba_email.email_rejected_title');
 
         // Build render array.
         $content = array(
           '#theme' => 'booking_mail_rejected',
-          '#message' => $config->get('koba_email.rejected_email_body'),
+          '#message' => $config->get('koba_email.email_rejected_body'),
         );
         break;
 
       case 'cancelled':
-        $subject = $config->get('koba_email.cancelled_email_title');
+        $subject = $config->get('koba_email.email_cancelled_title');
 
         // Build render array.
         $content = array(
           '#theme' => 'booking_mail_cancelled',
-          '#message' => $config->get('koba_email.cancelled_email_body'),
+          '#message' => $config->get('koba_email.email_cancelled_body'),
         );
         break;
 

@@ -80,6 +80,8 @@ angular.module("kobaApp")
   ])
   .directive("bookingCalendar", ['kobaFactory', '$window',
     function (kobaFactory, $window) {
+      'use strict';
+
       return {
         restrict: 'E',
         scope: {
@@ -88,63 +90,60 @@ angular.module("kobaApp")
           "selectedStart": "=",
           "selectedEnd": "=",
           "bookings": "=",
-          "interestPeriod": "=",
-          "disabled": "="
+          "interestPeriod": "="
         },
         link: function (scope) {
           var bookings = [];
 
-          // Used for
+          // Used for.
           scope.loaded = false;
 
-          // Initialize start and end moment objects.
-          // Used for comparisons, updated when scope.selectedStart and scope.selectedEnd are updated.
-          var startTimestamp = parseInt(scope.selectedDate.format('x')) + scope.selectedStart.getTime();
-          var endTimestamp = parseInt(scope.selectedDate.format('x')) + scope.selectedEnd.getTime();
+          // Get selected timestamps.
+          var selectedTimestamp = getSelecteDateTimesAsTimestamp();
 
-          // Watch for changes to selectedStart and selectedEnd.
-          // Update startTimestamp and endTimestamp.
+          // Watch for changes to date and time selections.
           scope.$watchGroup(['selectedStart', 'selectedEnd', 'selectedDate'],
             function (val) {
               if (!val) {
                 return;
               }
 
-              startTimestamp = parseInt(scope.selectedDate.format('x')) + scope.selectedStart.getTime();
-              endTimestamp = parseInt(scope.selectedDate.format('x')) + scope.selectedEnd.getTime();
+              // Update selected time stamps.
+              selectedTimestamp = getSelecteDateTimesAsTimestamp();
+            }
+          );
+
+          // Watch for changes to bookings.
+          scope.$watch('bookings',
+            function (val) {
+              if (!val) {
+                return;
+              }
+
+              // Indicate the the calendar has not been loaded.
+              scope.loaded = false;
+
+              // Render timeIntervals for calendar view.
+              renderCalendar();
+
+              // Calendar done loading.
+              scope.loaded = true;
             }
           );
 
           /**
-           * Expose the Drupal.t() function to angular templates.
-           *
-           * @param str
-           *   The string to translate.
-           * @returns string
-           *   The translated string.
-           */
-          scope.t = function(str) {
-            return $window.Drupal.t(str);
-          };
-
-          /**
-           * Is the time interval selected?
-           *   returns 'first', 'middle', 'last', 'first-last'
-           *     corresponding to whether it is the first, middle, last, first-last (both first and last) of a booking.
-           *     used for which class to attach to the time interval.
-           *
-           *     @TODO: It dose only return 'first' and TRUE/FALSE?
+           * Is the time interval selected.
            *
            * @param timeInterval
            *   The time interval to evaluate.
            * @returns boolean|string
            *   The result of the evaluation (@TODO: WHICH CAN BE??).
            */
-          scope.selected = function(timeInterval) {
-            var selectedTime = parseInt(timeInterval.timeMoment.format('x'));
+          scope.selected = function selected(timeInterval) {
+            var selectedTime = timeInterval.time.getTime();
 
-            if (startTimestamp <= selectedTime && endTimestamp > selectedTime) {
-              if (startTimestamp === selectedTime) {
+            if (selectedTimestamp.from <= selectedTime && selectedTimestamp.to > selectedTime) {
+              if (selectedTimestamp.from === selectedTime) {
                 return 'first';
               }
               else {
@@ -164,22 +163,31 @@ angular.module("kobaApp")
            * @param timeInterval
            *   The clicked time interval.
            */
-          scope.select = function (timeInterval) {
-            /**
-             * Why ?
-             */
-            if (timeInterval.disabled || startTimestamp === timeInterval.timeMoment) {
+          scope.select = function select(timeInterval) {
+
+            var timestamp = timeInterval.time.getTime();
+            if (selectedTimestamp.from === timestamp) {
               return;
             }
 
-            /**
-             * @TODO: Explain the math behind this ?
-             */
-            scope.selectedStart = new Date(
-              timeInterval.timeFromZero.hours * 60 * 60 * 1000 + timeInterval.timeFromZero.minutes * 60 * 1000
-            );
+            // Set the new start and end times based on the interval selected. The end time is the start plus the
+            // selected interval in the time picker.
+            scope.selectedStart = new Date(timestamp);
+            scope.selectedEnd = new Date(timestamp + (selectedTimestamp.to - selectedTimestamp.from));
+          };
 
-            scope.selectedEnd = (new Date(scope.selectedStart.getTime() + (endTimestamp - startTimestamp)));
+          /**
+           * Expose the Drupal.t() function to angular templates.
+           *
+           * @param str
+           *   The string to translate.
+           * @returns string
+           *   The translated string.
+           */
+          scope.Drupal = {
+            "t": function(str) {
+              return $window.Drupal.t(str);
+            }
           };
 
           /**
@@ -188,7 +196,6 @@ angular.module("kobaApp")
            * Generates the calendar timeIntervals.
            * - based on
            *   - interest period
-           *   - disabled intervals
            *   - booked intervals.
            *
            * Also sets a text to display in the calendar.
@@ -205,24 +212,12 @@ angular.module("kobaApp")
             for (var i = 0; i < numberOfIntervals; i++) {
               var time = moment(scope.selectedDate).add(i * 30, 'minutes').add(scope.interestPeriod.start, 'hours');
 
-              // See if the time interval is disabled.
-              var disabled = false;
-              for (var j = 0; j < scope.disabled.length; j++) {
-                if (
-                  time >= moment(scope.selectedDate).add(scope.disabled[j][0], 'hours') &&
-                  time < moment(scope.selectedDate).add(scope.disabled[j][1], 'hours')
-                ) {
-                  disabled = true;
-                  break;
-                }
-              }
-
               // Get the Date representation of time.
               var timeDate = time.toDate();
 
               // See if the time interval is free.
               var free = true;
-              for (j = 0; j < scope.bookings.length; j++) {
+              for (var j = 0; j < scope.bookings.length; j++) {
                 if (timeDate.getTime() >= scope.bookings[j].start * 1000 &&
                   timeDate.getTime() < scope.bookings[j].end * 1000) {
                   free = false;
@@ -237,29 +232,42 @@ angular.module("kobaApp")
                   'minutes': (i % 2) * 30
                 },
                 'time': timeDate,
-                'timeMoment': time,
                 'halfhour': (time.minutes() > 0),
-                'disabled': disabled,
                 'booked': !free
               });
             }
           }
 
-          // Watch for changes to bookings.
-          scope.$watch('bookings',
-            function (val) {
-              if (!val) return;
+          /**
+           * Get current date/time selections as unix timestamps.
+           *
+           * Build timestamps to send to the server based on the date picker and time picker selector. The first issue is
+           * that the time picker returns date information for the time selected today, while we want to combine the date
+           * select and only get the time selected (without the date from the time picker).
+           *
+           * @returns {{from: number, to: number}}
+           */
+          function getSelecteDateTimesAsTimestamp() {
+            if (scope.selectedDate !== null && scope.selectedStart !== null) {
+              var from = new Date(scope.selectedDate.toDate().getTime());
+              var fromTime = scope.selectedStart;
+              from.setHours(fromTime.getHours(), fromTime.getMinutes(), 0, 0);
 
-              // Indicate the the calendar has not been loaded.
-              scope.loaded = false;
+              var to = new Date(scope.selectedDate.toDate().getTime());
+              var toTime = scope.selectedEnd;
+              to.setHours(toTime.getHours(), toTime.getMinutes(), 0, 0);
 
-              // Render timeIntervals for calendar view.
-              renderCalendar();
-
-              // Calendar done loading.
-              scope.loaded = true;
+              return {
+                "from": from.getTime(),
+                "to": to.getTime()
+              };
             }
-          );
+
+            return {
+              "from": 0,
+              "to": 0
+            };
+          }
         },
         templateUrl: '/modules/koba_booking/js/app/pages/calendar/booking-calendar.html'
       };

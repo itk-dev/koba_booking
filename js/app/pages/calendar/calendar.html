@@ -2,13 +2,13 @@
   <div class="booking--selection">
     <div class="booking--selection-date-time-wrapper">
       <div class="booking--selection-date-picker">
-        <div class="booking--selection-header-date" data-ng-class="{'is-active': pickDate, 'is-inactive' : pickResource || pickTime}" data-ng-click="toggleDate()">1. {{ t('Date') }}</div>
+        <div class="booking--selection-header-date" data-ng-class="{'is-active': pickDate, 'is-inactive' : pickResource || pickTime}" data-ng-click="toggleDate()">1. {{ Drupal.t('Date') }}</div>
         <div class="booking--selection-display-date">
-          <span class="booking--display-date-arrow-left" data-ng-click="prevDate()">
+          <span class="booking--display-date-arrow-left" data-ng-if="getSelectedDate()" data-ng-click="prevDate()">
             <span class="booking--arrow is-left" data-ng-include="themePath + '/templates/svgs/arrow.svg'"></span>
           </span>
-          <span class="booking--selection-text" data-ng-click="toggleDate()">{{ getSelectedDate() ? (getSelectedDate() | date: 'd/M-yy') : t('Select date') }}</span>
-          <span class="booking--display-date-arrow-right" data-ng-click="nextDate()">
+          <span class="booking--selection-text" data-ng-click="toggleDate()">{{ getSelectedDate() ? (getSelectedDate() | date: 'd/M-yy') : Drupal.t('Select date') }}</span>
+          <span class="booking--display-date-arrow-right" data-ng-if="getSelectedDate()" data-ng-click="nextDate()">
             <span class="booking--arrow is-right" data-ng-include="themePath + '/templates/svgs/arrow.svg'"></span>
           </span>
         </div>
@@ -19,14 +19,14 @@
         </div>
       </div>
       <div class="booking--selection-time-picker">
-        <div class="booking--selection-header-time" data-ng-class="{'is-active': pickTime, 'is-inactive' : pickResource || pickDate}"  data-ng-click="toggleTime()">2. {{ t('Time') }}</div>
+        <div class="booking--selection-header-time" data-ng-class="{'is-active': pickTime, 'is-inactive' : pickResource || pickDate}"  data-ng-click="toggleTime()">2. {{ Drupal.t('Time') }}</div>
         <div class="booking--selection-display-time">
             <span data-ng-click="toggleTime()" class="booking--selection-text">
                 <span data-ng-if="isTimeSelected()">
                   {{ getSelectedStartTime() }} - {{ getSelectedEndTime() }}
                 </span>
                 <span data-ng-if="!isTimeSelected()">
-                    {{ t('Select time') }}
+                    {{ Drupal.t('Select time') }}
                 </span>
             </span>
         </div>
@@ -34,19 +34,19 @@
           <div class="booking--popup-inner">
             <div class="booking--popup-content">
               <div class="booking--popup-timepicker-wrapper">
-                <itk-time-picker class="booking--popup-timepicker" time="selected.time.start" step="30"></itk-time-picker>
+                <itk-time-picker class="booking--popup-timepicker" time="selected.time.start" step="timeIntervalLength" interest-period="interestPeriod"></itk-time-picker>
                 <div class="booking--popup-timepicker-text">til</div>
-                <itk-time-picker class="booking--popup-timepicker" time="selected.time.end" step="30" offset="30"></itk-time-picker>
+                <itk-time-picker class="booking--popup-timepicker" time="selected.time.end" step="timeIntervalLength" offset="timeIntervalLength" interest-period="interestPeriod"></itk-time-picker>
               </div>
-              <div class="booking--popup-close" data-ng-click="toggleTime()">{{ t('Select') }}</div>
+              <div class="booking--popup-close" data-ng-click="toggleTime()">{{ Drupal.t('Select') }}</div>
             </div>
           </div>
         </div>
       </div>
       <div class="booking--selection-resource-picker">
-        <div class="booking--selection-header-resource" data-ng-class="{'is-active': pickResource, 'is-inactive' : pickTime || pickDate}" data-ng-click="toggleResource()">3. {{ t('Resources') }}</div>
+        <div class="booking--selection-header-resource" data-ng-class="{'is-active': pickResource, 'is-inactive' : pickTime || pickDate}" data-ng-click="toggleResource()">3. {{ Drupal.t('Resources') }}</div>
         <div class="booking--selection-display-resource">
-          <span class="booking--selection-text" data-ng-click="toggleResource()">{{ (resourceName = getSelectedResource()) ? resourceName : t('Select resource') }}</span>
+          <span class="booking--selection-text" data-ng-click="toggleResource()">{{ (resourceName = getSelectedResource()) ? resourceName : Drupal.t('Select resource') }}</span>
         </div>
         <div class="booking--popup-resource" data-ng-if="pickResource">
           <div class="booking--popup-inner">
@@ -63,49 +63,49 @@
   </div>
 
   <div data-ng-if="loadingBookings">
-    <div class="booking--description">{{ t('Checking if the room is available on the selected date, please wait ...')}}</div>
+    <div class="booking--description">{{ Drupal.t('Checking if the room is available on the selected date, please wait ...')}}</div>
   </div>
   <div data-ng-if="errorGettingBookings">
     <div class="booking--message-wrapper">
       <div class="itk-message">
-        <div class="itk-message--inner is-error">{{ t('Error loading availability on the selected date. You can still attempt bookings...')}}</div>
+        <div class="itk-message--inner is-error">{{ Drupal.t('Error loading availability on the selected date. You can still attempt bookings...')}}</div>
       </div>
     </div>
   </div>
   <div data-ng-if="errorGettingResources">
     <div class="booking--message-wrapper">
       <div class="itk-message">
-        <div class="itk-message--inner is-error">{{ t('Error loading resources. Please reload...')}}</div>
+        <div class="itk-message--inner is-error">{{ Drupal.t('Error loading resources. Please reload...')}}</div>
       </div>
     </div>
   </div>
   <div data-ng-if="!validating && validBooking === false && selected.date && selected.resource">
     <div class="booking--message-wrapper">
       <div class="itk-message">
-        <div class="itk-message--inner is-error">{{t('The room is not available at the selected time')}}</div>
+        <div class="itk-message--inner is-error">{{Drupal.t('The room is not available at the selected time')}}</div>
       </div>
     </div>
     <div class="booking--description">
-      {{ t('Below here you can see when the room is already booked. If you cannot find an available time slot, you can try another date or a different room.') }}
+      {{ Drupal.t('Below here you can see when the room is already booked. If you cannot find an available time slot, you can try another date or a different room.') }}
     </div>
     <div class="booking--description">
-      {{ t('Select a different time or click directly on an available time slot below to change your selection.') }}
+      {{ Drupal.t('Select a different time or click directly on an available time slot below to change your selection.') }}
     </div>
   </div>
   <div data-ng-if="!validating && validBooking">
     <div class="booking--message-wrapper">
       <div class="itk-message">
-        <div class="itk-message--inner is-info">{{ t('The room is available') }}</div>
+        <div class="itk-message--inner is-info">{{ Drupal.t('The room is available') }}</div>
       </div>
     </div>
     <div class="booking--description">
-      {{ t('To send your booking request you must login with Nemid. When you click on the button you will be redirected to another page where you have login, then you will be directed to a new page where you can complete your booking request.') }}
+      {{ Drupal.t('To send your booking request you must login with Nemid. When you click on the button you will be redirected to another page where you have login, then you will be directed to a new page where you can complete your booking request.') }}
     </div>
     <a data-ng-href="{{ getLink() }}" class="booking--add-submit-date">
-      {{ t('Continue to login') }}
+      {{ Drupal.t('Continue to login') }}
     </a>
   </div>
   <div class="booking--display" data-ng-if="showCalendar">
-    <booking-calendar bookings="bookings" class="booking--display-content-wrapper" selected-date="selected.date" selected-resource="selected.resource" selected-start="selected.time.start" selected-end="selected.time.end" interest-period="interestPeriod" disabled="disabled"></booking-calendar>
+    <booking-calendar bookings="bookings" class="booking--display-content-wrapper" selected-date="selected.date" selected-resource="selected.resource" selected-start="selected.time.start" selected-end="selected.time.end" interest-period="interestPeriod"></booking-calendar>
   </div>
 </div>
