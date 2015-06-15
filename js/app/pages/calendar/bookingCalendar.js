@@ -164,16 +164,26 @@ angular.module("kobaApp")
            *   The clicked time interval.
            */
           scope.select = function select(timeInterval) {
-
             var timestamp = timeInterval.time.getTime();
+
             if (selectedTimestamp.from === timestamp) {
+              return;
+            }
+
+            var selectedStart = new Date(timestamp);
+            var selectedEnd = new Date(timestamp + (selectedTimestamp.to - selectedTimestamp.from));
+
+            // Check that the new selectedEnd will not overlap the available time slots.
+            if (selectedStart.getHours() > selectedEnd.getHours() ||
+               (selectedEnd.getHours() > parseInt(scope.interestPeriod.end) ||
+               ((selectedEnd.getHours() === parseInt(scope.interestPeriod.end) && selectedEnd.getMinutes() > 0)))) {
               return;
             }
 
             // Set the new start and end times based on the interval selected. The end time is the start plus the
             // selected interval in the time picker.
-            scope.selectedStart = new Date(timestamp);
-            scope.selectedEnd = new Date(timestamp + (selectedTimestamp.to - selectedTimestamp.from));
+            scope.selectedStart = selectedStart;
+            scope.selectedEnd = selectedEnd;
           };
 
           /**
