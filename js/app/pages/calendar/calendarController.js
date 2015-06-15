@@ -253,6 +253,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      *
      * @returns string
      *   String representation of the selected start time.
+     *   HH.mm
      */
     $scope.getSelectedStartTime = function() {
       var hours = "" + $scope.selected.time.start.getHours();
@@ -265,7 +266,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
         minutes = "0" + minutes;
       }
 
-      return hours + ":" + minutes;
+      return hours + "." + minutes;
     };
 
     /**
@@ -273,6 +274,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      *
      * @returns string
      *   String representation of the selected end time.
+     *   HH.mm
      */
     $scope.getSelectedEndTime = function getSelectedEndTime() {
       var hours = "" + $scope.selected.time.end.getHours();
@@ -285,7 +287,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
         minutes = "0" + minutes;
       }
 
-      return hours + ":" + minutes;
+      return hours + "." + minutes;
     };
 
     /**
