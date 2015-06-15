@@ -113,6 +113,7 @@ koba_booking.booking_add:
     _title: 'Booking'
   requirements:
     _entity_create_access: 'koba_booking_booking'
+    _booking_add_access_check: 'access content'
 
 koba_booking.receipt:
   path: '/booking/receipt/{hash}'
