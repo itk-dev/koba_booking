@@ -57,10 +57,11 @@ class KobaBookingController extends ControllerBase  {
             'resource' => isset($defaults['resource']) ? $defaults['resource'] : NULL,
             'from' => isset($defaults['from']) ? $defaults['from'] : NULL,
             'to' => isset($defaults['to']) ? $defaults['to'] : NULL,
-            'interestPeriod' => array(
+            'interest_period' => array(
               "start" => $config->get('koba_booking.interest.from'),
               "end" => $config->get('koba_booking.interest.to'),
             ),
+            'last_booking_date' => $config->get('koba_booking.last_booking_date'),
           ),
         ),
       ),

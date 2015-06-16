@@ -6,8 +6,6 @@
 /**
  * CalendarController
  * belongs to "kobaApp" module
- *
- * @TODO: Move all the init scope code into init function to bette structure the code.
  */
 angular.module('kobaApp').controller("CalendarController", ['$scope', '$window', 'kobaFactory',
   function ($scope, $window, kobaFactory) {
@@ -46,7 +44,10 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       };
 
       // Interest period to show (in calendar directive).
-      $scope.interestPeriod = drupalSettings.koba_booking.interestPeriod;
+      $scope.interestPeriod = drupalSettings.koba_booking.interest_period;
+
+      // Last available booking date.
+      $scope.lastAvailableBookingDate = new Date(drupalSettings.koba_booking.last_booking_date * 1000);
 
       // Get booking information from drupalSettings.
       var initBooking = {
