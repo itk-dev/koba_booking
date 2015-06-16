@@ -217,3 +217,49 @@ function koba_booking_js_alter(&$javascript, AttachedAssetsInterface $assets) {
   // Scan the files to get translations into the database.
   locale_js_translate($files);
 }
+
+/**
+ * Implements hook_preprocess_views_view_table().
+ *
+ * Attaches a class to conflicting bookings in the view and load css.
+ */
+function koba_booking_preprocess_views_view_table(&$vars) {
+  // @TODO: Find better way to identify this particular view.
+  if ($vars['view']->storage->id() !== 'bookings') {
+    return;
+  }
+
+  // Load css library.
+  $vars['view']->element['#attached']['library'][] = 'koba_booking/administration_booking_view_style';
+
+  // Look through each result for a conflict.
+  foreach ($vars['result'] as $result) {
+    // Get current booking info.
+    $booking_from_date = (int) $result->booking_booking_from_date;
+    $booking_to_date = (int) $result->booking_booking_to_date;
+    $booking_id = (int) $result->id;
+    $booking_index = $result->index;
+
+    // Get conflicting bookings.
+    $query = \Drupal::entityQuery('koba_booking_booking')
+      ->condition('id', $booking_id, '<>')
+      ->condition('booking_from_date', $booking_to_date, '<')
+      ->condition('booking_to_date', $booking_from_date, '>');
+
+    // Only consider request, accepted, pending bookings.
+    $onlyActiveGroup = $query->orConditionGroup()
+      ->condition('booking_status', 'accepted', 'STARTS_WITH')
+      ->condition('booking_status', 'request', 'STARTS_WITH')
+      ->condition('booking_status', 'pending', 'STARTS_WITH');
+    $query->condition($onlyActiveGroup);
+
+    // Execute query to get possible conflicts.
+    $conflicts = $query->execute();
+
+    // If there are any conflicts.
+    if (count($conflicts) > 0) {
+      // Attach the class to indicate a conflict.
+      $vars['rows'][$booking_index]['attributes']['class'] = 'koba--booking-is-conflict ' . $vars['rows'][$booking_index]['attributes']['class'];
+    }
+  }
+}

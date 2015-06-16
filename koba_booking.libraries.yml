@@ -36,3 +36,8 @@ angular:
     - core/drupal.ajax
     - core/drupal
     - core/drupalSettings
+
+administration_booking_view_style:
+  css:
+    theme:
+      css/booking_view_style: {}
