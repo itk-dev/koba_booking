@@ -145,6 +145,13 @@ class BookingMessagesForm extends FormBase {
       '#description' => $tokens_description,
     );
 
+    $form['user_email_settings']['pending_email']['pending_email_search_phase_body'] = array(
+      '#type' => 'text_format',
+      '#title' => $this->t('Search phase message'),
+      '#default_value' => $config->get('koba_email.email_pending_search_phase_body'),
+      '#description' => $tokens_description,
+    );
+
     $form['user_email_settings']['pending_email']['pending_email_submit'] = array(
       '#type' => 'submit',
       '#value' => t('Save pending email settings'),
@@ -406,6 +413,7 @@ class BookingMessagesForm extends FormBase {
     $this->configFactory()->getEditable('koba_booking.settings')
       ->set('koba_email.email_pending_title', $form_state->getValue('pending_email_title'))
       ->set('koba_email.email_pending_body', $form_state->getValue('pending_email_body')['value'])
+      ->set('koba_email.email_pending_search_phase_body', $form_state->getValue('pending_email_search_phase_body')['value'])
       ->save();
   }
 

@@ -46,6 +46,7 @@ function koba_booking_theme($existing, $type, $theme, $path) {
       'variables' => array(
         'logo_url' => '',
         'message' => 'Booking request',
+        'search_phase_message' => '',
         'booking' => array(
           'id' => '',
           'title' => '',

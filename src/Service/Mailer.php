@@ -162,6 +162,23 @@ class Mailer {
           '#theme' => 'booking_mail_request',
           '#message' => $config->get('koba_email.email_pending_body'),
         );
+
+        // If this booking is in the next search phase, attach search phase message.
+        $last_booking_date = $config->get('koba_booking.last_booking_date');
+        $last_booking_date_minus_half_year = null;
+        if (date('n', $last_booking_date) > 6) {
+          $last_booking_date_minus_half_year = mktime(0, 0, 0, 7, 1, date('Y', $last_booking_date));
+        }
+        else {
+          $last_booking_date_minus_half_year = mktime(0, 0, 0, 1, 1, date('Y', $last_booking_date));
+        }
+        $booking_from_date = $booking->booking_from_date->value;
+        if ($booking_from_date >= $last_booking_date_minus_half_year &&
+          $booking_from_date <= $last_booking_date
+        ) {
+          $content['#search_phase_message'] = $config->get('koba_email.email_pending_search_phase_body');
+        }
+
         break;
 
       case 'accepted':
