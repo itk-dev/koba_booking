@@ -41,6 +41,17 @@ class KobaBookingController extends ControllerBase  {
     // Load configuration.
     $config = $this->config('koba_booking.settings');
 
+    // Get a half year before last_booking_date
+    $last_booking_date = $config->get('koba_booking.last_booking_date');
+    $last_booking_date_minus_half_year = null;
+
+    if (date('n', $last_booking_date) > 6) {
+      $last_booking_date_minus_half_year = mktime(0, 0, 0, 7, 1, date('Y', $last_booking_date));
+    }
+    else {
+      $last_booking_date_minus_half_year = mktime(0, 0, 0, 1, 1, date('Y', $last_booking_date));
+    }
+
     $build = array(
       '#type' => 'markup',
       '#theme' => 'booking_calendar_page',
@@ -62,6 +73,9 @@ class KobaBookingController extends ControllerBase  {
               "end" => $config->get('koba_booking.interest.to'),
             ),
             'last_booking_date' => $config->get('koba_booking.last_booking_date'),
+            'last_booking_date_minus_half_year' => $last_booking_date_minus_half_year,
+            'search_phase' => $config->get('koba_booking.search_phase'),
+            'search_phase_text' => strip_tags(check_markup($config->get('koba_booking.search_phase_text'), 'editor_format')),
           ),
         ),
       ),

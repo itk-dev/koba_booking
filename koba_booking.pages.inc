@@ -33,8 +33,6 @@ function template_preprocess_booking_calendar_page(&$variables) {
   $variables['manchet'] = check_markup($config->get('koba_booking.create_booking_description'), 'editor_format');
   $variables['submit_header'] = '/' . $config->get('koba_booking.add_booking_header');
   $variables['app_dir'] = '/' .  drupal_get_path('module', 'koba_booking') . '/js/app';
-  $variables['search_phase'] = $config->get('koba_booking.search_phase');
-  $variables['search_phase_text'] = check_markup($config->get('koba_booking.search_phase_text'), 'editor_format');
 }
 
 /**

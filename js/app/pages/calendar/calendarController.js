@@ -48,6 +48,11 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
 
       // Last available booking date.
       $scope.lastAvailableBookingDate = new Date(drupalSettings.koba_booking.last_booking_date * 1000);
+      $scope.lastAvailableBookingDateMinusHalfYear = new Date(drupalSettings.koba_booking.last_booking_date_minus_half_year * 1000);
+
+      // Search phase.
+      $scope.searchPhase = drupalSettings.koba_booking.search_phase;
+      $scope.searchPhaseText = drupalSettings.koba_booking.search_phase_text;
 
       // Get booking information from drupalSettings.
       var initBooking = {
@@ -169,6 +174,10 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
           if (!val || !$scope.selected.resource || !$scope.selected.date) {
             return;
           }
+
+          // Update whether the search phase warning should be displayed.
+          $scope.displaySearchPhaseWarning = $scope.selected.date >= moment($scope.lastAvailableBookingDateMinusHalfYear) &&
+              $scope.selected.date <= moment($scope.lastAvailableBookingDate);
 
           $scope.validating = true;
           $scope.loadingBookings = true;

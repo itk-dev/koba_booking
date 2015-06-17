@@ -104,7 +104,7 @@ class BookingSettingsForm extends FormBase {
     $form['search_period_wrapper']['search_period_text'] = array(
       '#description' => t('What text should be displayed to the user when they try to book inside a search period?'),
       '#title' => t('Search period text'),
-      '#type' => 'text_format',
+      '#type' => 'textfield',
       '#default_value' => $config->get('koba_booking.search_phase_text'),
       '#weight' => '2',
       '#open' => TRUE,
@@ -270,7 +270,7 @@ class BookingSettingsForm extends FormBase {
       ->set('koba_booking.create_booking_top_image', $file ? $file->id() : NULL)
       ->set('koba_booking.planning_state', $form_state->getValue('half_year'))
       ->set('koba_booking.search_phase', $form_state->getValue('search_period'))
-      ->set('koba_booking.search_phase_text', $form_state->getValue('search_period_text')['value'])
+      ->set('koba_booking.search_phase_text', $form_state->getValue('search_period_text'))
       ->set('koba_booking.last_booking_date', $last_booking_date)
       ->set('koba_booking.api_key', $form_state->getValue('api_key'))
       ->set('koba_booking.path', $form_state->getValue('path'))

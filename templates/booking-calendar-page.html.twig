@@ -9,8 +9,6 @@
  *  - manchet
  *  - submit_header : path
  *  - app_dir
- *  - search_phase
- *  - search_phase_text
  */
 #}
 
@@ -22,11 +20,6 @@
   <div class="booking--add-prefix">
     {{ manchet }}
   </div>
-  {% if search_phase and search_phase_text %}
-  <div class="itk-message">
-    <div class="itk-message--inner is-warning">{{ search_phase_text }}</div>
-  </div>
-  {% endif %}
   <div data-ng-app="kobaApp">
     <div data-ng-include="'{{ app_dir }}/pages/calendar/calendar.html'"></div>
   </div>

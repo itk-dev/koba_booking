@@ -65,6 +65,11 @@
   <div data-ng-if="loadingBookings">
     <div class="booking--description">{{ Drupal.t('Checking if the room is available on the selected date, please wait ...')}}</div>
   </div>
+  <div data-ng-if="searchPhase && displaySearchPhaseWarning && searchPhaseText">
+    <div class="itk-message">
+      <div class="itk-message--inner is-warning">{{ searchPhaseText }}</div>
+    </div>
+  </div>
   <div data-ng-if="errorGettingBookings">
     <div class="booking--message-wrapper">
       <div class="itk-message">
