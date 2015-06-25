@@ -33,6 +33,7 @@ function koba_booking_theme($existing, $type, $theme, $path) {
     'booking_receipt' => array(
       'variables' => array(
         'booking' => NULL,
+        'search_phase_text' => NULL,
       ),
       'file' => 'koba_booking.pages.inc',
     ),
