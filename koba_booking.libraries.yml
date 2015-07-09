@@ -4,7 +4,7 @@ angular:
     name: MIT
     url: https://github.com/angular/angular.js/blob/master/LICENSE
     gpl-compatible: true
-  version: 1.x
+  version: 2.x
   css:
     theme:
       js/assets/libs/datepicker/jquery-ui-1.11.4.custom/jquery-ui.min.css: {}
