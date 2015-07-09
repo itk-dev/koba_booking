@@ -234,7 +234,7 @@ class Booking extends ContentEntityBase implements BookingInterface {
           'association' => 'Association',
         ),
       ))
-      ->setRequired(FALSE)
+      ->setRequired(TRUE)
       ->setDisplayOptions('view', array(
         'label' => 'above',
         'type' => 'string',
@@ -265,7 +265,6 @@ class Booking extends ContentEntityBase implements BookingInterface {
         'type' => 'string',
         'weight' => -5,
       ))
-      ->setRequired(TRUE)
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 

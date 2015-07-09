@@ -27,6 +27,7 @@ angular:
     js/app/app.js: {}
     js/app/pages/calendar/bookingCalendar.js: {}
     js/app/pages/calendar/calendarController.js: {}
+    js/app/booking-add.js: {}
 
   header: TRUE
   dependencies:
