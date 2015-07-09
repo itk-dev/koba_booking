@@ -31,9 +31,6 @@ class BookingForm extends ContentEntityForm {
     if ($this->getOperation() == 'add') {
       $defaults = \Drupal::service('session')->get('koba_booking_request');
       if (!empty($defaults)) {
-        // Added link to "why" pop-up.
-        $form['booking_email']['widget']['0']['value']['#description'] = '<div class="booking--description-link" data-ng-click="showEmailDescription = !showEmailDescription">' . t('Why do we need your email?') . '</div>';
-
         if (!empty($defaults['mail'])) {
           // Set mail.
           $form['booking_email']['widget'][0]['value']['#default_value'] = $defaults['mail'];
@@ -42,18 +39,23 @@ class BookingForm extends ContentEntityForm {
           $form['booking_email']['widget']['0']['value']['#attributes']['readonly'] = 'readonly';
           $form['booking_email']['widget']['0']['value']['#attributes']['class'][] = 'booking--readonly';
         }
-
-        // Set name.
-        $form['booking_name']['widget'][0]['value']['#default_value'] = $defaults['name'];
-
-        // Set name to read-only and add link to description pop-up.
-        $form['name']['widget']['0']['value']['#description'] = '<div class="booking--description-link" data-ng-click="showTitleDescription = !showTitleDescription">' . t('Why do we need a title?') . '</div>';
-        $form['booking_name']['widget']['0']['value']['#attributes']['readonly'] = 'readonly';
-        $form['booking_name']['widget']['0']['value']['#attributes']['class'][] = 'booking--readonly';
-
-        // Add another theme function for the add booking form.
-        $form['#theme'] = array('booking_add_booking');
       }
+
+      // Added link to "why" pop-up.
+      $form['booking_email']['widget']['0']['value']['#description'] = '<div class="booking--description-link" data-ng-click="showEmailDescription = !showEmailDescription">' . t('Why do we need your email?') . '</div>';
+
+      // Set name.
+      $form['booking_name']['widget'][0]['value']['#default_value'] = $defaults['name'];
+
+      // Set name to read-only and add link to description pop-up.
+      $form['name']['widget']['0']['value']['#description'] = '<div class="booking--description-link" data-ng-click="showTitleDescription = !showTitleDescription">' . t('Why do we need a title?') . '</div>';
+      $form['booking_name']['widget']['0']['value']['#attributes']['readonly'] = 'readonly';
+      $form['booking_name']['widget']['0']['value']['#attributes']['class'][] = 'booking--readonly';
+      $form['booking_association']['#prefix'] = '<div class="js-booking-type-toggle">';
+      $form['booking_association']['#suffix'] = '</div>';
+
+      // Add another theme function for the add booking form.
+      $form['#theme'] = array('booking_add_booking');
     }
 
     $form['langcode'] = array(
