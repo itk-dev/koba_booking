@@ -31,7 +31,7 @@ angular.module('itkTimePicker', [])
           endOfDay.setHours(scope.interestPeriod.end, 0, 0, 0);
 
           // Only set new selection, if not into next day.
-          if (newTime < endOfDay.getTime()) {
+          if (newTime <= endOfDay.getTime()) {
             scope.time = new Date(newTime);
           }
         };

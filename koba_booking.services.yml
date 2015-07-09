@@ -5,3 +5,8 @@ services:
   koba_booking.mailer:
       class: Drupal\koba_booking\Service\Mailer
       arguments: ['@plugin.manager.mail']
+
+  koba_booking.booking_add_access_checker:
+      class: Drupal\koba_booking\Access\BookingAddAccessCheck
+      tags:
+        - { name: access_check, applies_to: _booking_add_access_check }

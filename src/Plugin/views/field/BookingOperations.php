@@ -22,9 +22,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @ViewsField("koba_booking_operations")
  */
 class BookingOperations extends EntityOperations {
-
-  use RedirectDestinationTrait;
-
   /**
    * The entity manager.
    *

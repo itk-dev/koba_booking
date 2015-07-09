@@ -11,9 +11,12 @@ koba_booking:
   create_booking_title: 'Create booking'
   create_booking_description: 'Lorem ipsum'
   create_booking_top_image: '0'
-  session.expire: 600
-  koba_booking.interest.from: 7
-  koba_booking.interest.to: 23
+  session:
+    expire: 600
+  koba_booking:
+    interest:
+      from: 7
+      to: 23
 koba_email:
   email_accepted_title: 'Your booking request has been accepted'
   email_accepted_body: 'Your booking has now been accepted.'

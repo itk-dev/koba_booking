@@ -6,8 +6,6 @@
 /**
  * CalendarController
  * belongs to "kobaApp" module
- *
- * @TODO: Move all the init scope code into init function to bette structure the code.
  */
 angular.module('kobaApp').controller("CalendarController", ['$scope', '$window', 'kobaFactory',
   function ($scope, $window, kobaFactory) {
@@ -46,7 +44,15 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
       };
 
       // Interest period to show (in calendar directive).
-      $scope.interestPeriod = drupalSettings.koba_booking.interestPeriod;
+      $scope.interestPeriod = drupalSettings.koba_booking.interest_period;
+
+      // Last available booking date.
+      $scope.lastAvailableBookingDate = new Date(drupalSettings.koba_booking.last_booking_date * 1000);
+      $scope.lastAvailableBookingDateMinusHalfYear = new Date(drupalSettings.koba_booking.last_booking_date_minus_half_year * 1000);
+
+      // Search phase.
+      $scope.searchPhase = drupalSettings.koba_booking.search_phase;
+      $scope.searchPhaseText = drupalSettings.koba_booking.search_phase_text;
 
       // Get booking information from drupalSettings.
       var initBooking = {
@@ -169,6 +175,10 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
             return;
           }
 
+          // Update whether the search phase warning should be displayed.
+          $scope.displaySearchPhaseWarning = $scope.selected.date >= moment($scope.lastAvailableBookingDateMinusHalfYear) &&
+              $scope.selected.date <= moment($scope.lastAvailableBookingDate);
+
           $scope.validating = true;
           $scope.loadingBookings = true;
           $scope.errorGettingBookings = false;
@@ -253,6 +263,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      *
      * @returns string
      *   String representation of the selected start time.
+     *   HH.mm
      */
     $scope.getSelectedStartTime = function() {
       var hours = "" + $scope.selected.time.start.getHours();
@@ -265,7 +276,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
         minutes = "0" + minutes;
       }
 
-      return hours + ":" + minutes;
+      return hours + "." + minutes;
     };
 
     /**
@@ -273,6 +284,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
      *
      * @returns string
      *   String representation of the selected end time.
+     *   HH.mm
      */
     $scope.getSelectedEndTime = function getSelectedEndTime() {
       var hours = "" + $scope.selected.time.end.getHours();
@@ -285,7 +297,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
         minutes = "0" + minutes;
       }
 
-      return hours + ":" + minutes;
+      return hours + "." + minutes;
     };
 
     /**
