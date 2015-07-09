@@ -416,7 +416,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
         var booking = $scope.bookings[i];
 
         // Check that the selected time is not blocked by an existing booking.
-        if (times.from >= booking.start && times.from <= booking.start) {
+        if (times.from >= booking.start && times.from <= booking.end) {
           // The selected start time was inside the interval of the this
           // bookings start time.
           validBooking = false;
@@ -427,7 +427,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
         }
 
         // Also check the end time.
-        if (times.to >= booking.end && times.to <= booking.end) {
+        if (times.to >= booking.start && times.to <= booking.end) {
           // The selected end time was inside the interval of the this
           // bookings end time.
           validBooking = false;
