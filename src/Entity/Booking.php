@@ -394,6 +394,7 @@ class Booking extends ContentEntityBase implements BookingInterface {
         'type' => 'string',
         'weight' => -5,
       ))
+      ->setRequired(TRUE)
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 

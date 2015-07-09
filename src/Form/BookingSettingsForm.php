@@ -101,6 +101,15 @@ class BookingSettingsForm extends FormBase {
       '#description' => t('When the search period is active, the users will be informed of their booking state after the planning phase, if the bookings are in the next half year period.'),
     );
 
+    $form['search_period_wrapper']['search_period_text'] = array(
+      '#description' => t('What text should be displayed to the user when they try to book inside a search period?'),
+      '#title' => t('Search period text'),
+      '#type' => 'textfield',
+      '#default_value' => $config->get('koba_booking.search_phase_text'),
+      '#weight' => '2',
+      '#open' => TRUE,
+    );
+
     // Add booking wrapper.
     $form['create_booking_wrapper'] = array(
       '#title' => $this->t('Create booking pages'),
@@ -261,6 +270,7 @@ class BookingSettingsForm extends FormBase {
       ->set('koba_booking.create_booking_top_image', $file ? $file->id() : NULL)
       ->set('koba_booking.planning_state', $form_state->getValue('half_year'))
       ->set('koba_booking.search_phase', $form_state->getValue('search_period'))
+      ->set('koba_booking.search_phase_text', $form_state->getValue('search_period_text'))
       ->set('koba_booking.last_booking_date', $last_booking_date)
       ->set('koba_booking.api_key', $form_state->getValue('api_key'))
       ->set('koba_booking.path', $form_state->getValue('path'))
@@ -288,18 +298,22 @@ function setLastBookingDate($form_state) {
 
   // If currently 1st half year.
   if ($current_month < 7) {
-    $last_booking_date = strtotime('30-6-' . date('Y'));
     // If the system is set to request phase or has opened for the next half year.
     if ($planning_state == 'second half year open') {
-      $last_booking_date = strtotime('31-12-' . date('Y'));
+      $last_booking_date = mktime(23, 59, 59, 12, 31, date('Y'));
+    }
+    else {
+      $last_booking_date = mktime(23, 59, 59, 6, 30, date('Y'));
     }
   }
+  // If currently 2nd half year.
   else {
-    // If currently 2nd half year.
-    $last_booking_date = strtotime('31-12-' . date('Y'));
     // If the system is set to request phase or has opened for the next half year.
     if ($planning_state == 'first half year open') {
-      $last_booking_date = strtotime('30-06-' . date('Y', strtotime('+1 year')));
+      $last_booking_date = mktime(23, 59, 59, 6, 30, date('Y', strtotime('+1 year')));
+    }
+    else {
+      $last_booking_date = mktime(23, 59, 59, 12, 31, date('Y'));
     }
   }
 

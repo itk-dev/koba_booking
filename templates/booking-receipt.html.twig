@@ -19,7 +19,11 @@
     <div>{{ 'Your booking id:'|t }} <span class="booking--id-display">{{ id }}</span></div>
     </br>
     <div>
-      {{ 'We regularly look through new booking requests, usually you will receive a reply within 24 hours.'|t }}
+      {% if search_phase_text %}
+        {{ search_phase_text }}
+       {% else %}
+        {{ 'We regularly look through new booking requests, usually you will receive a reply within 24 hours.'|t }}
+      {% endif %}
       {{ 'If you have any questions you can send an email to booking@dokk1.dk, when contacting us please use your booking id in the email subject:'|t }} <span class="booking--id-display">{{ id }}</span>
     </div>
   </div>

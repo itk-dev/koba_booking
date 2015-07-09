@@ -14,7 +14,8 @@ angular.module('datePicker', [])
       scope: {
         "numberOfMonths": "=",
         "showWeekNumber": "=",
-        "closeFunction": "&"
+        "closeFunction": "&",
+        "lastDate": '='
       },
       link: function (scope, el, attrs, ngModel) {
         // Setup datepicker.
@@ -33,7 +34,7 @@ angular.module('datePicker', [])
         // Set danish
         el.datepicker(jQuery.datepicker.regional["da"]);
         el.datepicker("option", "minDate", new Date());
-        el.datepicker("option", "maxDate", "+8m");
+        el.datepicker("option", "maxDate", scope.lastDate);
 
         // update the datepicker whenever the value on the scope changes
         ngModel.$render = function () {
