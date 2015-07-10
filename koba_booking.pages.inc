@@ -79,7 +79,7 @@ function template_preprocess_booking_receipt(&$variables) {
   $variables['mail'] = \Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_email->value);
   $variables['phone'] = \Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_phone->value);
   $variables['usage'] = koba_booking_room_usage()[\Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_usage->value)];
-  $variables['type'] = \Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_type->value);
+  $variables['type'] = koba_booking_type()[\Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_type->value)];
   $variables['association'] = \Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_association->value);
   $variables['message'] = \Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_message->value);
 }
