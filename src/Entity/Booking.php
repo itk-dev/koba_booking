@@ -229,10 +229,7 @@ class Booking extends ContentEntityBase implements BookingInterface {
       ->setLabel(t('Booking type'))
       ->setDescription(t('The type of booking.'))
       ->setSettings(array(
-        'allowed_values' => array(
-          'private' => 'Private',
-          'association' => 'Association',
-        ),
+        'allowed_values' => koba_booking_type(),
       ))
       ->setRequired(TRUE)
       ->setDisplayOptions('view', array(
