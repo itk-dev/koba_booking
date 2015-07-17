@@ -281,7 +281,7 @@ class Mailer {
         'name' => SafeMarkup::checkPlain($booking->booking_name->value),
         'mail' => SafeMarkup::checkPlain($booking->booking_email->value),
         'phone' => SafeMarkup::checkPlain($booking->booking_phone->value),
-        'type' => SafeMarkup::checkPlain($booking->booking_usage->value),
+        'type' => koba_booking_room_usage()[SafeMarkup::checkPlain($booking->booking_usage->value)],
         'message' => SafeMarkup::checkPlain($booking->booking_message->value),
         'url' => $url,
       ),
