@@ -133,6 +133,8 @@ class Mailer {
       $content += $this->generateBookingArray($booking);
     }
 
+    $this->replaceTokens($content, $booking);
+
     // Render the body content for the mail.
     return array(
       'subject' => $subject,
@@ -228,11 +230,32 @@ class Mailer {
       $content += $this->generateBookingArray($booking);
     }
 
+    $this->replaceTokens($content, $booking);
+
     // Render the body content for the mail.
     return array(
       'subject' => $subject,
       'body' => render($content),
     );
+  }
+
+  /**
+   * Replace tokens in content.
+   *
+   * @param array $content
+   *   The content.
+   *
+   * @return array
+   *   The content with tokens replaced by actual content.
+   */
+  protected function replaceTokens(array &$content, BookingInterface $booking) {
+    if (isset($content['#message'])) {
+      $token_service = \Drupal::token();
+      // Fetch current language for language options.
+      $language_interface = \Drupal::languageManager()->getCurrentLanguage();
+      // Output the content with tokens replaced.
+      $content['#message'] = $token_service->replace($content['#message'], array('booking' => $booking), array('langcode' => $language_interface->getId()));
+    }
   }
 
   /**
