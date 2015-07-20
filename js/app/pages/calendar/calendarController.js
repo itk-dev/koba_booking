@@ -106,10 +106,13 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
 
         if ($scope.selected.time.end <= $scope.selected.time.start) {
           // Ensure that the interest period is used.
-          var endOfDay = new Date();
+          var endOfDay = new Date($scope.selected.time.start.getTime());
           endOfDay.setHours($scope.interestPeriod.end, 0, 0, 0);
           if (endOfDay > $scope.selected.time.end) {
             $scope.selected.time.end = new Date($scope.selected.time.start.getTime() + $scope.timeIntervalLength * 60 * 1000);
+          }
+          else {
+            $scope.selected.time.start = new Date($scope.selected.time.start.getTime() - $scope.timeIntervalLength * 60 * 1000);
           }
         }
       });
@@ -125,7 +128,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
 
         if ($scope.selected.time.end <= $scope.selected.time.start) {
           // Ensure that the interest period is used.
-          var startOfDay = new Date();
+          var startOfDay = new Date($scope.selected.time.end.getTime());
           startOfDay.setHours($scope.interestPeriod.start, 0, 0, 0);
           if (startOfDay < $scope.selected.time.start) {
             $scope.selected.time.start = new Date($scope.selected.time.end.getTime() - $scope.timeIntervalLength * 60 * 1000);
