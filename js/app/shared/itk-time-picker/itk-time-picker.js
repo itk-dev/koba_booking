@@ -27,7 +27,7 @@ angular.module('itkTimePicker', [])
           var newTime = scope.time.getTime() + scope.step * 60 * 1000;
 
           // Get end of day to ensure that time stays within interest period.
-          var endOfDay = new Date();
+          var endOfDay = new Date(scope.time.getTime());
           endOfDay.setHours(scope.interestPeriod.end, 0, 0, 0);
 
           // Only set new selection, if not into next day.
@@ -43,7 +43,7 @@ angular.module('itkTimePicker', [])
           var newTime = scope.time.getTime() - scope.step * 60 * 1000;
 
           // Get end of day to ensure that time stays within interest period.
-          var startOfDay = new Date();
+          var startOfDay = new Date(scope.time.getTime());
           startOfDay.setHours(scope.interestPeriod.start, 0, 0, 0);
 
           if (newTime >= startOfDay) {
