@@ -172,3 +172,13 @@ koba_booking.action_cancel:
     _permission: 'edit booking entity'
   options:
     _admin_route: TRUE
+
+koba_booking.action_confirm:
+  path: '/booking/{koba_booking_booking}/confirm'
+  defaults:
+    _controller: '\Drupal\koba_booking\Controller\KobaBookingController::actionConfirm'
+    _title: 'Confirm action'
+  requirements:
+    _permission: 'edit booking entity'
+  options:
+    _admin_route: TRUE

@@ -125,6 +125,14 @@ class BookingListBuilder extends EntityListBuilder {
       );
     }
 
+    if ($entity->access('update')) {
+      $operations['confirmed'] = array(
+        'title' => $this->t('Confirm'),
+        'weight' => 100,
+        'url' => Url::fromRoute('koba_booking.action_confirm', array('koba_booking_booking' => $entity->id->value)),
+      );
+    }
+
     return $operations;
   }
 

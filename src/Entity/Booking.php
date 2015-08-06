@@ -154,6 +154,13 @@ class Booking extends ContentEntityBase implements BookingInterface {
   /**
    * {@inheritdoc}
    */
+  public function isUnconfirmed() {
+    return $this->get('booking_status')->value == 'unconfirmed';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function isPublic() {
     return $this->get('booking_public')->value;
   }
@@ -209,6 +216,7 @@ class Booking extends ContentEntityBase implements BookingInterface {
           'refused' => 'Refused',
           'pending' => 'Pending',
           'cancelled' => 'Cancelled',
+          'unconfirmed' => 'Unconfirmed',
         ),
       ))
       ->setRequired(FALSE)
