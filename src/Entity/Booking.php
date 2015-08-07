@@ -232,6 +232,47 @@ class Booking extends ContentEntityBase implements BookingInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
+    // Booking type field.
+    $fields['booking_type'] = BaseFieldDefinition::create('list_string')
+      ->setLabel(t('Booking type'))
+      ->setDescription(t('The type of booking.'))
+      ->setSettings(array(
+        'allowed_values' => koba_booking_type(),
+      ))
+      ->setRequired(TRUE)
+      ->setDisplayOptions('view', array(
+        'label' => 'above',
+        'type' => 'string',
+        'weight' => -10,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'options_buttons',
+        'weight' => -10,
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
+    // Name field.
+    $fields['booking_association'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Association'))
+      ->setDescription(t('The name of the association'))
+      ->setSettings(array(
+        'default_value' => '',
+        'max_length' => 255,
+        'text_processing' => 0,
+      ))
+      ->setDisplayOptions('view', array(
+        'label' => 'above',
+        'type' => 'string',
+        'weight' => -5,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'string',
+        'weight' => -5,
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
     // Booking public status field.
     // ListTextType with a drop down menu widget.
     $fields['booking_public'] = BaseFieldDefinition::create('boolean')

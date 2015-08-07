@@ -133,6 +133,9 @@ class Mailer {
       $content += $this->generateBookingArray($booking);
     }
 
+    $this->replaceTokens($content, $booking);
+    $this->setTheme($config->get('koba_email_admin.admin_email_theme'));
+
     // Render the body content for the mail.
     return array(
       'subject' => $subject,
@@ -228,11 +231,48 @@ class Mailer {
       $content += $this->generateBookingArray($booking);
     }
 
+    $this->replaceTokens($content, $booking);
+    $this->setTheme($config->get('koba_email.email_theme'));
+
     // Render the body content for the mail.
     return array(
       'subject' => $subject,
       'body' => render($content),
     );
+  }
+
+  /**
+   * Set theme for rendering email templates.
+   *
+   * @param string
+   *   The theme name.
+   */
+  protected function setTheme($themeName) {
+    if ($themeName) {
+      $theme = \Drupal::service('theme.initialization')->getActiveThemeByName($themeName);
+      if ($theme) {
+        \Drupal::theme()->setActiveTheme($theme);
+      }
+    }
+  }
+
+  /**
+   * Replace tokens in content.
+   *
+   * @param array $content
+   *   The content.
+   *
+   * @return array
+   *   The content with tokens replaced by actual content.
+   */
+  protected function replaceTokens(array &$content, BookingInterface $booking) {
+    if (isset($content['#message'])) {
+      $token_service = \Drupal::token();
+      // Fetch current language for language options.
+      $language_interface = \Drupal::languageManager()->getCurrentLanguage();
+      // Output the content with tokens replaced.
+      $content['#message'] = $token_service->replace($content['#message'], array('booking' => $booking), array('langcode' => $language_interface->getId()));
+    }
   }
 
   /**
@@ -281,7 +321,7 @@ class Mailer {
         'name' => SafeMarkup::checkPlain($booking->booking_name->value),
         'mail' => SafeMarkup::checkPlain($booking->booking_email->value),
         'phone' => SafeMarkup::checkPlain($booking->booking_phone->value),
-        'type' => SafeMarkup::checkPlain($booking->booking_usage->value),
+        'type' => koba_booking_room_usage()[SafeMarkup::checkPlain($booking->booking_usage->value)],
         'message' => SafeMarkup::checkPlain($booking->booking_message->value),
         'url' => $url,
       ),

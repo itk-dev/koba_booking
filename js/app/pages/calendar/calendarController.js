@@ -106,10 +106,13 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
 
         if ($scope.selected.time.end <= $scope.selected.time.start) {
           // Ensure that the interest period is used.
-          var endOfDay = new Date();
+          var endOfDay = new Date($scope.selected.time.start.getTime());
           endOfDay.setHours($scope.interestPeriod.end, 0, 0, 0);
           if (endOfDay > $scope.selected.time.end) {
             $scope.selected.time.end = new Date($scope.selected.time.start.getTime() + $scope.timeIntervalLength * 60 * 1000);
+          }
+          else {
+            $scope.selected.time.start = new Date($scope.selected.time.start.getTime() - $scope.timeIntervalLength * 60 * 1000);
           }
         }
       });
@@ -125,7 +128,7 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
 
         if ($scope.selected.time.end <= $scope.selected.time.start) {
           // Ensure that the interest period is used.
-          var startOfDay = new Date();
+          var startOfDay = new Date($scope.selected.time.end.getTime());
           startOfDay.setHours($scope.interestPeriod.start, 0, 0, 0);
           if (startOfDay < $scope.selected.time.start) {
             $scope.selected.time.start = new Date($scope.selected.time.end.getTime() - $scope.timeIntervalLength * 60 * 1000);
@@ -414,9 +417,17 @@ angular.module('kobaApp').controller("CalendarController", ['$scope', '$window',
 
       for (var i = 0; i < $scope.bookings.length; i++) {
         var booking = $scope.bookings[i];
-        if (booking.start >= times.from && booking.start < times.to ||
-          booking.end <= times.to && booking.end > times.from) {
+
+        // Check that the selected time is not blocked by an existing booking.
+        // Consecutive bookings can stop and start at the same time.
+        if ((booking.start <= times.from && times.from < booking.end)
+            || (booking.start < times.to && times.to <= booking.end)
+            || (times.from <= booking.start && booking.end <= times.to)) {
+          // The selected time interval overlaps with this booking.
           validBooking = false;
+
+          // Break for loop as one interval just have to be blocked to make the
+          // booking invalid.
           break;
         }
       }
