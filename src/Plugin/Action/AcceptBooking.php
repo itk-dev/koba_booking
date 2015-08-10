@@ -28,7 +28,7 @@ class AcceptBooking extends ActionBase {
    */
   public function execute(BookingInterface $booking = NULL) {
     // Get proxy service.
-    $proxy =  \Drupal::service('koba_booking.api.proxy');
+    $proxy = \Drupal::service('koba_booking.api.proxy');
 
     try {
       if ($proxy->sendBooking($booking)) {

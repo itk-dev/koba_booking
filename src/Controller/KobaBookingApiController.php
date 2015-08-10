@@ -112,7 +112,7 @@ class KobaBookingApiController extends ControllerBase {
 
         case 'UNCONFIRMED':
           // If unconfirmed, leave it in pending.
-          $booking->set('booking_status', 'pending');
+          $booking->set('booking_status', 'unconfirmed');
           break;
 
         case 'NOT CANCELLED':

@@ -222,7 +222,7 @@ class KobaBookingController extends ControllerBase  {
     $proxy = \Drupal::service('koba_booking.api.proxy');
 
     try {
-      if ($proxy->sendBooking($koba_booking_booking)) {
+      if ($proxy->confirmBooking($koba_booking_booking)) {
         // For efficiency manually save the original booking before applying any
         // changes.
         $koba_booking_booking->original = clone $koba_booking_booking;

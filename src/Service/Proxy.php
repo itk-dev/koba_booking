@@ -167,4 +167,37 @@ class Proxy {
 
     return TRUE;
   }
+
+  /**
+   * Send confirm booking request.
+   *
+   * @param \Drupal\koba_booking\BookingInterface $booking
+   *   The booking to confirm.
+   *
+   * @return bool
+   *   If booking was sent TRUE else ProxyException is thrown on error.
+   */
+  public function confirmBooking(BookingInterface $booking) {
+    // Get Drupal http client.
+    $client = new Client();
+
+    // Get unique id for the booking.
+    $id = $booking->uuid->value;
+
+    try {
+      // Send request to koba.
+      $response = $client->get($this->path . '/api/bookings/confirm/group/default/apikey/'. $this->apikey . '/booking/' . $id);
+
+      // Check response to ensure the proxy got it.
+      if ($response->getStatusCode() != 202) {
+        // Sent error message as response was not correct.
+        throw new ProxyException('Something happened at the booking service, that should not have happened. Please contact support.');
+      }
+    }
+    catch (RequestException $exception) {
+      throw new ProxyException($exception->getMessage());
+    }
+
+    return TRUE;
+  }
 }
