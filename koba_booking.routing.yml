@@ -83,6 +83,7 @@ entity.koba_booking_booking.edit_form:
     _title: 'Edit Booking'
   requirements:
     _entity_access: 'koba_booking_booking.edit'
+    _booking_edit_access_check: 'access content'
   options:
     _admin_route: TRUE
 
