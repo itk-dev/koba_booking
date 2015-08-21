@@ -1,8 +1,12 @@
 # DOKK1
 
-## In development
+## v2.1.0
 
 * Added mail theme selector
+* Bookings are made editable for admin before they are accepted/refused
+* Date for booking received is added to booking overview with recent bookings
+* Booking fields added for type of organisation
+* Added handling of unconfirmed bookings
 
 ## v2.0.8 (hotfix)
 
