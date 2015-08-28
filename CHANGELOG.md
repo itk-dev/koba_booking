@@ -7,6 +7,7 @@
 * Date for booking received is added to booking overview with recent bookings
 * Booking fields added for type of organisation
 * Added handling of unconfirmed bookings
+* Changed link to conditions for bookings from /hvad-kan-du/booking-regler to /priser-lokaler-og-sale
 
 ## v2.0.8 (hotfix)
 
