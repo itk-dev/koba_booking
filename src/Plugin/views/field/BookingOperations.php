@@ -13,6 +13,7 @@ use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\views\Plugin\views\field\EntityOperations;
 use Drupal\views\ResultRow;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\koba_booking\Entity\Booking;
 
 /**
  * Renders all operations links for an entity.
@@ -84,8 +85,9 @@ class BookingOperations extends EntityOperations {
         'accepted' => $this->t('Accepted'),
         'refused' => $this->t('Refused'),
         'cancelled' => $this->t('Cancelled'),
+        'confirmed' => $this->t('Confirmed'),
       ),
-      '#description' => $this->t('The operation the can be performed in this view (if the user has the right permissions.)'),
+      '#description' => $this->t('The operation that can be performed in this view (if the user has the right permissions.)'),
       '#default_value' => $this->options['allowedOperations'],
     );
   }
@@ -100,10 +102,17 @@ class BookingOperations extends EntityOperations {
     // Filter operations.
     if (!empty($this->options['allowedOperations'])) {
       $allowed = array_filter($this->options['allowedOperations']);
-      foreach ($operations as $machineName => $operation) {
+      // Check if the status is unconfirmed. If so, we allow manual retry.
+      if (array_key_exists('confirmed', $allowed)) {
+        $booking_status = $entity->booking_status->value;
+        if ($booking_status != 'unconfirmed') {
+          unset($allowed['confirmed']);
+        }
+      }
+      foreach ($operations as $machinename => $operation) {
         // This could have been done with array_filter in PHP 5.6.
-        if (!in_array($machineName, $allowed)) {
-          unset($operations[$machineName]);
+        if (!in_array($machinename, $allowed)) {
+          unset($operations[$machinename]);
         }
       }
     }

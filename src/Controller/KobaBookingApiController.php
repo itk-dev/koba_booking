@@ -110,6 +110,11 @@ class KobaBookingApiController extends ControllerBase {
           $mailer->send('cancelled', $booking);
           break;
 
+        case 'UNCONFIRMED':
+          // If unconfirmed, leave it in pending.
+          $booking->set('booking_status', 'unconfirmed');
+          break;
+
         case 'NOT CANCELLED':
           $booking->set('booking_status', 'accepted');
           $mailer->send('cancelled', $booking);
