@@ -26,14 +26,19 @@ class BookingForm extends ContentEntityForm {
     $form = parent::buildForm($form, $form_state);
     $entity = $this->entity;
 
+
+    $form['langcode'] = array(
+      '#title' => $this->t('Language'),
+      '#type' => 'language_select',
+      '#default_value' => $entity->getUntranslated()->language()->getId(),
+      '#languages' => Language::STATE_ALL,
+    );
+
     // Get information for the current session to fill in default values. Only
     // the ones need in the form is set here, reset in page process functions.
     if ($this->getOperation() == 'add') {
       $defaults = \Drupal::service('session')->get('koba_booking_request');
       if (!empty($defaults)) {
-        // Added link to "why" pop-up.
-        $form['booking_email']['widget']['0']['value']['#description'] = '<div class="booking--description-link" data-ng-click="showEmailDescription = !showEmailDescription">' . t('Why do we need your email?') . '</div>';
-
         if (!empty($defaults['mail'])) {
           // Set mail.
           $form['booking_email']['widget'][0]['value']['#default_value'] = $defaults['mail'];
@@ -42,26 +47,35 @@ class BookingForm extends ContentEntityForm {
           $form['booking_email']['widget']['0']['value']['#attributes']['readonly'] = 'readonly';
           $form['booking_email']['widget']['0']['value']['#attributes']['class'][] = 'booking--readonly';
         }
-
-        // Set name.
-        $form['booking_name']['widget'][0]['value']['#default_value'] = $defaults['name'];
-
-        // Set name to read-only and add link to description pop-up.
-        $form['name']['widget']['0']['value']['#description'] = '<div class="booking--description-link" data-ng-click="showTitleDescription = !showTitleDescription">' . t('Why do we need a title?') . '</div>';
-        $form['booking_name']['widget']['0']['value']['#attributes']['readonly'] = 'readonly';
-        $form['booking_name']['widget']['0']['value']['#attributes']['class'][] = 'booking--readonly';
-
-        // Add another theme function for the add booking form.
-        $form['#theme'] = array('booking_add_booking');
       }
-    }
 
-    $form['langcode'] = array(
-      '#title' => $this->t('Language'),
-      '#type' => 'language_select',
-      '#default_value' => $entity->getUntranslated()->language()->getId(),
-      '#languages' => Language::STATE_ALL,
-    );
+      // Added link to "why" pop-up.
+      $form['booking_email']['widget']['0']['value']['#description'] = '<div class="booking--description-link" data-ng-click="showEmailDescription = !showEmailDescription">' . t('Why do we need your email?') . '</div>';
+
+      // Set name.
+      $form['booking_name']['widget'][0]['value']['#default_value'] = $defaults['name'];
+
+      // Set name to read-only and add link to description pop-up.
+      $form['name']['widget']['0']['value']['#description'] = '<div class="booking--description-link" data-ng-click="showTitleDescription = !showTitleDescription">' . t('Why do we need a title?') . '</div>';
+      $form['booking_name']['widget']['0']['value']['#attributes']['readonly'] = 'readonly';
+      $form['booking_name']['widget']['0']['value']['#attributes']['class'][] = 'booking--readonly';
+      $form['booking_association']['#prefix'] = '<div class="js-booking-type-toggle">';
+      $form['booking_association']['#suffix'] = '</div>';
+
+      // Add another theme function for the add booking form.
+      $form['#theme'] = array('booking_add_booking');
+    }
+    else {
+      // Hide fields on edit form.
+      $form['booking_status']['#access'] = FALSE;
+      $form['booking_public']['#access'] = FALSE;
+      $form['booking_resource']['#access'] = FALSE;
+      $form['booking_from_date']['#access'] = FALSE;
+      $form['booking_to_date']['#access'] = FALSE;
+      $form['booking_type']['#access'] = FALSE;
+      $form['booking_association']['#access'] = FALSE;
+      $form['langcode']['#access'] = FALSE;
+    }
 
     // Attach overlays with more information about the fields.
     $form['#attached']['library'][] = 'koba_booking/angular';
@@ -92,18 +106,18 @@ class BookingForm extends ContentEntityForm {
     // Store hash value on the booking.
     $entity->booking_hash->setValue(array($hash));
 
-    // Store resource.
-    $entity->booking_resource->setValue(array($defaults['resource']));
-
-    // Store dates.
-    $entity->booking_from_date->setValue(array($defaults['from']));
-    $entity->booking_to_date->setValue(array($defaults['to']));
-
     // On first save set the booking state.
     if ($entity->isNew()) {
       $entity->set('booking_status', 'request');
 
+      // Store resource.
+      $entity->booking_resource->setValue(array($defaults['resource']));
+
+      // Store dates.
+      $entity->booking_from_date->setValue(array($defaults['from']));
+      $entity->booking_to_date->setValue(array($defaults['to']));
     }
+
     $entity->save();
 
     if ($this->getOperation() == 'add') {
@@ -118,32 +132,4 @@ class BookingForm extends ContentEntityForm {
     // Remove booking information from session (comment out during tests).
     \Drupal::service('session')->remove('koba_booking_request');
   }
-}
-
-
-/**
- * Creates an array of date elements.
- * @param $input
- *  A string in the the expected format: d/m/Y
- *
- * @return array
- */
-function getDate($input) {
-  $date_elements = explode('/', $input);
-
-  return $date_elements;
-}
-
-
-/**
- * Creates an array of time elements.
- * @param $input
- *  A string in the the expected format: H:i
- *
- * @return array
- */
-function getTime($input) {
-  $time_elements = explode(':', $input);
-
-  return $time_elements;
 }

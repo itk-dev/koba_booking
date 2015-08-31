@@ -134,6 +134,7 @@ class Mailer {
     }
 
     $this->replaceTokens($content, $booking);
+    $this->setTheme($config->get('koba_email_admin.admin_email_theme'));
 
     // Render the body content for the mail.
     return array(
@@ -231,12 +232,28 @@ class Mailer {
     }
 
     $this->replaceTokens($content, $booking);
+    $this->setTheme($config->get('koba_email.email_theme'));
 
     // Render the body content for the mail.
     return array(
       'subject' => $subject,
       'body' => render($content),
     );
+  }
+
+  /**
+   * Set theme for rendering email templates.
+   *
+   * @param string
+   *   The theme name.
+   */
+  protected function setTheme($themeName) {
+    if ($themeName) {
+      $theme = \Drupal::service('theme.initialization')->getActiveThemeByName($themeName);
+      if ($theme) {
+        \Drupal::theme()->setActiveTheme($theme);
+      }
+    }
   }
 
   /**

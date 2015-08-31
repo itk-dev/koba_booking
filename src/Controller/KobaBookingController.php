@@ -165,7 +165,7 @@ class KobaBookingController extends ControllerBase  {
    */
   public function actionAccept(Request $request, BookingInterface $koba_booking_booking) {
     // Get proxy service.
-    $proxy =  \Drupal::service('koba_booking.api.proxy');
+    $proxy = \Drupal::service('koba_booking.api.proxy');
 
     try {
       if ($proxy->sendBooking($koba_booking_booking)) {
@@ -208,6 +208,39 @@ class KobaBookingController extends ControllerBase  {
     $response->send();
   }
 
+
+  /**
+   * Confirm action for admin pending list.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request for this action.
+   * @param \Drupal\koba_booking\BookingInterface $koba_booking_booking
+   *   The booking to perform the action on.
+   */
+  public function actionConfirm(Request $request, BookingInterface $koba_booking_booking) {
+    // Get proxy service.
+    $proxy = \Drupal::service('koba_booking.api.proxy');
+
+    try {
+      if ($proxy->confirmBooking($koba_booking_booking)) {
+        // For efficiency manually save the original booking before applying any
+        // changes.
+        $koba_booking_booking->original = clone $koba_booking_booking;
+        $koba_booking_booking->set('booking_status', 'pending');
+        $koba_booking_booking->save();
+      }
+    }
+    catch (ProxyException $exception) {
+      drupal_set_message(t($exception->getMessage()), 'error');
+    }
+
+    // Set redirect. (Original path.)
+    $referer = $request->server->get('HTTP_REFERER');
+    $response = new RedirectResponse($referer);
+    $response->send();
+    exit;
+  }
+
   /**
    * Cancel action for admin list.
    *
@@ -218,7 +251,7 @@ class KobaBookingController extends ControllerBase  {
    */
   public function actionCancel(Request $request, BookingInterface $koba_booking_booking = NULL) {
     // Get proxy service.
-    $proxy =  \Drupal::service('koba_booking.api.proxy');
+    $proxy = \Drupal::service('koba_booking.api.proxy');
 
     try {
       if ($proxy->deleteBooking($koba_booking_booking)) {

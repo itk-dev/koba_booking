@@ -8,7 +8,6 @@ namespace Drupal\koba_booking;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\user\EntityOwnerInterface;
-use Drupal\user\UserInterface;
 
 /**
  * Provides an interface defining a Booking entity.
@@ -73,6 +72,14 @@ interface BookingInterface extends ContentEntityInterface, EntityOwnerInterface 
    *   Returns TRUE if status is cancelled else FALSE.
    */
   public function isCancelled();
+
+  /**
+   * Returns TRUE if the booking status is cancelled.
+   *
+   * @return bool
+   *   Returns TRUE if status is cancelled else FALSE.
+   */
+  public function isUnconfirmed();
 
   /**
    * Get room entity base on resource field.

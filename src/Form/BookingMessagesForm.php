@@ -363,6 +363,61 @@ class BookingMessagesForm extends FormBase {
       '#submit' => array('::cancelled_admin_email_submit'),
     );
 
+    // Email theme settings.
+    $installed_themes = array_filter(\Drupal::service('theme_handler')->rebuildThemeData(), function($theme) {
+      return $theme->status;
+    });
+    $installed_themes_options = array('' => '');
+    foreach ($installed_themes as $name => $theme) {
+      $installed_themes_options[$name] = $theme->info['name'];
+    }
+
+    $form['user_email_settings']['theme'] = array(
+      '#title' => $this->t('Theme'),
+      '#type' => 'details',
+      '#weight' => '87',
+      '#group' => 'user_email_settings',
+    );
+
+    $form['user_email_settings']['theme']['email_theme'] = array(
+      '#type' => 'select',
+      '#title' => $this->t('Theme'),
+      '#options' => $installed_themes_options,
+      '#default_value' => $config->get('koba_email.email_theme'),
+      '#description' => t('Theme used for sending user emails'),
+    );
+
+    $form['user_email_settings']['theme']['theme_submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Save email theme settings'),
+      '#weight' => 1,
+      '#submit' => array('::theme_submit'),
+    );
+
+    // Admin email theme settings.
+    $form['admin_email_settings']['admin_theme'] = array(
+      '#title' => $this->t('Theme'),
+      '#type' => 'details',
+      '#weight' => '87',
+      '#group' => 'admin_email_settings',
+    );
+
+    $form['admin_email_settings']['admin_theme']['admin_email_theme'] = array(
+      '#type' => 'select',
+      '#title' => $this->t('Theme'),
+      '#options' => $installed_themes_options,
+      '#default_value' => $config->get('koba_email_admin.admin_email_theme'),
+      '#description' => t('Theme used for sending admin emails'),
+    );
+
+    $form['admin_email_settings']['admin_theme']['admin_theme_submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Save admin email theme settings'),
+      '#weight' => 1,
+      '#submit' => array('::admin_theme_submit'),
+    );
+
+
     return $form;
   }
 
@@ -465,6 +520,38 @@ class BookingMessagesForm extends FormBase {
     $this->configFactory()->getEditable('koba_booking.settings')
       ->set('koba_email.email_cancelled_title', $form_state->getValue('cancelled_email_title'))
       ->set('koba_email.email_cancelled_body', $form_state->getValue('cancelled_email_body')['value'])
+      ->save();
+  }
+
+
+  /**
+   * Form submission handler for email theme config.
+   *
+   * @param $form
+   *   An associative array containing the structure of the form.
+   * @param $form_state
+   *   The current state of the form.
+   */
+  public function theme_submit(array $form, FormStateInterface $form_state) {
+    drupal_set_message('Email theme settings saved');
+    $this->configFactory()->getEditable('koba_booking.settings')
+      ->set('koba_email.email_theme', $form_state->getValue('email_theme'))
+      ->save();
+  }
+
+
+  /**
+   * Form submission handler for email admin theme config.
+   *
+   * @param $form
+   *   An associative array containing the structure of the form.
+   * @param $form_state
+   *   The current state of the form.
+   */
+  public function admin_theme_submit(array $form, FormStateInterface $form_state) {
+    drupal_set_message('Email theme settings saved');
+    $this->configFactory()->getEditable('koba_booking.settings')
+      ->set('koba_email_admin.admin_email_theme', $form_state->getValue('admin_email_theme'))
       ->save();
   }
 

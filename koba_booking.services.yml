@@ -10,3 +10,8 @@ services:
       class: Drupal\koba_booking\Access\BookingAddAccessCheck
       tags:
         - { name: access_check, applies_to: _booking_add_access_check }
+
+  koba_booking.booking_edit_access_checker:
+      class: Drupal\koba_booking\Access\BookingEditAccessCheck
+      tags:
+        - { name: access_check, applies_to: _booking_edit_access_check }

@@ -196,6 +196,23 @@ function koba_booking_room_usage() {
 }
 
 /**
+ * Translate list item machine name for booking type list field.
+ *
+ * Display the name rather than machine name.
+ *
+ * @todo get the list item title in a proper way.
+ *
+ * @return array
+ *   An array of list item titles.
+ */
+function koba_booking_type() {
+  return array(
+    'private' => t('Private'),
+    'association' => t('Association'),
+  );
+}
+
+/**
  * Implements hook_js_alter().
  *
  * Search the angular application for drupal translations.
