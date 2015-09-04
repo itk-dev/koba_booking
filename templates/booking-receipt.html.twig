@@ -55,13 +55,15 @@
       <div class="booking--information-item">
         <span class="booking--information-label">{{ 'Usage'|t }}</span><span class="booking--information-content">{{ usage }}</span>
       </div>
-      <div class="booking--information-item">
-        <span class="booking--information-label">{{ 'Type'|t }}</span>
-        <div class="booking--content">
-          <div>{{ type |t}}</div>
-          <div>{{ association }}</div>
+      {% if type %}
+        <div class="booking--information-item">
+          <span class="booking--information-label">{{ 'Type'|t }}</span>
+          <div class="booking--content">
+            <div>{{ type |t}}</div>
+            <div>{{ association }}</div>
+          </div>
         </div>
-      </div>
+      {% endif %}
       <div class="booking--information-item">
         <div class="booking--information-label">{{ 'Message'|t }}</div><div class="booking--information-message-content">{{ message|nl2br }}</div></div>
       </div>
