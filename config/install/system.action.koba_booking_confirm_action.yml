@@ -3,7 +3,6 @@ label: 'Confirm the selected booking(s)'
 status: true
 langcode: en
 type: koba_booking_booking
-plugin: koba_booking_confirm__action
 dependencies:
   module:
     - koba_booking
