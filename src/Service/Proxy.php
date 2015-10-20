@@ -7,7 +7,7 @@
 namespace Drupal\koba_booking\Service;
 
 use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Core\Http\Client;
+use GuzzleHttp\Client;
 use Drupal\koba_booking\BookingInterface;
 use Drupal\koba_booking\Exception\ProxyException;
 use GuzzleHttp\Exception\RequestException;
@@ -68,6 +68,10 @@ class Proxy {
    *   Array with resource_id and name or throws an ProxyException on error.
    */
   public function getResources() {
+    if (!isset($this->apikey)) {
+      throw new ProxyException("Apikey not set.");
+    }
+
     // Build request url.
     $url = $this->path . "/api/resources/group/default?apikey=" . $this->apikey;
 
