@@ -7,7 +7,6 @@
 
 namespace Drupal\koba_booking;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
@@ -181,7 +180,7 @@ class BookingListBuilder extends EntityListBuilder {
     // saved.
     $operations = parent::getOperations($entity);
     if (isset($operations['edit'])) {
-      $destination = drupal_get_destination();
+      $destination = \Drupal::service('redirect.destination')->getAsArray();
       $operations['edit']['query'] = $destination;
     }
     return $operations;

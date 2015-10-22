@@ -71,15 +71,15 @@ function template_preprocess_booking_receipt(&$variables) {
   );
 
   // Set date information.
-  $variables['day'] = format_date($booking->booking_from_date->value, 'dokk1_booking_dato');
-  $variables['timeInterval'] = format_date($booking->booking_from_date->value, 'dokk1_booking_time') . ' - ' . format_date($booking->booking_to_date->value, 'dokk1_booking_time');
+  $variables['day'] = \Drupal::service('date.formatter')->format($booking->booking_from_date->value, 'dokk1_booking_dato');
+  $variables['timeInterval'] = \Drupal::service('date.formatter')->format($booking->booking_from_date->value, 'dokk1_booking_time') . ' - ' . \Drupal::service('date.formatter')->format($booking->booking_to_date->value, 'dokk1_booking_time');
 
   // Set user information.
   $variables['name'] = \Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_name->value);
   $variables['mail'] = \Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_email->value);
   $variables['phone'] = \Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_phone->value);
-  $variables['usage'] = koba_booking_room_usage()[\Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_usage->value)];
-  $variables['type'] = koba_booking_type()[\Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_type->value)];
+  $variables['usage'] = koba_booking_room_usage()[\Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_usage->value)->jsonSerialize()];
+  $variables['type'] = koba_booking_type()[\Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_type->value)->jsonSerialize()];
   $variables['association'] = \Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_association->value);
   $variables['message'] = \Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_message->value);
 }
@@ -94,7 +94,7 @@ function template_preprocess_booking_add_booking(&$variables) {
 
   if (!empty($defaults)) {
     // Load "lokale" entity information.
-    $defaults['room'] = entity_load('node', $defaults['resource']);
+    $defaults['room'] = \Drupal\node\Entity\Node::load($defaults['resource']);
 
     $variables['booking'] = array(
       'room' => array(
@@ -102,8 +102,8 @@ function template_preprocess_booking_add_booking(&$variables) {
         'price' => $defaults['room']->field_price->value,
         'url' => $defaults['room']->url(),
       ),
-      'day' => format_date($defaults['from'], 'dokk1_booking_dato'),
-      'timeIntreval' => format_date($defaults['from'], 'dokk1_booking_time') . ' - ' . format_date($defaults['to'], 'dokk1_booking_time'),
+      'day' => \Drupal::service('date.formatter')->format($defaults['from'], 'dokk1_booking_dato'),
+      'timeIntreval' => \Drupal::service('date.formatter')->format($defaults['from'], 'dokk1_booking_time') . ' - ' . \Drupal::service('date.formatter')->format($defaults['to'], 'dokk1_booking_time'),
       'raw' => $defaults,
     );
   }

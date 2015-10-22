@@ -7,14 +7,9 @@
 namespace Drupal\koba_booking\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Http\Client;
-use Drupal\Core\Url;
-use Drupal\koba_booking\BookingInterface;
-use Drupal\koba_booking\Exception\ProxyException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use GuzzleHttp\Exception\RequestException;
 
 /**
  * KobaBookingApiController.
@@ -39,7 +34,7 @@ class KobaBookingApiController extends ControllerBase {
     $nids = $query->execute();
 
     // Load nodes and build response.
-    $nodes = entity_load_multiple('node', $nids);
+    $nodes = \Drupal::entityManager()->getStorage('node')->loadMultiple($nids);
     foreach ($nodes as $node) {
       $rooms[] = array(
         'id' => $node->nid->value,

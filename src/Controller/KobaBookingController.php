@@ -7,13 +7,10 @@
 namespace Drupal\koba_booking\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Render\Element\Link;
-use Drupal\Core\Url;
 use Drupal\koba_booking\BookingInterface;
 use Drupal\koba_booking\Exception\ProxyException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
@@ -101,7 +98,7 @@ class KobaBookingController extends ControllerBase  {
 
     if (!empty($nids)) {
       // Load booking.
-      $booking = entity_load('koba_booking_booking', array_pop($nids));
+      $booking = \Drupal::entityManager()->getStorage('koba_booking_booking')->load(array_pop($nids));
 
       // Setup template for frontend.
       $build = array(
