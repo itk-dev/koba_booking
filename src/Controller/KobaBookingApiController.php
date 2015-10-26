@@ -72,6 +72,7 @@ class KobaBookingApiController extends ControllerBase {
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The HTTP post request.
+   * @return JsonResponse
    */
   public function callback(Request $request) {
     // Get JSON parameters.
@@ -124,6 +125,8 @@ class KobaBookingApiController extends ControllerBase {
     else {
       \Drupal::logger('koba_booking')->error('No entity with uuid: ' . $params['client_booking_id']);
     }
+
+    return new JsonResponse(array(), 200);
   }
 
   /**
