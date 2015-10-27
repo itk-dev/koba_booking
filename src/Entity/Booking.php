@@ -38,6 +38,7 @@ use Drupal\user\UserInterface;
  *   base_table = "booking",
  *   entity_keys = {
  *     "id" = "id",
+ *     "langcode" = "langcode",
  *     "uuid" = "uuid"
  *   },
  *  links = {
