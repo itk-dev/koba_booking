@@ -6,9 +6,7 @@
  * Available variables:
  *  - form : Booking form
  *    - variables:
- *      - why_email_header
  *      - why_email
- *      - why_title_header
  *      - why_title
  *  - user : Active user
  *  - title
@@ -72,7 +70,7 @@
     <div class="booking--wrapper">
       <div class="booking--field-wrapper">
         {{ form.name }}
-        <div data-ng-cloak data-ng-show="showTitleDescription">{% include "@koba_booking/booking-title-description.html.twig" %}</div>
+        {{ why_title }}
       </div>
       {{ form.booking_usage }}
       {{ form.booking_type }}
@@ -91,7 +89,7 @@
       {{ form.booking_name }}
       <div class="booking--field-wrapper">
         {{ form.booking_email }}
-        <div data-ng-cloak data-ng-show="showEmailDescription">{% include "@koba_booking/booking-email-description.html.twig" %}</div>
+        {{ why_email }}
       </div>
       {{ form.booking_phone }}
     </div>
