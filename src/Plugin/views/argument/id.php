@@ -7,7 +7,7 @@
 
 namespace Drupal\koba_booking\Plugin\views\argument;
 
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\views\Plugin\views\argument\NumericArgument;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -61,7 +61,7 @@ class Id extends NumericArgument {
    */
   public function titleQuery() {
     return array_map(function($booking) {
-      return SafeMarkup::checkPlain($booking->label());
+      return Html::escape($booking->label());
     }, $this->storage->loadMultiple($this->value));
   }
 }

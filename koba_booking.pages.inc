@@ -7,6 +7,7 @@
 
 use Drupal\file\Entity\File;
 use Drupal\Core\Config;
+use Drupal\Component\Utility\Html;
 
 /**
  * Prepares variables for booking calendar page.
@@ -75,13 +76,13 @@ function template_preprocess_booking_receipt(&$variables) {
   $variables['timeInterval'] = \Drupal::service('date.formatter')->format($booking->booking_from_date->value, 'dokk1_booking_time') . ' - ' . \Drupal::service('date.formatter')->format($booking->booking_to_date->value, 'dokk1_booking_time');
 
   // Set user information.
-  $variables['name'] = $booking->booking_name->value;
-  $variables['mail'] = $booking->booking_email->value;
-  $variables['phone'] = $booking->booking_phone->value;
-  $variables['usage'] = (string) (koba_booking_room_usage()[$booking->booking_usage->value]);
-  $variables['type'] = (string) (koba_booking_type()[$booking->booking_type->value]);
-  $variables['association'] = $booking->booking_association->value;
-  $variables['message'] = $booking->booking_message->value;
+  $variables['name'] = Html::escape($booking->booking_name->value);
+  $variables['mail'] = Html::escape($booking->booking_email->value);
+  $variables['phone'] = Html::escape($booking->booking_phone->value);
+  $variables['usage'] = (string) (koba_booking_room_usage()[Html::escape($booking->booking_usage->value)]);
+  $variables['type'] = (string) (koba_booking_type()[Html::escape($booking->booking_type->value)]);
+  $variables['association'] = Html::escape($booking->booking_association->value);
+  $variables['message'] = Html::escape($booking->booking_message->value);
 }
 
 
