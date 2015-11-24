@@ -135,9 +135,9 @@ class ResourceSelectWidget extends WidgetBase {
    * {@inheritdoc}
    */
   protected function getEmptyLabel() {
-    if ($this->multiple) {
+    if (isset($this->multiple) && $this->multiple) {
       // Multiple select: add a 'none' option for non-required fields.
-      if (!$this->required) {
+      if (!isset($this->required) || !$this->multiple) {
         return t('- None -');
       }
     }
@@ -145,10 +145,10 @@ class ResourceSelectWidget extends WidgetBase {
       // Single select: add a 'none' option for non-required fields,
       // and a 'select a value' option for required fields that do not come
       // with a value selected.
-      if (!$this->required) {
+      if (!isset($this->required) || !$this->required) {
         return t('- None -');
       }
-      if (!$this->has_value) {
+      if (!isset($this->has_value) || !$this->has_value) {
         return t('- Select a value -');
       }
     }

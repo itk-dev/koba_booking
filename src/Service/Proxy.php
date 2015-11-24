@@ -6,8 +6,8 @@
 
 namespace Drupal\koba_booking\Service;
 
-use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Core\Http\Client;
+use Drupal\Component\Utility\Html;
+use GuzzleHttp\Client;
 use Drupal\koba_booking\BookingInterface;
 use Drupal\koba_booking\Exception\ProxyException;
 use GuzzleHttp\Exception\RequestException;
@@ -68,6 +68,10 @@ class Proxy {
    *   Array with resource_id and name or throws an ProxyException on error.
    */
   public function getResources() {
+    if (!isset($this->apikey)) {
+      throw new ProxyException("Apikey not set.");
+    }
+
     // Build request url.
     $url = $this->path . "/api/resources/group/default?apikey=" . $this->apikey;
 
@@ -103,11 +107,11 @@ class Proxy {
 
     // Build request.
     $requestBody = json_encode(array(
-      'subject' => SafeMarkup::checkPlain($booking->name->value),
-      'description' => SafeMarkup::checkPlain($booking->booking_message->value),
-      'name' => SafeMarkup::checkPlain($booking->booking_name->value),
-      'mail' => SafeMarkup::checkPlain($booking->booking_email->value),
-      'phone' => SafeMarkup::checkPlain($booking->booking_phone->value),
+      'subject' => Html::escape($booking->name->value),
+      'description' => Html::escape($booking->booking_message->value),
+      'name' => Html::escape($booking->booking_name->value),
+      'mail' => Html::escape($booking->booking_email->value),
+      'phone' => Html::escape($booking->booking_phone->value),
       'start_time' => $booking->booking_from_date->value,
       'end_time' => $booking->booking_to_date->value,
       'resource' => $room->field_resource->value,

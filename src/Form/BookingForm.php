@@ -49,14 +49,18 @@ class BookingForm extends ContentEntityForm {
         }
       }
 
+      $config = \Drupal::config('koba_booking.settings');
+      $why_email = check_markup($config->get('koba_booking.why_email'), 'editor_format');
+      $why_title = check_markup($config->get('koba_booking.why_title'), 'editor_format');
+
       // Added link to "why" pop-up.
-      $form['booking_email']['widget']['0']['value']['#description'] = '<div class="booking--description-link" data-ng-click="showEmailDescription = !showEmailDescription">' . t('Why do we need your email?') . '</div>';
+      $form['booking_email']['widget']['0']['value']['#description'] = $why_email;
 
       // Set name.
       $form['booking_name']['widget'][0]['value']['#default_value'] = $defaults['name'];
 
       // Set name to read-only and add link to description pop-up.
-      $form['name']['widget']['0']['value']['#description'] = '<div class="booking--description-link" data-ng-click="showTitleDescription = !showTitleDescription">' . t('Why do we need a title?') . '</div>';
+      $form['name']['widget']['0']['value']['#description'] = $why_title;
       $form['booking_name']['widget']['0']['value']['#attributes']['readonly'] = 'readonly';
       $form['booking_name']['widget']['0']['value']['#attributes']['class'][] = 'booking--readonly';
       $form['booking_association']['#prefix'] = '<div class="js-booking-type-toggle">';

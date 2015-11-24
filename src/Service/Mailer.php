@@ -7,7 +7,7 @@
 namespace Drupal\koba_booking\Service;
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use Drupal\koba_booking\BookingInterface;
 
@@ -310,19 +310,19 @@ class Mailer {
     return array(
       '#booking' => array(
         'id' => $booking->id->value,
-        'title' => SafeMarkup::checkPlain($booking->name->value),
-        'date' => format_date($booking->booking_from_date->value, 'dokk1_booking_dato'),
-        'time' => format_date($booking->booking_from_date->value, 'dokk1_booking_time') . ' - ' . format_date($booking->booking_to_date->value, 'dokk1_booking_time'),
+        'title' => Html::escape($booking->name->value),
+        'date' => \Drupal::service('date.formatter')->format($booking->booking_from_date->value, 'dokk1_booking_dato'),
+        'time' => \Drupal::service('date.formatter')->format($booking->booking_from_date->value, 'dokk1_booking_time') . ' - ' . \Drupal::service('date.formatter')->format($booking->booking_to_date->value, 'dokk1_booking_time'),
         'room' => array(
           'title' => $room->title->value,
           'price' => $room->field_price->value,
           'url' => Url::fromUri($room->url('canonical', array('absolute' => TRUE))),
         ),
-        'name' => SafeMarkup::checkPlain($booking->booking_name->value),
-        'mail' => SafeMarkup::checkPlain($booking->booking_email->value),
-        'phone' => SafeMarkup::checkPlain($booking->booking_phone->value),
-        'type' => koba_booking_room_usage()[SafeMarkup::checkPlain($booking->booking_usage->value)],
-        'message' => SafeMarkup::checkPlain($booking->booking_message->value),
+        'name' => Html::escape($booking->booking_name->value),
+        'mail' => Html::escape($booking->booking_email->value),
+        'phone' => Html::escape($booking->booking_phone->value),
+        'type' => koba_booking_room_usage()[Html::escape($booking->booking_usage->value)],
+        'message' => Html::escape($booking->booking_message->value),
         'url' => $url,
       ),
     );

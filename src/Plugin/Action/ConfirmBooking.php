@@ -9,6 +9,7 @@ namespace Drupal\koba_booking\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\koba_booking\Exception\ProxyException;
 
 /**
  * Refuse booking.

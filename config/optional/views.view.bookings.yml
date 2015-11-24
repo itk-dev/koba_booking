@@ -1,5 +1,4 @@
-uuid: 47c66d6f-c288-4607-8e5d-93975e6e6467
-langcode: da
+langcode: en
 status: true
 dependencies:
   module:
@@ -763,11 +762,11 @@ display:
       contexts:
         - 'languages:language_interface'
         - url
-        - 'url.query_args.pagers:0'
-        - 'url.query_args:order'
-        - 'url.query_args:sort'
+        - url.query_args
         - user.permissions
       cacheable: false
+      max-age: 0
+      tags: {  }
   page_1:
     display_plugin: page
     id: page_1
@@ -843,6 +842,22 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
+          click_sort_column: value
+          type: timestamp
+          settings:
+            date_format: custom
+            custom_date_format: 'd.m.Y - h:i'
+            timezone: ''
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: 0
           date_format: custom
           custom_date_format: 'd.m.Y - h:i'
           timezone: ''
@@ -1022,10 +1037,10 @@ display:
           entity_type: koba_booking_booking
           entity_field: booking_to_date
           plugin_id: date
-        koba_booking_booking_bulk_form:
-          id: koba_booking_booking_bulk_form
+        booking_bulk_form:
+          id: booking_bulk_form
           table: booking
-          field: koba_booking_booking_bulk_form
+          field: booking_bulk_form
           relationship: none
           group_type: group
           admin_label: ''
@@ -1062,7 +1077,7 @@ display:
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: true
+          element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
@@ -1076,7 +1091,7 @@ display:
             - koba_booking_accept_action
             - koba_booking_refuse_action
           entity_type: koba_booking_booking
-          plugin_id: bulk_form
+          plugin_id: booking_bulk_form
         name_1:
           id: name_1
           table: booking
@@ -1396,13 +1411,14 @@ display:
           plugin_id: koba_booking_operations
     cache_metadata:
       contexts:
+        - 'languages:language_content'
         - 'languages:language_interface'
         - url
-        - 'url.query_args.pagers:0'
-        - 'url.query_args:order'
-        - 'url.query_args:sort'
+        - url.query_args
         - user.permissions
       cacheable: false
+      max-age: 0
+      tags: {  }
   page_2:
     display_plugin: page
     id: page_2
@@ -1794,10 +1810,10 @@ display:
           entity_type: koba_booking_booking
           entity_field: booking_to_date
           plugin_id: date
-        koba_booking_booking_bulk_form:
-          id: koba_booking_booking_bulk_form
+        booking_bulk_form:
+          id: booking_bulk_form
           table: booking
-          field: koba_booking_booking_bulk_form
+          field: booking_bulk_form
           relationship: none
           group_type: group
           admin_label: ''
@@ -1847,7 +1863,7 @@ display:
           selected_actions:
             - koba_booking_cancel_action
           entity_type: koba_booking_booking
-          plugin_id: bulk_form
+          plugin_id: booking_bulk_form
         name_1:
           id: name_1
           table: booking
@@ -2166,13 +2182,14 @@ display:
           plugin_id: koba_booking_operations
     cache_metadata:
       contexts:
+        - 'languages:language_content'
         - 'languages:language_interface'
         - url
-        - 'url.query_args.pagers:0'
-        - 'url.query_args:order'
-        - 'url.query_args:sort'
+        - url.query_args
         - user.permissions
       cacheable: false
+      max-age: 0
+      tags: {  }
   page_3:
     display_plugin: page
     id: page_3
@@ -2826,13 +2843,14 @@ display:
           plugin_id: custom
     cache_metadata:
       contexts:
+        - 'languages:language_content'
         - 'languages:language_interface'
         - url
-        - 'url.query_args.pagers:0'
-        - 'url.query_args:order'
-        - 'url.query_args:sort'
+        - url.query_args
         - user.permissions
       cacheable: false
+      max-age: 0
+      tags: {  }
   page_4:
     display_plugin: page
     id: page_4
@@ -3486,13 +3504,14 @@ display:
           plugin_id: custom
     cache_metadata:
       contexts:
+        - 'languages:language_content'
         - 'languages:language_interface'
         - url
-        - 'url.query_args.pagers:0'
-        - 'url.query_args:order'
-        - 'url.query_args:sort'
+        - url.query_args
         - user.permissions
       cacheable: false
+      max-age: 0
+      tags: {  }
   page_5:
     display_plugin: page
     id: page_5
@@ -4250,10 +4269,11 @@ display:
           plugin_id: koba_booking_operations
     cache_metadata:
       contexts:
+        - 'languages:language_content'
         - 'languages:language_interface'
         - url
-        - 'url.query_args.pagers:0'
-        - 'url.query_args:order'
-        - 'url.query_args:sort'
+        - url.query_args
         - user.permissions
       cacheable: false
+      max-age: 0
+      tags: {  }
