@@ -38,6 +38,7 @@ use Drupal\user\UserInterface;
  *   base_table = "booking",
  *   entity_keys = {
  *     "id" = "id",
+ *     "langcode" = "langcode",
  *     "uuid" = "uuid"
  *   },
  *  links = {
@@ -171,7 +172,7 @@ class Booking extends ContentEntityBase implements BookingInterface {
   public function getRoomEntity() {
     $values = $this->get('booking_resource')->getValue();
     if (!empty($values) && isset($values[0]['target_id'])) {
-      return entity_load('node', array_pop($values)['target_id']);
+      return \Drupal::entityManager()->getStorage('node')->load(array_pop($values)['target_id']);
     }
 
     return FALSE;

@@ -7,6 +7,7 @@
 
 use Drupal\file\Entity\File;
 use Drupal\Core\Config;
+use Drupal\Component\Utility\Html;
 
 /**
  * Prepares variables for booking calendar page.
@@ -71,17 +72,17 @@ function template_preprocess_booking_receipt(&$variables) {
   );
 
   // Set date information.
-  $variables['day'] = format_date($booking->booking_from_date->value, 'dokk1_booking_dato');
-  $variables['timeInterval'] = format_date($booking->booking_from_date->value, 'dokk1_booking_time') . ' - ' . format_date($booking->booking_to_date->value, 'dokk1_booking_time');
+  $variables['day'] = \Drupal::service('date.formatter')->format($booking->booking_from_date->value, 'dokk1_booking_dato');
+  $variables['timeInterval'] = \Drupal::service('date.formatter')->format($booking->booking_from_date->value, 'dokk1_booking_time') . ' - ' . \Drupal::service('date.formatter')->format($booking->booking_to_date->value, 'dokk1_booking_time');
 
   // Set user information.
-  $variables['name'] = \Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_name->value);
-  $variables['mail'] = \Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_email->value);
-  $variables['phone'] = \Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_phone->value);
-  $variables['usage'] = koba_booking_room_usage()[\Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_usage->value)];
-  $variables['type'] = koba_booking_type()[\Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_type->value)];
-  $variables['association'] = \Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_association->value);
-  $variables['message'] = \Drupal\Component\Utility\SafeMarkup::checkPlain($booking->booking_message->value);
+  $variables['name'] = Html::escape($booking->booking_name->value);
+  $variables['mail'] = Html::escape($booking->booking_email->value);
+  $variables['phone'] = Html::escape($booking->booking_phone->value);
+  $variables['usage'] = (string) (koba_booking_room_usage()[Html::escape($booking->booking_usage->value)]);
+  $variables['type'] = (string) (koba_booking_type()[Html::escape($booking->booking_type->value)]);
+  $variables['association'] = Html::escape($booking->booking_association->value);
+  $variables['message'] = Html::escape($booking->booking_message->value);
 }
 
 
@@ -94,7 +95,7 @@ function template_preprocess_booking_add_booking(&$variables) {
 
   if (!empty($defaults)) {
     // Load "lokale" entity information.
-    $defaults['room'] = entity_load('node', $defaults['resource']);
+    $defaults['room'] = \Drupal\node\Entity\Node::load($defaults['resource']);
 
     $variables['booking'] = array(
       'room' => array(
@@ -102,8 +103,8 @@ function template_preprocess_booking_add_booking(&$variables) {
         'price' => $defaults['room']->field_price->value,
         'url' => $defaults['room']->url(),
       ),
-      'day' => format_date($defaults['from'], 'dokk1_booking_dato'),
-      'timeIntreval' => format_date($defaults['from'], 'dokk1_booking_time') . ' - ' . format_date($defaults['to'], 'dokk1_booking_time'),
+      'day' => \Drupal::service('date.formatter')->format($defaults['from'], 'dokk1_booking_dato'),
+      'timeIntreval' => \Drupal::service('date.formatter')->format($defaults['from'], 'dokk1_booking_time') . ' - ' . \Drupal::service('date.formatter')->format($defaults['to'], 'dokk1_booking_time'),
       'raw' => $defaults,
     );
   }
@@ -119,12 +120,4 @@ function template_preprocess_booking_add_booking(&$variables) {
   $variables['title'] = $config->get('koba_booking.create_booking_title');
   $variables['top_img'] = ($file) ? $file->url() : '';
   $variables['search_phase'] = $config->get('koba_booking.search_phase');
-
-  // Filter help texts if they have a filter.
-  $variables['why_email'] = check_markup($config->get('koba_booking.why_email'), 'editor_format');
-  $variables['why_title'] = check_markup($config->get('koba_booking.why_title'), 'editor_format');
-
-  // Help texts are reused as headers.
-  $variables['why_email_header'] = t('Why do we need your email?');
-  $variables['why_title_header'] = t('Why do we need a title?');
 }

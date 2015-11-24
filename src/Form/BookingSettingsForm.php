@@ -353,5 +353,7 @@ function getHalfYears() {
 function removeFile($fid) {
   // Load and delete old file.
   $file = File::load($fid);
-  \Drupal::service('file.usage')->delete($file, 'koba_booking', 'user', '1', '1');
+  if ($file) {
+    \Drupal::service('file.usage')->delete($file, 'koba_booking', 'user', '1', '1');
+  }
 }
