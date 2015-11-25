@@ -49,9 +49,9 @@ class BookingForm extends ContentEntityForm {
         }
       }
 
-      $config = \Drupal::config('koba_booking.settings');
-      $why_email = check_markup($config->get('koba_booking.why_email'), 'editor_format');
-      $why_title = check_markup($config->get('koba_booking.why_title'), 'editor_format');
+      $content = \Drupal::getContainer()->get('koba_booking.booking_content');
+      $why_email = check_markup($content->get('koba_booking.why_email'), 'editor_format');
+      $why_title = check_markup($content->get('koba_booking.why_title'), 'editor_format');
 
       // Added link to "why" pop-up.
       $form['booking_email']['widget']['0']['value']['#description'] = $why_email;
@@ -94,11 +94,11 @@ class BookingForm extends ContentEntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     // Load configuration and session defaults.
-    $config = \Drupal::config('koba_booking.settings');
+    $content = \Drupal::getContainer()->get('koba_booking.booking_content');
     $defaults = \Drupal::service('session')->get('koba_booking_request');
 
     // Set message.
-    $message_text = is_array($config->get('koba_booking.created_booking_message')) ? $config->get('koba_booking.created_booking_message')['value'] : $config->get('koba_booking.created_booking_message');
+    $message_text = is_array($content->get('koba_booking.created_booking_message')) ? $content->get('koba_booking.created_booking_message')['value'] : $content->get('koba_booking.created_booking_message');
     drupal_set_message($message_text);
 
     // Generate hash value (based on name, mail, date).

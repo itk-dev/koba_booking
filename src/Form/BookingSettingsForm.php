@@ -25,11 +25,16 @@ class BookingSettingsForm extends FormBase {
     return 'koba_booking_settings';
   }
 
+  public function getContent() {
+    return \Drupal::getContainer()->get('koba_booking.booking_content');
+  }
+
   /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('koba_booking.settings');
+    $content = $this->getContent();
     $account = $this->currentUser();
 
     // Set first and second half year strings.
@@ -105,7 +110,7 @@ class BookingSettingsForm extends FormBase {
       '#description' => t('What text should be displayed to the user when they try to book inside a search period?'),
       '#title' => t('Search period text'),
       '#type' => 'textfield',
-      '#default_value' => $config->get('koba_booking.search_phase_text'),
+      '#default_value' => $content->get('koba_booking.search_phase_text'),
       '#weight' => '2',
       '#open' => TRUE,
     );
@@ -121,7 +126,7 @@ class BookingSettingsForm extends FormBase {
     $form['create_booking_wrapper']['create_booking_title'] = array(
       '#title' => $this->t('Pages title'),
       '#type' => 'textfield',
-      '#default_value' => $config->get('koba_booking.create_booking_title'),
+      '#default_value' => $content->get('koba_booking.create_booking_title'),
       '#weight' => '1',
       '#open' => TRUE,
     );
@@ -129,7 +134,7 @@ class BookingSettingsForm extends FormBase {
     $form['create_booking_wrapper']['create_booking_description'] = array(
       '#title' => $this->t('Pages description'),
       '#type' => 'text_format',
-      '#default_value' => $config->get('koba_booking.create_booking_description'),
+      '#default_value' => $content->get('koba_booking.create_booking_description'),
       '#weight' => '2',
       '#open' => TRUE,
     );
@@ -141,7 +146,7 @@ class BookingSettingsForm extends FormBase {
       }
     }
     else {
-      $fids[0] = $config->get('koba_booking.create_booking_top_image', '');
+      $fids[0] = $content->get('koba_booking.create_booking_top_image', '');
     }
 
     $form['create_booking_wrapper']['create_booking_top_image'] = array(
@@ -231,8 +236,8 @@ class BookingSettingsForm extends FormBase {
     drupal_set_message('Settings saved');
 
     // Fetch the file id previously saved.
-    $config = $this->config('koba_booking.settings');
-    $old_fid = $config->get('koba_booking.create_booking_top_image', '');
+    $content = \Drupal::getContainer()->get('koba_booking.booking_content');
+    $old_fid = $content->get('koba_booking.create_booking_top_image', '');
 
     // Load the file set in the form.
     $value = $form_state->getValue('create_booking_top_image');
@@ -265,12 +270,8 @@ class BookingSettingsForm extends FormBase {
     $last_booking_date = setLastBookingDate($form_state);
 
     $this->configFactory()->getEditable('koba_booking.settings')
-      ->set('koba_booking.create_booking_title', $form_state->getValue('create_booking_title'))
-      ->set('koba_booking.create_booking_description', $form_state->getValue('create_booking_description')['value'])
-      ->set('koba_booking.create_booking_top_image', $file ? $file->id() : NULL)
       ->set('koba_booking.planning_state', $form_state->getValue('half_year'))
       ->set('koba_booking.search_phase', $form_state->getValue('search_period'))
-      ->set('koba_booking.search_phase_text', $form_state->getValue('search_period_text'))
       ->set('koba_booking.last_booking_date', $last_booking_date)
       ->set('koba_booking.api_key', $form_state->getValue('api_key'))
       ->set('koba_booking.path', $form_state->getValue('path'))
@@ -279,6 +280,13 @@ class BookingSettingsForm extends FormBase {
       ->set('koba_booking.interest.to', $form_state->getValue('interest_to'))
       ->set('koba_booking.add_booking_header', $form_state->getValue('add_booking_header'))
       ->save();
+
+    $this->getContent()->setMultiple(array(
+      'koba_booking.create_booking_title' => $form_state->getValue('create_booking_title'),
+      'koba_booking.create_booking_description' => $form_state->getValue('create_booking_description')['value'],
+      'koba_booking.create_booking_top_image' => $file ? $file->id() : NULL,
+      'koba_booking.search_phase_text' => $form_state->getValue('search_period_text'),
+    ));
   }
 }
 

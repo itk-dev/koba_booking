@@ -1,0 +1,68 @@
+<?php
+/**
+ * @file
+ * Contains update functions for koba_booking.
+ */
+
+/**
+ * Move content from configuration to key/value database storage.
+ */
+function koba_booking_update_8001(&$sandbox) {
+  $config = \Drupal::service('config.factory')->getEditable('koba_booking.settings');
+
+  $configToContent = array(
+    'koba_booking' => array(
+      'created_booking_message',
+      'why_email',
+      'why_title',
+      'create_booking_title',
+      'create_booking_description',
+      'search_phase_text',
+      'create_booking_top_image',
+    ),
+    'koba_email' => array(
+      'email_accepted_title',
+      'email_accepted_body',
+      'email_pending_title',
+      'email_pending_body',
+      'email_rejected_title',
+      'email_rejected_body',
+      'email_cancelled_title',
+      'email_cancelled_body',
+      'pending_email_search_phase_body',
+      'email_theme',
+      'admin_email_theme',
+    ),
+    'koba_email_admin' => array(
+      'email_admin_accepted_title',
+      'email_admin_accepted_body',
+      'email_admin_pending_title',
+      'email_admin_pending_body',
+      'email_admin_rejected_title',
+      'email_admin_rejected_body',
+      'email_admin_cancelled_title',
+      'email_admin_cancelled_body',
+    )
+  );
+
+  $settings = array();
+  foreach ($configToContent as $parentKey => $childKeys) {
+    foreach ($childKeys as $childKey) {
+      $key = $parentKey . '.'. $childKey;
+      $value = $config->get($key);
+      if ($value !== NULL) {
+        $settings[$key] = $value;
+        $config->clear($key);
+      }
+    }
+    if (empty($config->get($parentKey))) {
+      $config->clear($parentKey);
+    }
+  }
+  $config->save();
+
+  if ($settings) {
+    \Drupal::getContainer()->get('koba_booking.booking_content')
+      ->setMultiple($settings);
+  }
+}

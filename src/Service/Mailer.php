@@ -74,45 +74,45 @@ class Mailer {
    */
   protected function generateAdminNotificationMailContent($type, BookingInterface $booking) {
     // Build render array for the mail body.
-    $config = \Drupal::config('koba_booking.settings');
+    $content = \Drupal::getContainer()->get('koba_booking.booking_content');
     switch ($type) {
       case 'request':
-        $subject = $config->get('koba_email_admin.email_admin_pending_title');
+        $subject = $content->get('koba_email_admin.email_admin_pending_title');
 
         // Build render array.
         $content = array(
           '#theme' => 'booking_mail_request',
-          '#message' => $config->get('koba_email_admin.email_admin_pending_body'),
+          '#message' => $content->get('koba_email_admin.email_admin_pending_body'),
         );
         break;
 
       case 'accepted':
-        $subject = $config->get('koba_email_admin.email_admin_accepted_title');
+        $subject = $content->get('koba_email_admin.email_admin_accepted_title');
 
         // Build render array.
         $content = array(
           '#theme' => 'booking_mail_accepted',
-          '#message' => $config->get('koba_email_admin.email_admin_accepted_body'),
+          '#message' => $content->get('koba_email_admin.email_admin_accepted_body'),
         );
         break;
 
       case 'rejected':
-        $subject = $config->get('koba_email_admin.email_admin_rejected_title');
+        $subject = $content->get('koba_email_admin.email_admin_rejected_title');
 
         // Build render array.
         $content = array(
           '#theme' => 'booking_mail_rejected',
-          '#message' => $config->get('koba_email_admin.email_admin_rejected_body'),
+          '#message' => $content->get('koba_email_admin.email_admin_rejected_body'),
         );
         break;
 
       case 'cancelled':
-        $subject = $config->get('koba_email_admin.email_admin_cancelled_title');
+        $subject = $content->get('koba_email_admin.email_admin_cancelled_title');
 
         // Build render array.
         $content = array(
           '#theme' => 'booking_mail_cancelled',
-          '#message' => $config->get('koba_email_admin.email_admin_cancelled_body'),
+          '#message' => $content->get('koba_email_admin.email_admin_cancelled_body'),
         );
         break;
 
@@ -134,7 +134,7 @@ class Mailer {
     }
 
     $this->replaceTokens($content, $booking);
-    $this->setTheme($config->get('koba_email_admin.admin_email_theme'));
+    $this->setTheme($content->get('koba_email_admin.admin_email_theme'));
 
     // Render the body content for the mail.
     return array(
@@ -158,12 +158,12 @@ class Mailer {
     $config = \Drupal::config('koba_booking.settings');
     switch ($type) {
       case 'request':
-        $subject = $config->get('koba_email.email_pending_title');
+        $subject = $content->get('koba_email.email_pending_title');
 
         // Build render array.
         $content = array(
           '#theme' => 'booking_mail_request',
-          '#message' => $config->get('koba_email.email_pending_body'),
+          '#message' => $content->get('koba_email.email_pending_body'),
         );
 
         // If this booking is in the next search phase, attach search phase message.
@@ -179,38 +179,38 @@ class Mailer {
         if ($booking_from_date >= $last_booking_date_minus_half_year &&
           $booking_from_date <= $last_booking_date
         ) {
-          $content['#search_phase_message'] = $config->get('koba_email.email_pending_search_phase_body');
+          $content['#search_phase_message'] = $content->get('koba_email.email_pending_search_phase_body');
         }
 
         break;
 
       case 'accepted':
-        $subject = $config->get('koba_email.email_accepted_title');
+        $subject = $content->get('koba_email.email_accepted_title');
 
         // Build render array.
         $content = array(
           '#theme' => 'booking_mail_accepted',
-          '#message' => $config->get('koba_email.email_accepted_body'),
+          '#message' => $content->get('koba_email.email_accepted_body'),
         );
         break;
 
       case 'rejected':
-        $subject = $config->get('koba_email.email_rejected_title');
+        $subject = $content->get('koba_email.email_rejected_title');
 
         // Build render array.
         $content = array(
           '#theme' => 'booking_mail_rejected',
-          '#message' => $config->get('koba_email.email_rejected_body'),
+          '#message' => $content->get('koba_email.email_rejected_body'),
         );
         break;
 
       case 'cancelled':
-        $subject = $config->get('koba_email.email_cancelled_title');
+        $subject = $content->get('koba_email.email_cancelled_title');
 
         // Build render array.
         $content = array(
           '#theme' => 'booking_mail_cancelled',
-          '#message' => $config->get('koba_email.email_cancelled_body'),
+          '#message' => $content->get('koba_email.email_cancelled_body'),
         );
         break;
 
@@ -232,7 +232,7 @@ class Mailer {
     }
 
     $this->replaceTokens($content, $booking);
-    $this->setTheme($config->get('koba_email.email_theme'));
+    $this->setTheme($content->get('koba_email.email_theme'));
 
     // Render the body content for the mail.
     return array(
