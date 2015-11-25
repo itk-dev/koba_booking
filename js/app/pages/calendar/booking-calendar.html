@@ -20,6 +20,7 @@
       <div data-ng-if="selected(timeInterval)" class="booking--display-row-your-selection is-selected">
         {{ (selected(timeInterval) === 'first') ? Drupal.t("Your selection") : '' }}
       </div>
+      <div data-ng-if="!selected(timeInterval) && inBuffer(timeInterval)" class="booking--display-row-your-selection is-buffer">&nbsp;</div>
     </div>
   </div>
 </div>

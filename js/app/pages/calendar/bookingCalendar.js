@@ -32,9 +32,9 @@ angular.module("kobaApp")
             "Content-Type": 'text/html',
             "Accept": 'text/html'
           }
-        }).success(function(response) {
+        }).success(function (response) {
           defer.resolve(response);
-        }).error(function(error) {
+        }).error(function (error) {
           defer.reject(error);
         });
 
@@ -66,9 +66,9 @@ angular.module("kobaApp")
             "Content-Type": 'text/html',
             "Accept": 'text/html'
           }
-        }).success(function(response) {
+        }).success(function (response) {
           defer.resolve(response);
-        }).error(function(error) {
+        }).error(function (error) {
           defer.reject(error);
         });
 
@@ -90,7 +90,9 @@ angular.module("kobaApp")
           "selectedStart": "=",
           "selectedEnd": "=",
           "bookings": "=",
-          "interestPeriod": "="
+          "interestPeriod": "=",
+          "bufferStart": "=",
+          "bufferEnd": "="
         },
         link: function (scope) {
           var bookings = [];
@@ -99,7 +101,7 @@ angular.module("kobaApp")
           scope.loaded = false;
 
           // Get selected timestamps.
-          var selectedTimestamp = getSelecteDateTimesAsTimestamp();
+          var selectedTimestamp = getSelectedDateTimesAsTimestamps();
 
           // Watch for changes to date and time selections.
           scope.$watchGroup(['selectedStart', 'selectedEnd', 'selectedDate'],
@@ -109,7 +111,7 @@ angular.module("kobaApp")
               }
 
               // Update selected time stamps.
-              selectedTimestamp = getSelecteDateTimesAsTimestamp();
+              selectedTimestamp = getSelectedDateTimesAsTimestamps();
             }
           );
 
@@ -137,7 +139,7 @@ angular.module("kobaApp")
            * @param timeInterval
            *   The time interval to evaluate.
            * @returns boolean|string
-           *   The result of the evaluation (@TODO: WHICH CAN BE??).
+           *   The result of the evaluation. This can be true/false/'first'. 'first' is if the time interval is selected and the first in the selection.
            */
           scope.selected = function selected(timeInterval) {
             var selectedTime = timeInterval.time.getTime();
@@ -153,6 +155,27 @@ angular.module("kobaApp")
             else {
               return false;
             }
+          };
+
+          /**
+           * Is the time interval inside the buffers but not the selection?
+           *
+           * @returns boolean
+           *   The result of the evaluation.
+           */
+          scope.inBuffer = function inBuffer(timeInterval) {
+            var evaluationTime = timeInterval.time.getTime();
+
+            console.log("---------- " + evaluationTime + " compare with " + selectedTimestamp.fromBuffer + " - " + selectedTimestamp.from + " - " + selectedTimestamp.to + " - " + selectedTimestamp.toBuffer);
+            console.log(evaluationTime >= selectedTimestamp.fromBuffer);
+            console.log(evaluationTime < selectedTimestamp.from);
+            console.log(evaluationTime >= selectedTimestamp.to);
+            console.log(evaluationTime < selectedTimestamp.toBuffer);
+
+            return (
+              (evaluationTime >= selectedTimestamp.fromBuffer && evaluationTime < selectedTimestamp.from) ||
+              (evaluationTime >= selectedTimestamp.to && evaluationTime < selectedTimestamp.toBuffer)
+            );
           };
 
           /**
@@ -175,8 +198,8 @@ angular.module("kobaApp")
 
             // Check that the new selectedEnd will not overlap the available time slots.
             if (selectedStart.getHours() > selectedEnd.getHours() ||
-               (selectedEnd.getHours() > parseInt(scope.interestPeriod.end) ||
-               ((selectedEnd.getHours() === parseInt(scope.interestPeriod.end) && selectedEnd.getMinutes() > 0)))) {
+              (selectedEnd.getHours() > parseInt(scope.interestPeriod.end) ||
+              ((selectedEnd.getHours() === parseInt(scope.interestPeriod.end) && selectedEnd.getMinutes() > 0)))) {
               return;
             }
 
@@ -195,7 +218,7 @@ angular.module("kobaApp")
            *   The translated string.
            */
           scope.Drupal = {
-            "t": function(str) {
+            "t": function (str) {
               return $window.Drupal.t(str);
             }
           };
@@ -249,7 +272,7 @@ angular.module("kobaApp")
           }
 
           /**
-           * Get current date/time selections as unix timestamps.
+           * Get current date/time selections as javascript timestamps.
            *
            * Build timestamps to send to the server based on the date picker and time picker selector. The first issue is
            * that the time picker returns date information for the time selected today, while we want to combine the date
@@ -257,7 +280,7 @@ angular.module("kobaApp")
            *
            * @returns {{from: number, to: number}}
            */
-          function getSelecteDateTimesAsTimestamp() {
+          function getSelectedDateTimesAsTimestamps() {
             if (scope.selectedDate !== null && scope.selectedStart !== null) {
               var from = new Date(scope.selectedDate.toDate().getTime());
               var fromTime = scope.selectedStart;
@@ -269,13 +292,17 @@ angular.module("kobaApp")
 
               return {
                 "from": from.getTime(),
-                "to": to.getTime()
+                "to": to.getTime(),
+                "fromBuffer": from.getTime() - parseInt(Math.ceil(scope.bufferStart / 30.0) * 30) * 60 * 1000,
+                "toBuffer": to.getTime() + parseInt(Math.ceil(scope.bufferEnd / 30.0) * 30) * 60 * 1000
               };
             }
 
             return {
               "from": 0,
-              "to": 0
+              "to": 0,
+              "fromBuffer": 0,
+              "toBuffer": 0
             };
           }
         },

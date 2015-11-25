@@ -111,6 +111,15 @@
     </a>
   </div>
   <div class="booking--display" data-ng-if="showCalendar">
-    <booking-calendar bookings="bookings" class="booking--display-content-wrapper" selected-date="selected.date" selected-resource="selected.resource" selected-start="selected.time.start" selected-end="selected.time.end" interest-period="interestPeriod"></booking-calendar>
+    <booking-calendar
+      class="booking--display-content-wrapper"
+      bookings="bookings"
+      selected-date="selected.date"
+      selected-resource="selected.resource"
+      selected-start="selected.time.start"
+      selected-end="selected.time.end"
+      interest-period="interestPeriod"
+      buffer-start="bufferStart"
+      buffer-end="bufferEnd"></booking-calendar>
   </div>
 </div>

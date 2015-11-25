@@ -1,5 +1,9 @@
 # DOKK1
 
+## v2.3.0
+
+* Made compatible with Drupal 8.0.0
+
 ## v2.1.0
 
 * Added mail theme selector
