@@ -166,12 +166,6 @@ angular.module("kobaApp")
           scope.inBuffer = function inBuffer(timeInterval) {
             var evaluationTime = timeInterval.time.getTime();
 
-            console.log("---------- " + evaluationTime + " compare with " + selectedTimestamp.fromBuffer + " - " + selectedTimestamp.from + " - " + selectedTimestamp.to + " - " + selectedTimestamp.toBuffer);
-            console.log(evaluationTime >= selectedTimestamp.fromBuffer);
-            console.log(evaluationTime < selectedTimestamp.from);
-            console.log(evaluationTime >= selectedTimestamp.to);
-            console.log(evaluationTime < selectedTimestamp.toBuffer);
-
             return (
               (evaluationTime >= selectedTimestamp.fromBuffer && evaluationTime < selectedTimestamp.from) ||
               (evaluationTime >= selectedTimestamp.to && evaluationTime < selectedTimestamp.toBuffer)
