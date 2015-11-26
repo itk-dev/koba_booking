@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains services to communicate with the KOBA proxy.
+ * Contains key/value storage for KOBA booking content.
  */
 
 namespace Drupal\koba_booking\State;
