@@ -122,5 +122,5 @@ function template_preprocess_booking_add_booking(&$variables) {
   // Set variables
   $variables['title'] = $content->get('koba_booking.create_booking_title');
   $variables['top_img'] = ($file) ? $file->url() : '';
-  $variables['search_phase'] = $config->get('koba_booking.search_phase');
+  $variables['search_phase'] = $content->get('koba_booking.search_phase');
 }

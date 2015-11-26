@@ -37,7 +37,7 @@ class BookingMessagesForm extends FormBase {
     $tokens_description = t('Available tokens are: [booking:name], [booking:description], [booking:resource], [booking:status], [booking:date], [booking:from_time], [booking:to_time], [booking:email], [booking:id]');
 
     // If in search phase print message.
-    if ($config->get('koba_booking.search_phase') > 0) {
+    if ($content->get('koba_booking.search_phase') > 0) {
       $search_period_message = t('Notice! Search period is active, remember to deactivate the setting when planning starts');
       drupal_set_message($search_period_message, $type = 'warning');
     }

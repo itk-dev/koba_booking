@@ -56,14 +56,14 @@ class BookingSettingsForm extends FormBase {
     // If form did not change.
     else {
       // If Search phase value is true.
-      if ($config->get('koba_booking.search_phase') > 0) {
+      if ($content->get('koba_booking.search_phase') > 0) {
         drupal_set_message($search_period_message, $type = 'warning');
       }
     }
 
     // Booking status.
     $form['booking_status'] = array(
-      '#prefix' => '<div class="messages messages--status">Bookings possible until ' . date('d/m/Y', $config->get('koba_booking.last_booking_date')) . '</div>',
+      '#prefix' => '<div class="messages messages--status">Bookings possible until ' . date('d/m/Y', $content->get('koba_booking.last_booking_date')) . '</div>',
       '#title' => $this->t('Booking status'),
       '#type' => 'details',
       '#weight' => '1',
@@ -78,7 +78,7 @@ class BookingSettingsForm extends FormBase {
       ),
       '#empty_value' => TRUE,
       '#weight' => '0',
-      '#default_value' => $config->get('koba_booking.planning_state'),
+      '#default_value' => $content->get('koba_booking.planning_state'),
     );
 
     $form['booking_status']['half_year']['first half year open'] = array(
@@ -102,7 +102,7 @@ class BookingSettingsForm extends FormBase {
     $form['search_period_wrapper']['search_period'] = array(
       '#type' => 'checkbox',
       '#title' => t('Search period'),
-      '#default_value' => $config->get('koba_booking.search_phase'),
+      '#default_value' => $content->get('koba_booking.search_phase'),
       '#description' => t('When the search period is active, the users will be informed of their booking state after the planning phase, if the bookings are in the next half year period.'),
     );
 
@@ -209,14 +209,14 @@ class BookingSettingsForm extends FormBase {
     $form['koba_settings']['interest_from'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Which time of the day should booking be possible from.'),
-      '#default_value' => $config->get('koba_booking.interest.from'),
+      '#default_value' => $content->get('koba_booking.interest.from'),
       '#required' => TRUE,
     );
 
     $form['koba_settings']['interest_to'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Which time of the day should booking be possible to.'),
-      '#default_value' => $config->get('koba_booking.interest.to'),
+      '#default_value' => $content->get('koba_booking.interest.to'),
       '#required' => TRUE,
     );
 
@@ -270,22 +270,22 @@ class BookingSettingsForm extends FormBase {
     $last_booking_date = setLastBookingDate($form_state);
 
     $this->configFactory()->getEditable('koba_booking.settings')
-      ->set('koba_booking.planning_state', $form_state->getValue('half_year'))
-      ->set('koba_booking.search_phase', $form_state->getValue('search_period'))
-      ->set('koba_booking.last_booking_date', $last_booking_date)
       ->set('koba_booking.api_key', $form_state->getValue('api_key'))
       ->set('koba_booking.path', $form_state->getValue('path'))
       ->set('koba_booking.session.expire', $form_state->getValue('expire'))
-      ->set('koba_booking.interest.from', $form_state->getValue('interest_from'))
-      ->set('koba_booking.interest.to', $form_state->getValue('interest_to'))
       ->set('koba_booking.add_booking_header', $form_state->getValue('add_booking_header'))
       ->save();
 
     $this->getContent()->setMultiple(array(
+      'koba_booking.last_booking_date' => $last_booking_date,
+      'koba_booking.planning_state' => $form_state->getValue('half_year'),
       'koba_booking.create_booking_title' => $form_state->getValue('create_booking_title'),
       'koba_booking.create_booking_description' => $form_state->getValue('create_booking_description')['value'],
       'koba_booking.create_booking_top_image' => $file ? $file->id() : NULL,
+      'koba_booking.search_phase' => $form_state->getValue('search_period'),
       'koba_booking.search_phase_text' => $form_state->getValue('search_period_text'),
+      'koba_booking.interest.from' => $form_state->getValue('interest_from'),
+      'koba_booking.interest.to' => $form_state->getValue('interest_to'),
     ));
   }
 }

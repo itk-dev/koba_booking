@@ -167,7 +167,7 @@ class Mailer {
         );
 
         // If this booking is in the next search phase, attach search phase message.
-        $last_booking_date = $config->get('koba_booking.last_booking_date');
+        $last_booking_date = $content->get('koba_booking.last_booking_date');
         $last_booking_date_minus_half_year = null;
         if (date('n', $last_booking_date) > 6) {
           $last_booking_date_minus_half_year = mktime(0, 0, 0, 7, 1, date('Y', $last_booking_date));
