@@ -196,8 +196,8 @@ class BookingListBuilder extends EntityListBuilder {
   public function render() {
     $build['table'] = parent::render();
 
-    $config = \Drupal::config('koba_booking.settings');
-    if ($config->get('koba_booking.search_phase') > 0) {
+    $content = \Drupal::getContainer()->get('koba_booking.booking_content');
+    if ($content->get('koba_booking.search_phase') > 0) {
       $search_period_message = t('Notice! Search period is active, remember to deactivate the setting when planning starts');
       drupal_set_message($search_period_message, $type = 'warning');
     }

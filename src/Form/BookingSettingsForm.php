@@ -25,11 +25,16 @@ class BookingSettingsForm extends FormBase {
     return 'koba_booking_settings';
   }
 
+  public function getContent() {
+    return \Drupal::getContainer()->get('koba_booking.booking_content');
+  }
+
   /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('koba_booking.settings');
+    $content = $this->getContent();
     $account = $this->currentUser();
 
     // Set first and second half year strings.
@@ -51,14 +56,14 @@ class BookingSettingsForm extends FormBase {
     // If form did not change.
     else {
       // If Search phase value is true.
-      if ($config->get('koba_booking.search_phase') > 0) {
+      if ($content->get('koba_booking.search_phase') > 0) {
         drupal_set_message($search_period_message, $type = 'warning');
       }
     }
 
     // Booking status.
     $form['booking_status'] = array(
-      '#prefix' => '<div class="messages messages--status">Bookings possible until ' . date('d/m/Y', $config->get('koba_booking.last_booking_date')) . '</div>',
+      '#prefix' => '<div class="messages messages--status">Bookings possible until ' . date('d/m/Y', $content->get('koba_booking.last_booking_date')) . '</div>',
       '#title' => $this->t('Booking status'),
       '#type' => 'details',
       '#weight' => '1',
@@ -73,7 +78,7 @@ class BookingSettingsForm extends FormBase {
       ),
       '#empty_value' => TRUE,
       '#weight' => '0',
-      '#default_value' => $config->get('koba_booking.planning_state'),
+      '#default_value' => $content->get('koba_booking.planning_state'),
     );
 
     $form['booking_status']['half_year']['first half year open'] = array(
@@ -97,7 +102,7 @@ class BookingSettingsForm extends FormBase {
     $form['search_period_wrapper']['search_period'] = array(
       '#type' => 'checkbox',
       '#title' => t('Search period'),
-      '#default_value' => $config->get('koba_booking.search_phase'),
+      '#default_value' => $content->get('koba_booking.search_phase'),
       '#description' => t('When the search period is active, the users will be informed of their booking state after the planning phase, if the bookings are in the next half year period.'),
     );
 
@@ -105,7 +110,7 @@ class BookingSettingsForm extends FormBase {
       '#description' => t('What text should be displayed to the user when they try to book inside a search period?'),
       '#title' => t('Search period text'),
       '#type' => 'textfield',
-      '#default_value' => $config->get('koba_booking.search_phase_text'),
+      '#default_value' => $content->get('koba_booking.search_phase_text'),
       '#weight' => '2',
       '#open' => TRUE,
     );
@@ -121,7 +126,7 @@ class BookingSettingsForm extends FormBase {
     $form['create_booking_wrapper']['create_booking_title'] = array(
       '#title' => $this->t('Pages title'),
       '#type' => 'textfield',
-      '#default_value' => $config->get('koba_booking.create_booking_title'),
+      '#default_value' => $content->get('koba_booking.create_booking_title'),
       '#weight' => '1',
       '#open' => TRUE,
     );
@@ -129,7 +134,7 @@ class BookingSettingsForm extends FormBase {
     $form['create_booking_wrapper']['create_booking_description'] = array(
       '#title' => $this->t('Pages description'),
       '#type' => 'text_format',
-      '#default_value' => $config->get('koba_booking.create_booking_description'),
+      '#default_value' => $content->get('koba_booking.create_booking_description'),
       '#weight' => '2',
       '#open' => TRUE,
     );
@@ -141,7 +146,7 @@ class BookingSettingsForm extends FormBase {
       }
     }
     else {
-      $fids[0] = $config->get('koba_booking.create_booking_top_image', '');
+      $fids[0] = $content->get('koba_booking.create_booking_top_image', '');
     }
 
     $form['create_booking_wrapper']['create_booking_top_image'] = array(
@@ -201,139 +206,41 @@ class BookingSettingsForm extends FormBase {
       '#required' => TRUE,
     );
 
+    // Opening hours
     $form['koba_settings']['opening_hours'] = array(
       '#title' => $this->t('Opening hours'),
-      '#type' => 'fieldset',
+      '#type' => 'details',
       '#weight' => '2',
-      '#open' => TRUE,
+      '#tree' => TRUE,
+      '#open' => FALSE,
     );
 
-    $form['koba_settings']['opening_hours']['monday'] = array(
-      '#title' => $this->t('Monday'),
-      '#type' => 'fieldset',
-      '#weight' => '2',
-      '#open' => TRUE,
-    );
-    $form['koba_settings']['opening_hours']['tuesday'] = array(
-      '#title' => $this->t('Tuesday'),
-      '#type' => 'fieldset',
-      '#weight' => '2',
-      '#open' => TRUE,
-    );
-    $form['koba_settings']['opening_hours']['wednesday'] = array(
-      '#title' => $this->t('Wednesday'),
-      '#type' => 'fieldset',
-      '#weight' => '2',
-      '#open' => TRUE,
-    );
-    $form['koba_settings']['opening_hours']['thursday'] = array(
-      '#title' => $this->t('Thursday'),
-      '#type' => 'fieldset',
-      '#weight' => '2',
-      '#open' => TRUE,
-    );
-    $form['koba_settings']['opening_hours']['friday'] = array(
-      '#title' => $this->t('Friday'),
-      '#type' => 'fieldset',
-      '#weight' => '2',
-      '#open' => TRUE,
-    );
-    $form['koba_settings']['opening_hours']['saturday'] = array(
-      '#title' => $this->t('Saturday'),
-      '#type' => 'fieldset',
-      '#weight' => '2',
-      '#open' => TRUE,
-    );
-    $form['koba_settings']['opening_hours']['sunday'] = array(
-      '#title' => $this->t('Sunday'),
-      '#type' => 'fieldset',
-      '#weight' => '2',
-      '#open' => TRUE,
-    );
-    $form['koba_settings']['opening_hours']['monday']['from'] = array(
-      '#title' => $this->t('From'),
-      '#type' => 'textfield',
-      '#default_value' => $config->get('koba_booking.opening_hours')[0]['from'],
-      '#required' => TRUE,
-    );
-    $form['koba_settings']['opening_hours']['monday']['to'] = array(
-      '#title' => $this->t('To'),
-      '#type' => 'textfield',
-      '#default_value' => $config->get('koba_booking.opening_hours')[0]['to'],
-      '#required' => TRUE,
-    );
-    $form['koba_settings']['opening_hours']['tuesday']['from'] = array(
-      '#title' => $this->t('From'),
-      '#type' => 'textfield',
-      '#default_value' => $config->get('koba_booking.opening_hours')[1]['from'],
-      '#required' => TRUE,
-    );
-    $form['koba_settings']['opening_hours']['tuesday']['to'] = array(
-      '#title' => $this->t('To'),
-      '#type' => 'textfield',
-      '#default_value' => $config->get('koba_booking.opening_hours')[1]['to'],
-      '#required' => TRUE,
-    );
-    $form['koba_settings']['opening_hours']['wednesday']['from'] = array(
-      '#title' => $this->t('From'),
-      '#type' => 'textfield',
-      '#default_value' => $config->get('koba_booking.opening_hours')[2]['from'],
-      '#required' => TRUE,
-    );
-    $form['koba_settings']['opening_hours']['wednesday']['to'] = array(
-      '#title' => $this->t('To'),
-      '#type' => 'textfield',
-      '#default_value' => $config->get('koba_booking.opening_hours')[2]['to'],
-      '#required' => TRUE,
-    );
-    $form['koba_settings']['opening_hours']['thursday']['from'] = array(
-      '#title' => $this->t('From'),
-      '#type' => 'textfield',
-      '#default_value' => $config->get('koba_booking.opening_hours')[3]['from'],
-      '#required' => TRUE,
-    );
-    $form['koba_settings']['opening_hours']['thursday']['to'] = array(
-      '#title' => $this->t('To'),
-      '#type' => 'textfield',
-      '#default_value' => $config->get('koba_booking.opening_hours')[3]['to'],
-      '#required' => TRUE,
-    );
-    $form['koba_settings']['opening_hours']['friday']['from'] = array(
-      '#title' => $this->t('From'),
-      '#type' => 'textfield',
-      '#default_value' => $config->get('koba_booking.opening_hours')[4]['from'],
-      '#required' => TRUE,
-    );
-    $form['koba_settings']['opening_hours']['friday']['to'] = array(
-      '#title' => $this->t('To'),
-      '#type' => 'textfield',
-      '#default_value' => $config->get('koba_booking.opening_hours')[4]['to'],
-      '#required' => TRUE,
-    );
-    $form['koba_settings']['opening_hours']['saturday']['from'] = array(
-      '#title' => $this->t('From'),
-      '#type' => 'textfield',
-      '#default_value' => $config->get('koba_booking.opening_hours')[5]['from'],
-      '#required' => TRUE,
-    );
-    $form['koba_settings']['opening_hours']['saturday']['to'] = array(
-      '#title' => $this->t('To'),
-      '#type' => 'textfield',
-      '#default_value' => $config->get('koba_booking.opening_hours')[5]['to'],
-      '#required' => TRUE,
-    );
-    $form['koba_settings']['opening_hours']['sunday']['from'] = array(
-      '#title' => $this->t('From'),
-      '#type' => 'textfield',
-      '#default_value' => $config->get('koba_booking.opening_hours')[6]['from'],
-      '#required' => TRUE,
-    );
-    $form['koba_settings']['opening_hours']['sunday']['to'] = array(
-      '#title' => $this->t('To'),
-      '#type' => 'textfield',
-      '#default_value' => $config->get('koba_booking.opening_hours')[6]['to'],
-      '#required' => TRUE,
-    );
+    $weekdayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+    foreach ($weekdayNames as $key => $value) {
+      $form['koba_settings']['opening_hours'][$key] = array(
+        '#title' => $this->t($value),
+        '#type' => 'fieldset',
+        '#weight' => '2',
+        '#open' => TRUE,
+      );
+      $form['koba_settings']['opening_hours'][$key]['from'] = array(
+        '#title' => $this->t('From'),
+        '#type' => 'number',
+        '#min' => 0,
+        '#max' => 23,
+        '#default_value' => $content->get('koba_booking.opening_hours')[$key]['from'],
+        '#required' => TRUE,
+      );
+      $form['koba_settings']['opening_hours'][$key]['to'] = array(
+        '#title' => $this->t('To'),
+        '#type' => 'number',
+        '#min' => 0,
+        '#max' => 23,
+        '#default_value' => $content->get('koba_booking.opening_hours')[$key]['to'],
+        '#required' => TRUE,
+      );
+    }
 
     $form['submit'] = array(
       '#type' => 'submit',
@@ -351,8 +258,8 @@ class BookingSettingsForm extends FormBase {
     drupal_set_message('Settings saved');
 
     // Fetch the file id previously saved.
-    $config = $this->config('koba_booking.settings');
-    $old_fid = $config->get('koba_booking.create_booking_top_image', '');
+    $content = \Drupal::getContainer()->get('koba_booking.booking_content');
+    $old_fid = $content->get('koba_booking.create_booking_top_image', '');
 
     // Load the file set in the form.
     $value = $form_state->getValue('create_booking_top_image');
@@ -385,20 +292,22 @@ class BookingSettingsForm extends FormBase {
     $last_booking_date = setLastBookingDate($form_state);
 
     $this->configFactory()->getEditable('koba_booking.settings')
-      ->set('koba_booking.create_booking_title', $form_state->getValue('create_booking_title'))
-      ->set('koba_booking.create_booking_description', $form_state->getValue('create_booking_description')['value'])
-      ->set('koba_booking.create_booking_top_image', $file ? $file->id() : NULL)
-      ->set('koba_booking.planning_state', $form_state->getValue('half_year'))
-      ->set('koba_booking.search_phase', $form_state->getValue('search_period'))
-      ->set('koba_booking.search_phase_text', $form_state->getValue('search_period_text'))
-      ->set('koba_booking.last_booking_date', $last_booking_date)
       ->set('koba_booking.api_key', $form_state->getValue('api_key'))
       ->set('koba_booking.path', $form_state->getValue('path'))
       ->set('koba_booking.session.expire', $form_state->getValue('expire'))
-      ->set('koba_booking.interest.from', $form_state->getValue('interest_from'))
-      ->set('koba_booking.interest.to', $form_state->getValue('interest_to'))
       ->set('koba_booking.add_booking_header', $form_state->getValue('add_booking_header'))
       ->save();
+
+    $this->getContent()->setMultiple(array(
+      'koba_booking.last_booking_date' => $last_booking_date,
+      'koba_booking.planning_state' => $form_state->getValue('half_year'),
+      'koba_booking.create_booking_title' => $form_state->getValue('create_booking_title'),
+      'koba_booking.create_booking_description' => $form_state->getValue('create_booking_description')['value'],
+      'koba_booking.create_booking_top_image' => $file ? $file->id() : NULL,
+      'koba_booking.search_phase' => $form_state->getValue('search_period'),
+      'koba_booking.search_phase_text' => $form_state->getValue('search_period_text'),
+      'koba_booking.opening_hours' => $form_state->getValue('opening_hours'),
+    ));
   }
 }
 

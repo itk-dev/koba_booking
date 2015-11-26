@@ -76,7 +76,7 @@ function koba_booking_token_info() {
  *  $language_interface = \Drupal::languageManager()->getCurrentLanguage();
  *
  *  // Output the content with tokens replaced.
- *  $output = $token_service->replace($config->get('koba_booking.email_pending_body'), array('booking' => $booking), array('langcode' => $language_interface->getId()));
+ *  $output = $token_service->replace($content->get('koba_email.email_pending_body'), array('booking' => $booking), array('langcode' => $language_interface->getId()));
  */
 function koba_booking_tokens($type, $tokens, array $data = array(), array $options = array()) {
 

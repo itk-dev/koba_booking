@@ -15,3 +15,7 @@ services:
       class: Drupal\koba_booking\Access\BookingEditAccessCheck
       tags:
         - { name: access_check, applies_to: _booking_edit_access_check }
+
+  koba_booking.booking_content:
+    class: Drupal\koba_booking\State\BookingContent
+    arguments: ['@serialization.json', '@database']
