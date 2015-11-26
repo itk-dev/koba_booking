@@ -201,17 +201,137 @@ class BookingSettingsForm extends FormBase {
       '#required' => TRUE,
     );
 
-    $form['koba_settings']['interest_from'] = array(
-      '#type' => 'textfield',
-      '#title' => $this->t('Which time of the day should booking be possible from.'),
-      '#default_value' => $config->get('koba_booking.interest.from'),
-      '#required' => TRUE,
+    $form['koba_settings']['opening_hours'] = array(
+      '#title' => $this->t('Opening hours'),
+      '#type' => 'fieldset',
+      '#weight' => '2',
+      '#open' => TRUE,
     );
 
-    $form['koba_settings']['interest_to'] = array(
+    $form['koba_settings']['opening_hours']['monday'] = array(
+      '#title' => $this->t('Monday'),
+      '#type' => 'fieldset',
+      '#weight' => '2',
+      '#open' => TRUE,
+    );
+    $form['koba_settings']['opening_hours']['tuesday'] = array(
+      '#title' => $this->t('Tuesday'),
+      '#type' => 'fieldset',
+      '#weight' => '2',
+      '#open' => TRUE,
+    );
+    $form['koba_settings']['opening_hours']['wednesday'] = array(
+      '#title' => $this->t('Wednesday'),
+      '#type' => 'fieldset',
+      '#weight' => '2',
+      '#open' => TRUE,
+    );
+    $form['koba_settings']['opening_hours']['thursday'] = array(
+      '#title' => $this->t('Thursday'),
+      '#type' => 'fieldset',
+      '#weight' => '2',
+      '#open' => TRUE,
+    );
+    $form['koba_settings']['opening_hours']['friday'] = array(
+      '#title' => $this->t('Friday'),
+      '#type' => 'fieldset',
+      '#weight' => '2',
+      '#open' => TRUE,
+    );
+    $form['koba_settings']['opening_hours']['saturday'] = array(
+      '#title' => $this->t('Saturday'),
+      '#type' => 'fieldset',
+      '#weight' => '2',
+      '#open' => TRUE,
+    );
+    $form['koba_settings']['opening_hours']['sunday'] = array(
+      '#title' => $this->t('Sunday'),
+      '#type' => 'fieldset',
+      '#weight' => '2',
+      '#open' => TRUE,
+    );
+    $form['koba_settings']['opening_hours']['monday']['from'] = array(
+      '#title' => $this->t('From'),
       '#type' => 'textfield',
-      '#title' => $this->t('Which time of the day should booking be possible to.'),
-      '#default_value' => $config->get('koba_booking.interest.to'),
+      '#default_value' => $config->get('koba_booking.opening_hours')[0]['from'],
+      '#required' => TRUE,
+    );
+    $form['koba_settings']['opening_hours']['monday']['to'] = array(
+      '#title' => $this->t('To'),
+      '#type' => 'textfield',
+      '#default_value' => $config->get('koba_booking.opening_hours')[0]['to'],
+      '#required' => TRUE,
+    );
+    $form['koba_settings']['opening_hours']['tuesday']['from'] = array(
+      '#title' => $this->t('From'),
+      '#type' => 'textfield',
+      '#default_value' => $config->get('koba_booking.opening_hours')[1]['from'],
+      '#required' => TRUE,
+    );
+    $form['koba_settings']['opening_hours']['tuesday']['to'] = array(
+      '#title' => $this->t('To'),
+      '#type' => 'textfield',
+      '#default_value' => $config->get('koba_booking.opening_hours')[1]['to'],
+      '#required' => TRUE,
+    );
+    $form['koba_settings']['opening_hours']['wednesday']['from'] = array(
+      '#title' => $this->t('From'),
+      '#type' => 'textfield',
+      '#default_value' => $config->get('koba_booking.opening_hours')[2]['from'],
+      '#required' => TRUE,
+    );
+    $form['koba_settings']['opening_hours']['wednesday']['to'] = array(
+      '#title' => $this->t('To'),
+      '#type' => 'textfield',
+      '#default_value' => $config->get('koba_booking.opening_hours')[2]['to'],
+      '#required' => TRUE,
+    );
+    $form['koba_settings']['opening_hours']['thursday']['from'] = array(
+      '#title' => $this->t('From'),
+      '#type' => 'textfield',
+      '#default_value' => $config->get('koba_booking.opening_hours')[3]['from'],
+      '#required' => TRUE,
+    );
+    $form['koba_settings']['opening_hours']['thursday']['to'] = array(
+      '#title' => $this->t('To'),
+      '#type' => 'textfield',
+      '#default_value' => $config->get('koba_booking.opening_hours')[3]['to'],
+      '#required' => TRUE,
+    );
+    $form['koba_settings']['opening_hours']['friday']['from'] = array(
+      '#title' => $this->t('From'),
+      '#type' => 'textfield',
+      '#default_value' => $config->get('koba_booking.opening_hours')[4]['from'],
+      '#required' => TRUE,
+    );
+    $form['koba_settings']['opening_hours']['friday']['to'] = array(
+      '#title' => $this->t('To'),
+      '#type' => 'textfield',
+      '#default_value' => $config->get('koba_booking.opening_hours')[4]['to'],
+      '#required' => TRUE,
+    );
+    $form['koba_settings']['opening_hours']['saturday']['from'] = array(
+      '#title' => $this->t('From'),
+      '#type' => 'textfield',
+      '#default_value' => $config->get('koba_booking.opening_hours')[5]['from'],
+      '#required' => TRUE,
+    );
+    $form['koba_settings']['opening_hours']['saturday']['to'] = array(
+      '#title' => $this->t('To'),
+      '#type' => 'textfield',
+      '#default_value' => $config->get('koba_booking.opening_hours')[5]['to'],
+      '#required' => TRUE,
+    );
+    $form['koba_settings']['opening_hours']['sunday']['from'] = array(
+      '#title' => $this->t('From'),
+      '#type' => 'textfield',
+      '#default_value' => $config->get('koba_booking.opening_hours')[6]['from'],
+      '#required' => TRUE,
+    );
+    $form['koba_settings']['opening_hours']['sunday']['to'] = array(
+      '#title' => $this->t('To'),
+      '#type' => 'textfield',
+      '#default_value' => $config->get('koba_booking.opening_hours')[6]['to'],
       '#required' => TRUE,
     );
 
