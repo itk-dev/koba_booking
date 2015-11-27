@@ -24,7 +24,12 @@ class BookingMessagesForm extends FormBase {
     return 'koba_booking_messages';
   }
 
-  public function getContent() {
+  /**
+   * Get key/value storage for booking content.
+   *
+   * @return object
+   */
+  private function getBookingContent() {
     return \Drupal::getContainer()->get('koba_booking.booking_content');
   }
 
@@ -33,11 +38,11 @@ class BookingMessagesForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('koba_booking.settings');
-    $content = $this->getContent();
+    $bookingContent = $this->getBookingContent();
     $tokens_description = t('Available tokens are: [booking:name], [booking:description], [booking:resource], [booking:status], [booking:date], [booking:from_time], [booking:to_time], [booking:email], [booking:id]');
 
     // If in search phase print message.
-    if ($content->get('koba_booking.search_phase') > 0) {
+    if ($bookingContent->get('koba_booking.search_phase') > 0) {
       $search_period_message = t('Notice! Search period is active, remember to deactivate the setting when planning starts');
       drupal_set_message($search_period_message, $type = 'warning');
     }
@@ -78,7 +83,7 @@ class BookingMessagesForm extends FormBase {
       '#type' => 'textarea',
       '#title' => t('Created booking'),
       '#description' => t('The message displayed to the user when the booking is created.') . '</br>' . $tokens_description,
-      '#default_value' => $content->get('koba_booking.created_booking_message'),
+      '#default_value' => $bookingContent->get('koba_booking.created_booking_message'),
       '#weight' => '0',
     );
 
@@ -101,7 +106,7 @@ class BookingMessagesForm extends FormBase {
       '#type' => 'text_format',
       '#title' => t('Why we need your email'),
       '#description' => t('The message displayed to the user when clicking "Why we need your email".') . '</br>' . $tokens_description,
-      '#default_value' => $content->get('koba_booking.why_email'),
+      '#default_value' => $bookingContent->get('koba_booking.why_email'),
       '#weight' => '0',
     );
 
@@ -109,7 +114,7 @@ class BookingMessagesForm extends FormBase {
       '#type' => 'text_format',
       '#title' => t('Why we need a title'),
       '#description' => t('The message displayed to the user when clicking "Why we need a title".') . '</br>' . $tokens_description,
-      '#default_value' => $content->get('koba_booking.why_title'),
+      '#default_value' => $bookingContent->get('koba_booking.why_title'),
       '#weight' => '1',
     );
 
@@ -140,20 +145,20 @@ class BookingMessagesForm extends FormBase {
     $form['user_email_settings']['pending_email']['pending_email_title'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Email title'),
-      '#default_value' => $content->get('koba_email.email_pending_title'),
+      '#default_value' => $bookingContent->get('koba_email.email_pending_title'),
     );
 
     $form['user_email_settings']['pending_email']['pending_email_body'] = array(
       '#type' => 'text_format',
       '#title' => $this->t('Email body'),
-      '#default_value' => $content->get('koba_email.email_pending_body'),
+      '#default_value' => $bookingContent->get('koba_email.email_pending_body'),
       '#description' => $tokens_description,
     );
 
     $form['user_email_settings']['pending_email']['pending_email_search_phase_body'] = array(
       '#type' => 'text_format',
       '#title' => $this->t('Search phase message'),
-      '#default_value' => $content->get('koba_email.email_pending_search_phase_body'),
+      '#default_value' => $bookingContent->get('koba_email.email_pending_search_phase_body'),
       '#description' => $tokens_description,
     );
 
@@ -175,13 +180,13 @@ class BookingMessagesForm extends FormBase {
     $form['user_email_settings']['accepted_email']['accepted_email_title'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Email title'),
-      '#default_value' => $content->get('koba_email.email_accepted_title'),
+      '#default_value' => $bookingContent->get('koba_email.email_accepted_title'),
     );
 
     $form['user_email_settings']['accepted_email']['accepted_email_body'] = array(
       '#type' => 'text_format',
       '#title' => $this->t('Email body'),
-      '#default_value' => $content->get('koba_email.email_accepted_body'),
+      '#default_value' => $bookingContent->get('koba_email.email_accepted_body'),
       '#description' => $tokens_description,
     );
 
@@ -203,13 +208,13 @@ class BookingMessagesForm extends FormBase {
     $form['user_email_settings']['rejected_email']['rejected_email_title'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Email title'),
-      '#default_value' => $content->get('koba_email.email_rejected_title'),
+      '#default_value' => $bookingContent->get('koba_email.email_rejected_title'),
     );
 
     $form['user_email_settings']['rejected_email']['rejected_email_body'] = array(
       '#type' => 'text_format',
       '#title' => $this->t('Email body'),
-      '#default_value' => $content->get('koba_email.email_rejected_body'),
+      '#default_value' => $bookingContent->get('koba_email.email_rejected_body'),
       '#description' => $tokens_description,
     );
 
@@ -231,13 +236,13 @@ class BookingMessagesForm extends FormBase {
     $form['user_email_settings']['cancelled_email']['cancelled_email_title'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Email title'),
-      '#default_value' => $content->get('koba_email.email_cancelled_title'),
+      '#default_value' => $bookingContent->get('koba_email.email_cancelled_title'),
     );
 
     $form['user_email_settings']['cancelled_email']['cancelled_email_body'] = array(
       '#type' => 'text_format',
       '#title' => $this->t('Email body'),
-      '#default_value' => $content->get('koba_email.email_cancelled_body'),
+      '#default_value' => $bookingContent->get('koba_email.email_cancelled_body'),
       '#description' => $tokens_description,
     );
 
@@ -267,13 +272,13 @@ class BookingMessagesForm extends FormBase {
     $form['admin_email_settings']['pending_admin_email']['pending_admin_email_title'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Email title'),
-      '#default_value' => $content->get('koba_email_admin.email_admin_pending_title'),
+      '#default_value' => $bookingContent->get('koba_email_admin.email_admin_pending_title'),
     );
 
     $form['admin_email_settings']['pending_admin_email']['pending_admin_email_body'] = array(
       '#type' => 'text_format',
       '#title' => $this->t('Email body'),
-      '#default_value' => $content->get('koba_email_admin.email_admin_pending_body'),
+      '#default_value' => $bookingContent->get('koba_email_admin.email_admin_pending_body'),
       '#description' => $tokens_description,
     );
 
@@ -295,13 +300,13 @@ class BookingMessagesForm extends FormBase {
     $form['admin_email_settings']['accepted_admin_email']['accepted_admin_email_title'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Email title'),
-      '#default_value' => $content->get('koba_email_admin.email_admin_accepted_title'),
+      '#default_value' => $bookingContent->get('koba_email_admin.email_admin_accepted_title'),
     );
 
     $form['admin_email_settings']['accepted_admin_email']['accepted_admin_email_body'] = array(
       '#type' => 'text_format',
       '#title' => $this->t('Email body'),
-      '#default_value' => $content->get('koba_email_admin.email_admin_accepted_body'),
+      '#default_value' => $bookingContent->get('koba_email_admin.email_admin_accepted_body'),
       '#description' => $tokens_description,
     );
 
@@ -323,13 +328,13 @@ class BookingMessagesForm extends FormBase {
     $form['admin_email_settings']['rejected_admin_email']['rejected_admin_email_title'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Email title'),
-      '#default_value' => $content->get('koba_email_admin.email_admin_rejected_title'),
+      '#default_value' => $bookingContent->get('koba_email_admin.email_admin_rejected_title'),
     );
 
     $form['admin_email_settings']['rejected_admin_email']['rejected_admin_email_body'] = array(
       '#type' => 'text_format',
       '#title' => $this->t('Email body'),
-      '#default_value' => $content->get('koba_email_admin.email_admin_rejected_body'),
+      '#default_value' => $bookingContent->get('koba_email_admin.email_admin_rejected_body'),
       '#description' => $tokens_description,
     );
 
@@ -351,13 +356,13 @@ class BookingMessagesForm extends FormBase {
     $form['admin_email_settings']['cancelled_admin_email']['cancelled_admin_email_title'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Email title'),
-      '#default_value' => $content->get('koba_email_admin.email_admin_cancelled_title'),
+      '#default_value' => $bookingContent->get('koba_email_admin.email_admin_cancelled_title'),
     );
 
     $form['admin_email_settings']['cancelled_admin_email']['cancelled_admin_email_body'] = array(
       '#type' => 'text_format',
       '#title' => $this->t('Email body'),
-      '#default_value' => $content->get('koba_email_admin.email_admin_cancelled_body'),
+      '#default_value' => $bookingContent->get('koba_email_admin.email_admin_cancelled_body'),
       '#description' => $tokens_description,
     );
 
@@ -388,7 +393,7 @@ class BookingMessagesForm extends FormBase {
       '#type' => 'select',
       '#title' => $this->t('Theme'),
       '#options' => $installed_themes_options,
-      '#default_value' => $content->get('koba_email.email_theme'),
+      '#default_value' => $bookingContent->get('koba_email.email_theme'),
       '#description' => t('Theme used for sending user emails'),
     );
 
@@ -411,7 +416,7 @@ class BookingMessagesForm extends FormBase {
       '#type' => 'select',
       '#title' => $this->t('Theme'),
       '#options' => $installed_themes_options,
-      '#default_value' => $content->get('koba_email_admin.admin_email_theme'),
+      '#default_value' => $bookingContent->get('koba_email_admin.admin_email_theme'),
       '#description' => t('Theme used for sending admin emails'),
     );
 
@@ -437,7 +442,7 @@ class BookingMessagesForm extends FormBase {
    */
   public function booking_created_submit(array $form, FormStateInterface $form_state) {
     drupal_set_message('Booking message settings saved');
-    $this->getContent()->setMultiple(array(
+    $this->getBookingContent()->setMultiple(array(
       'koba_booking.created_booking_message' => $form_state->getValue('booking_created'),
     ));
   }
@@ -453,7 +458,7 @@ class BookingMessagesForm extends FormBase {
    */
   public function booking_help_text_submit(array $form, FormStateInterface $form_state) {
     drupal_set_message('Booking message settings saved');
-    $this->getContent()->setMultiple(array(
+    $this->getBookingContent()->setMultiple(array(
       'koba_booking.why_email' => $form_state->getValue('why_email_description')['value'],
       'koba_booking.why_title' => $form_state->getValue('why_title_description')['value'],
     ));
@@ -470,7 +475,7 @@ class BookingMessagesForm extends FormBase {
    */
   public function pending_email_submit(array $form, FormStateInterface $form_state) {
     drupal_set_message('Pending email settings saved');
-    $this->getContent()->setMultiple(array(
+    $this->getBookingContent()->setMultiple(array(
       'koba_email.email_pending_title' => $form_state->getValue('pending_email_title'),
       'koba_email.email_pending_body' => $form_state->getValue('pending_email_body')['value'],
       'koba_email.email_pending_search_phase_body' => $form_state->getValue('pending_email_search_phase_body')['value'],
@@ -488,7 +493,7 @@ class BookingMessagesForm extends FormBase {
    */
   public function accepted_email_submit(array $form, FormStateInterface $form_state) {
     drupal_set_message('Accepted email settings saved');
-    $this->getContent()->setMultiple(array(
+    $this->getBookingContent()->setMultiple(array(
       'koba_email.email_accepted_title' => $form_state->getValue('accepted_email_title'),
       'koba_email.email_accepted_body' => $form_state->getValue('accepted_email_body')['value'],
     ));
@@ -505,7 +510,7 @@ class BookingMessagesForm extends FormBase {
    */
   public function rejected_email_submit(array $form, FormStateInterface $form_state) {
     drupal_set_message('Rejected email settings saved');
-    $this->getContent()->setMultiple(array(
+    $this->getBookingContent()->setMultiple(array(
       'koba_email.email_rejected_title' => $form_state->getValue('rejected_email_title'),
       'koba_email.email_rejected_body' => $form_state->getValue('rejected_email_body')['value'],
     ));
@@ -522,7 +527,7 @@ class BookingMessagesForm extends FormBase {
    */
   public function cancelled_email_submit(array $form, FormStateInterface $form_state) {
     drupal_set_message('Cancelled email settings saved');
-    $this->getContent()->setMultiple(array(
+    $this->getBookingContent()->setMultiple(array(
       'koba_email.email_cancelled_title' => $form_state->getValue('cancelled_email_title'),
       'koba_email.email_cancelled_body' => $form_state->getValue('cancelled_email_body')['value'],
     ));
@@ -539,7 +544,7 @@ class BookingMessagesForm extends FormBase {
    */
   public function theme_submit(array $form, FormStateInterface $form_state) {
     drupal_set_message('Email theme settings saved');
-    $this->getContent()->setMultiple(array(
+    $this->getBookingContent()->setMultiple(array(
       'koba_email.email_theme' => $form_state->getValue('email_theme'),
     ));
   }
@@ -555,7 +560,7 @@ class BookingMessagesForm extends FormBase {
    */
   public function admin_theme_submit(array $form, FormStateInterface $form_state) {
     drupal_set_message('Email theme settings saved');
-    $this->getContent()->setMultiple(array(
+    $this->getBookingContent()->setMultiple(array(
       'koba_email_admin.admin_email_theme' => $form_state->getValue('admin_email_theme'),
     ));
   }
@@ -572,7 +577,7 @@ class BookingMessagesForm extends FormBase {
 
   public function pending_admin_email_submit(array $form, FormStateInterface $form_state) {
     drupal_set_message('Pending email settings saved');
-    $this->getContent()->setMultiple(array(
+    $this->getBookingContent()->setMultiple(array(
       'koba_email_admin.email_admin_pending_title' => $form_state->getValue('pending_admin_email_title'),
       'koba_email_admin.email_admin_pending_body' => $form_state->getValue('pending_admin_email_body')['value'],
     ));
@@ -589,7 +594,7 @@ class BookingMessagesForm extends FormBase {
    */
   public function accepted_admin_email_submit(array $form, FormStateInterface $form_state) {
     drupal_set_message('Accepted email settings saved');
-    $this->getContent()->setMultiple(array(
+    $this->getBookingContent()->setMultiple(array(
       'koba_email_admin.email_admin_accepted_title' => $form_state->getValue('accepted_admin_email_title'),
       'koba_email_admin.email_admin_accepted_body' => $form_state->getValue('accepted_admin_email_body')['value'],
     ));
@@ -606,7 +611,7 @@ class BookingMessagesForm extends FormBase {
    */
   public function rejected_admin_email_submit(array $form, FormStateInterface $form_state) {
     drupal_set_message('Rejected email settings saved');
-    $this->getContent()->setMultiple(array(
+    $this->getBookingContent()->setMultiple(array(
       'koba_email_admin.email_admin_rejected_title' => $form_state->getValue('rejected_admin_email_title'),
       'koba_email_admin.email_admin_rejected_body' => $form_state->getValue('rejected_admin_email_body')['value'],
     ));
@@ -623,7 +628,7 @@ class BookingMessagesForm extends FormBase {
    */
   public function cancelled_admin_email_submit(array $form, FormStateInterface $form_state) {
     drupal_set_message('Cancelled email settings saved');
-    $this->getContent()->setMultiple(array(
+    $this->getBookingContent()->setMultiple(array(
       'koba_email_admin.email_admin_cancelled_title' => $form_state->getValue('cancelled_admin_email_title'),
       'koba_email_admin.email_admin_cancelled_body' => $form_state->getValue('cancelled_admin_email_body')['value'],
     ));

@@ -37,10 +37,10 @@ class KobaBookingController extends ControllerBase  {
 
     // Load configuration.
     $config = $this->config('koba_booking.settings');
-    $content = \Drupal::getContainer()->get('koba_booking.booking_content');
+    $bookingContent = \Drupal::getContainer()->get('koba_booking.booking_content');
 
     // Get a half year before last_booking_date
-    $last_booking_date = $content->get('koba_booking.last_booking_date');
+    $last_booking_date = $bookingContent->get('koba_booking.last_booking_date');
     $last_booking_date_minus_half_year = null;
 
     if (date('n', $last_booking_date) > 6) {
@@ -66,11 +66,11 @@ class KobaBookingController extends ControllerBase  {
             'resource' => isset($defaults['resource']) ? $defaults['resource'] : NULL,
             'from' => isset($defaults['from']) ? $defaults['from'] : NULL,
             'to' => isset($defaults['to']) ? $defaults['to'] : NULL,
-            'opening_hours' => $content->get('koba_booking.opening_hours'),
-            'last_booking_date' => $content->get('koba_booking.last_booking_date'),
+            'opening_hours' => $bookingContent->get('koba_booking.opening_hours'),
+            'last_booking_date' => $bookingContent->get('koba_booking.last_booking_date'),
             'last_booking_date_minus_half_year' => $last_booking_date_minus_half_year,
-            'search_phase' => $content->get('koba_booking.search_phase'),
-            'search_phase_text' => strip_tags(check_markup($content->get('koba_booking.search_phase_text'), 'editor_format')),
+            'search_phase' => $bookingContent->get('koba_booking.search_phase'),
+            'search_phase_text' => strip_tags(check_markup($bookingContent->get('koba_booking.search_phase_text'), 'editor_format')),
           ),
         ),
       ),
@@ -105,9 +105,8 @@ class KobaBookingController extends ControllerBase  {
       );
 
       // If this booking is in the next search phase, attach search phase message.
-      $config = \Drupal::config('koba_booking.settings');
-      $content = \Drupal::getContainer()->get('koba_booking.booking_content');
-      $last_booking_date = $content->get('koba_booking.last_booking_date');
+      $bookingContent = \Drupal::getContainer()->get('koba_booking.booking_content');
+      $last_booking_date = $bookingContent->get('koba_booking.last_booking_date');
       $last_booking_date_minus_half_year = null;
       if (date('n', $last_booking_date) > 6) {
         $last_booking_date_minus_half_year = mktime(0, 0, 0, 7, 1, date('Y', $last_booking_date));
@@ -119,7 +118,7 @@ class KobaBookingController extends ControllerBase  {
       if ($booking_from_date >= $last_booking_date_minus_half_year &&
         $booking_from_date <= $last_booking_date
       ) {
-        $build['#search_phase_text'] = strip_tags(check_markup($content->get('koba_booking.search_phase_text'), 'editor_format'));
+        $build['#search_phase_text'] = strip_tags(check_markup($bookingContent->get('koba_booking.search_phase_text'), 'editor_format'));
       }
 
       return $build;

@@ -22,17 +22,17 @@ use Drupal\Component\Utility\Html;
 function template_preprocess_booking_calendar_page(&$variables) {
   // Fetch module config settings.
   $config = \Drupal::config('koba_booking.settings');
-  $content = \Drupal::getContainer()->get('koba_booking.booking_content');
+  $bookingContent = \Drupal::getContainer()->get('koba_booking.booking_content');
 
   // Fetch header top file.
-  $top_image_id = $content->get('koba_booking.create_booking_top_image');
+  $top_image_id = $bookingContent->get('koba_booking.create_booking_top_image');
   $file = ($top_image_id) ? File::load($top_image_id) : FALSE;
 
   // @todo caching af image.
   // Set variables
-  $variables['title'] = $content->get('koba_booking.create_booking_title');
+  $variables['title'] = $bookingContent->get('koba_booking.create_booking_title');
   $variables['top_img'] = ($file) ? $file->url() : '';
-  $variables['manchet'] = check_markup($content->get('koba_booking.create_booking_description'), 'editor_format');
+  $variables['manchet'] = check_markup($bookingContent->get('koba_booking.create_booking_description'), 'editor_format');
   $variables['submit_header'] = '/' . $config->get('koba_booking.add_booking_header');
   $variables['app_dir'] = '/' .  drupal_get_path('module', 'koba_booking') . '/js/app';
 }
@@ -49,17 +49,17 @@ function template_preprocess_booking_calendar_page(&$variables) {
 function template_preprocess_booking_receipt(&$variables) {
   // Fetch module config settings.
   $config = \Drupal::config('koba_booking.settings');
-  $content = \Drupal::getContainer()->get('koba_booking.booking_content');
+  $bookingContent = \Drupal::getContainer()->get('koba_booking.booking_content');
 
   // Fetch header top file.
-  $top_image_id = $content->get('koba_booking.create_booking_top_image');
+  $top_image_id = $bookingContent->get('koba_booking.create_booking_top_image');
   $file = ($top_image_id) ? File::load($top_image_id) : FALSE;
 
   // @todo caching af image.
   // Set variables
-  $variables['title'] = $content->get('koba_booking.create_booking_title');
+  $variables['title'] = $bookingContent->get('koba_booking.create_booking_title');
   $variables['top_img'] = ($file) ? $file->url() : '';
-  $variables['manchet'] = check_markup($content->get('koba_booking.create_booking_description'), 'editor_format');
+  $variables['manchet'] = check_markup($bookingContent->get('koba_booking.create_booking_description'), 'editor_format');
 
   // Extract information about the booking.
   $booking = $variables['booking'];
@@ -113,14 +113,14 @@ function template_preprocess_booking_add_booking(&$variables) {
 
   // Fetch module config settings.
   $config = \Drupal::config('koba_booking.settings');
-  $content = \Drupal::getContainer()->get('koba_booking.booking_content');
+  $bookingContent = \Drupal::getContainer()->get('koba_booking.booking_content');
 
   // Fetch header top file.
-  $top_image_id = $content->get('koba_booking.create_booking_top_image');
+  $top_image_id = $bookingContent->get('koba_booking.create_booking_top_image');
   $file = ($top_image_id) ? File::load($top_image_id) : FALSE;
 
   // Set variables
-  $variables['title'] = $content->get('koba_booking.create_booking_title');
+  $variables['title'] = $bookingContent->get('koba_booking.create_booking_title');
   $variables['top_img'] = ($file) ? $file->url() : '';
-  $variables['search_phase'] = $content->get('koba_booking.search_phase');
+  $variables['search_phase'] = $bookingContent->get('koba_booking.search_phase');
 }
