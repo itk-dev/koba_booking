@@ -31,11 +31,6 @@ angular.module('kobaApp').controller("CalendarController",
         $scope.validating = false;
         $scope.timeIntervalLength = 30;
 
-        // Buffer
-        $scope.bufferId = '1';
-        $scope.bufferStart = 15;
-        $scope.bufferEnd = 45;
-
         // Set paths from the backend.
         $scope.modulePath = '/' + drupalSettings.koba_booking.module_path;
         $scope.themePath = '/' + drupalSettings.koba_booking.theme_path;
@@ -244,8 +239,7 @@ angular.module('kobaApp').controller("CalendarController",
           $scope.loginPath +
           '?res=' + $scope.selected.resource.id +
           '&from=' + times.from +
-          '&to=' + times.to +
-          '&buffer_id' + $scope.bufferId
+          '&to=' + times.to
         );
       };
 
@@ -427,21 +421,6 @@ angular.module('kobaApp').controller("CalendarController",
       }
 
       /**
-       * Add and subtract end and start buffers to times.to and times.end.
-       *
-       * @param times
-       *   object of form: {from: *, to: *}, unix timestamps
-       * @param bufferStart
-       *   Start buffer in minutes.
-       * @param bufferEnd
-       *   End buffer in minutes.
-       */
-      function applyTimeBuffers(times, bufferStart, bufferEnd) {
-        times.from = times.from - bufferStart * 60;
-        times.to = times.to + bufferEnd * 60;
-      }
-
-      /**
        * Validate the current selection.
        */
       function validateBooking() {
@@ -450,11 +429,7 @@ angular.module('kobaApp').controller("CalendarController",
           return;
         }
 
-        // Get times used for validation. Includes buffers for a given resource.
         var times = getSelectedDateTimesAsUnixTimestamp();
-
-        // Apply time buffers to the booking.
-        applyTimeBuffers(times, $scope.bufferStart, $scope.bufferEnd);
 
         var validBooking = true;
 
