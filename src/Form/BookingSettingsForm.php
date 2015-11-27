@@ -25,7 +25,12 @@ class BookingSettingsForm extends FormBase {
     return 'koba_booking_settings';
   }
 
-  public function getContent() {
+  /**
+   * Get key/value storage for booking content.
+   *
+   * @return object
+   */
+  private function getBookingContent() {
     return \Drupal::getContainer()->get('koba_booking.booking_content');
   }
 
@@ -34,7 +39,7 @@ class BookingSettingsForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('koba_booking.settings');
-    $content = $this->getContent();
+    $bookingContent = $this->getBookingContent();
     $account = $this->currentUser();
 
     // Set first and second half year strings.
@@ -56,14 +61,14 @@ class BookingSettingsForm extends FormBase {
     // If form did not change.
     else {
       // If Search phase value is true.
-      if ($content->get('koba_booking.search_phase') > 0) {
+      if ($bookingContent->get('koba_booking.search_phase') > 0) {
         drupal_set_message($search_period_message, $type = 'warning');
       }
     }
 
     // Booking status.
     $form['booking_status'] = array(
-      '#prefix' => '<div class="messages messages--status">Bookings possible until ' . date('d/m/Y', $content->get('koba_booking.last_booking_date')) . '</div>',
+      '#prefix' => '<div class="messages messages--status">Bookings possible until ' . date('d/m/Y', $bookingContent->get('koba_booking.last_booking_date')) . '</div>',
       '#title' => $this->t('Booking status'),
       '#type' => 'details',
       '#weight' => '1',
@@ -78,7 +83,7 @@ class BookingSettingsForm extends FormBase {
       ),
       '#empty_value' => TRUE,
       '#weight' => '0',
-      '#default_value' => $content->get('koba_booking.planning_state'),
+      '#default_value' => $bookingContent->get('koba_booking.planning_state'),
     );
 
     $form['booking_status']['half_year']['first half year open'] = array(
@@ -102,7 +107,7 @@ class BookingSettingsForm extends FormBase {
     $form['search_period_wrapper']['search_period'] = array(
       '#type' => 'checkbox',
       '#title' => t('Search period'),
-      '#default_value' => $content->get('koba_booking.search_phase'),
+      '#default_value' => $bookingContent->get('koba_booking.search_phase'),
       '#description' => t('When the search period is active, the users will be informed of their booking state after the planning phase, if the bookings are in the next half year period.'),
     );
 
@@ -110,7 +115,7 @@ class BookingSettingsForm extends FormBase {
       '#description' => t('What text should be displayed to the user when they try to book inside a search period?'),
       '#title' => t('Search period text'),
       '#type' => 'textfield',
-      '#default_value' => $content->get('koba_booking.search_phase_text'),
+      '#default_value' => $bookingContent->get('koba_booking.search_phase_text'),
       '#weight' => '2',
       '#open' => TRUE,
     );
@@ -126,7 +131,7 @@ class BookingSettingsForm extends FormBase {
     $form['create_booking_wrapper']['create_booking_title'] = array(
       '#title' => $this->t('Pages title'),
       '#type' => 'textfield',
-      '#default_value' => $content->get('koba_booking.create_booking_title'),
+      '#default_value' => $bookingContent->get('koba_booking.create_booking_title'),
       '#weight' => '1',
       '#open' => TRUE,
     );
@@ -134,7 +139,7 @@ class BookingSettingsForm extends FormBase {
     $form['create_booking_wrapper']['create_booking_description'] = array(
       '#title' => $this->t('Pages description'),
       '#type' => 'text_format',
-      '#default_value' => $content->get('koba_booking.create_booking_description'),
+      '#default_value' => $bookingContent->get('koba_booking.create_booking_description'),
       '#weight' => '2',
       '#open' => TRUE,
     );
@@ -146,7 +151,7 @@ class BookingSettingsForm extends FormBase {
       }
     }
     else {
-      $fids[0] = $content->get('koba_booking.create_booking_top_image', '');
+      $fids[0] = $bookingContent->get('koba_booking.create_booking_top_image', '');
     }
 
     $form['create_booking_wrapper']['create_booking_top_image'] = array(
@@ -209,14 +214,14 @@ class BookingSettingsForm extends FormBase {
     $form['koba_settings']['interest_from'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Which time of the day should booking be possible from.'),
-      '#default_value' => $content->get('koba_booking.interest.from'),
+      '#default_value' => $bookingContent->get('koba_booking.interest.from'),
       '#required' => TRUE,
     );
 
     $form['koba_settings']['interest_to'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Which time of the day should booking be possible to.'),
-      '#default_value' => $content->get('koba_booking.interest.to'),
+      '#default_value' => $bookingContent->get('koba_booking.interest.to'),
       '#required' => TRUE,
     );
 
@@ -236,8 +241,8 @@ class BookingSettingsForm extends FormBase {
     drupal_set_message('Settings saved');
 
     // Fetch the file id previously saved.
-    $content = \Drupal::getContainer()->get('koba_booking.booking_content');
-    $old_fid = $content->get('koba_booking.create_booking_top_image', '');
+    $bookingContent = \Drupal::getContainer()->get('koba_booking.booking_content');
+    $old_fid = $bookingContent->get('koba_booking.create_booking_top_image', '');
 
     // Load the file set in the form.
     $value = $form_state->getValue('create_booking_top_image');
@@ -276,7 +281,7 @@ class BookingSettingsForm extends FormBase {
       ->set('koba_booking.add_booking_header', $form_state->getValue('add_booking_header'))
       ->save();
 
-    $this->getContent()->setMultiple(array(
+    $this->getBookingContent()->setMultiple(array(
       'koba_booking.last_booking_date' => $last_booking_date,
       'koba_booking.planning_state' => $form_state->getValue('half_year'),
       'koba_booking.create_booking_title' => $form_state->getValue('create_booking_title'),
