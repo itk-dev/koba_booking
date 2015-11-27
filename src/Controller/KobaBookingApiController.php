@@ -171,6 +171,15 @@ class KobaBookingApiController extends ControllerBase {
     // Store information in session.
     \Drupal::service('session')->set('koba_booking_request', $data);
 
+    // If WAYF is in debug mode override session data.
+    $wayf_config = \Drupal::config('wayf_dk_login.settings');
+    if ($wayf_config->get('development_debug')) {
+      $data['name'] = 'Lars Larsen';
+      $data['mail'] = 'lars.larsen@institution.dk';
+      $data['uuid'] = 'WAYF-DK-bd62bf7b79d25399936c978c2dc425424c730324';
+      \Drupal::service('session')->set('koba_booking_request', $data);
+    }
+
     // Check if the user has authenticated with WAYF and .
     if (empty($data['uuid']) || !\Drupal::moduleHandler()->moduleExists('wayf_dk_login')) {
       // Redirect to WAYF login.
