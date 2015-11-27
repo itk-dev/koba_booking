@@ -155,7 +155,8 @@ class Mailer {
    */
   protected function generateUserMailContent($type, BookingInterface $booking) {
     // Build render array for the mail body.
-    $config = \Drupal::config('koba_booking.settings');
+    $content = \Drupal::getContainer()->get('koba_booking.booking_content');
+
     switch ($type) {
       case 'request':
         $subject = $content->get('koba_email.email_pending_title');
