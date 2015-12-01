@@ -38,7 +38,7 @@ function koba_booking_update_8001(&$sandbox) {
       'email_rejected_body',
       'email_rejected_title',
       'email_theme',
-      'pending_email_search_phase_body',
+      'email_pending_search_phase_body',
     ),
     'koba_email_admin' => array(
       'email_admin_accepted_body',
